@@ -1,0 +1,53 @@
+{
+  "slug": "bloom-coffee",
+  "business": {
+    "name": "블룸 커피",
+    "industry": "카페",
+    "tagline": "오후 세 시의 한 잔",
+    "description": "연희동 골목 2층에 있는 작은 커피집입니다. 좌석은 열여섯 자리이고, 창가 네 자리는 예약을 받습니다.\n\n원두는 두 가지를 두고 매주 바꿉니다. 주말에는 오전 열한 시에 문을 엽니다.",
+    "founded": "2021",
+    "owner": "김하린",
+    "keywords": ["연희동 카페", "핸드드립", "조용한 카페"]
+  },
+  "contact": {
+    "phone": "02-333-1174",
+    "email": "hello@bloomcoffee.kr",
+    "address": "서울 서대문구 연희로 11길 24, 2층",
+    "hours": "화–일 12:00–21:00 (월 휴무)",
+    "map_url": "https://map.naver.com/p/search/블룸커피",
+    "links": { "인스타그램": "https://instagram.com/bloomcoffee.kr" }
+  },
+  "site": {
+    "pages": 1,
+    "domain": "bloomcoffee.kr",
+    "goals": ["방문", "브랜딩"],
+    "features": ["지도", "갤러리", "메뉴", "영업시간", "sns"],
+    "primary_cta": "메뉴 보기"
+  },
+  "brand": {
+    "mood": ["따뜻", "깔끔"],
+    "font_preference": "serif"
+  },
+  "reference": {
+    "html_path": "examples/reference-warm-cafe.html",
+    "notes": "이 집처럼 여백이 넓고 사진이 큰 느낌"
+  },
+  "items": [
+    { "title": "핸드드립 (싱글 오리진)", "summary": "매주 두 가지 원두 중 고르실 수 있습니다.", "price": "6,000원" },
+    { "title": "플랫 화이트", "summary": "블렌드 원두로 내립니다.", "price": "5,000원" },
+    { "title": "오늘의 디저트", "summary": "당일 구운 것만 내놓습니다.", "price": "4,500원" }
+  ],
+  "gallery": [
+    { "src": "examples/photos/counter.svg", "alt": "카운터와 원두 진열", "caption": "카운터" },
+    { "src": "examples/photos/seat.svg", "alt": "창가 좌석", "caption": "창가 자리" },
+    { "src": "examples/photos/cup.svg", "alt": "핸드드립 한 잔" }
+  ],
+  "testimonials": [
+    { "quote": "조용해서 책 읽다 두 시간을 앉아 있었습니다.", "name": "정○○", "role": "네이버 리뷰" },
+    { "quote": "원두 설명을 친절하게 해 주십니다.", "name": "이○○" }
+  ],
+  "faq": [
+    { "question": "주차할 수 있습니까?", "answer": "건물 주차장이 없어 근처 공영주차장을 안내드립니다." },
+    { "question": "노트북을 써도 됩니까?", "answer": "평일 오후에는 괜찮습니다. 주말에는 자리가 좁아 양해를 부탁드립니다." }
+  ]
+}

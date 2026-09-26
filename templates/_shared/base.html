@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="{{ brief.site.locale or 'ko' }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.title }}</title>
+<meta name="description" content="{{ page.description }}">
+<meta name="theme-color" content="{{ tokens['color-primary'] }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ page.title }}">
+<meta property="og:description" content="{{ page.description }}">
+{%- if og_image %}
+<meta property="og:image" content="{{ og_image }}">
+{%- endif %}
+{%- if canonical %}
+<link rel="canonical" href="{{ canonical }}">
+<meta property="og:url" content="{{ canonical }}">
+{%- endif %}
+{%- if style.fonts.google_href() %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="{{ style.fonts.google_href() }}">
+{%- endif %}
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{{ jsonld }}</script>
+</head>
+<body class="theme-{{ style.mode }} density-{{ style.density }} industry-{{ brief.business.industry }}">
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+{% include "partials/header.html" %}
+<main id="main">
+{%- block main %}
+{%- for section in page.sections %}
+{% include "partials/section.html" %}
+{%- endfor %}
+{%- endblock %}
+</main>
+{% include "partials/footer.html" %}
+{% include "partials/scripts.html" %}
+</body>
+</html>

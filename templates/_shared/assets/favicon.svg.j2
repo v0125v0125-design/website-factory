@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="{{ brief.brand.logo_text }}">
+  <rect width="64" height="64" rx="{{ 14 if radius_px >= 10 else radius_px }}" fill="{{ tokens['color-primary'] }}"/>
+  <text x="32" y="41" text-anchor="middle" font-family="{{ 'Georgia, serif' if 'serif' in tokens['font-heading'] else 'Helvetica, Arial, sans-serif' }}"
+        font-size="32" font-weight="700" fill="{{ tokens['color-on-primary'] }}">{{ initial }}</text>
+</svg>

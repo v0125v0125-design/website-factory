@@ -1,0 +1,23 @@
+<header class="site-head">
+  <div class="container site-head__inner">
+    <a class="brand" href="{{ 'index.html' if page.spec.slug else '#top' }}">
+      <span class="brand__mark" aria-hidden="true">{{ brief.brand.logo_text[:1] }}</span>
+      <span class="brand__text">{{ brief.brand.logo_text }}</span>
+    </a>
+    {%- if content.nav %}
+    <nav class="site-nav" aria-label="주요 메뉴">
+      <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+        <span class="sr-only">메뉴 열기</span><span aria-hidden="true">☰</span>
+      </button>
+      <ul id="site-menu" class="site-nav__list">
+        {%- for link in content.nav %}
+        <li><a href="{{ link.href }}"{% if link.href == page.filename %} aria-current="page"{% endif %}>{{ link.label }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+    {%- endif %}
+    {%- if content.meta.cta_label and content.meta.head_cta %}
+    <a class="btn btn--sm site-head__cta" href="{{ content.meta.cta_href }}">{{ content.meta.cta_label }}</a>
+    {%- endif %}
+  </div>
+</header>

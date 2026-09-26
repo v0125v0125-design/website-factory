@@ -1,0 +1,31 @@
+<section class="hero hero--{{ style.hero }}" id="top">
+  {%- if style.hero == 'image' %}
+  <div class="hero__media" {% if section.data.image %}style="background-image:url('{{ section.data.image }}')"{% endif %} role="img" aria-label="{{ brief.business.name }}">
+    {%- if not section.data.image %}<span class="hero__media-note">{{ section.data.image_placeholder }}</span>{%- endif %}
+  </div>
+  {%- endif %}
+  <div class="container hero__inner">
+    <div class="hero__text">
+      {%- if section.data.kicker %}<p class="hero__kicker">{{ section.data.kicker }}</p>{%- endif %}
+      <h1 class="hero__title">{{ section.heading }}</h1>
+      {%- if section.subheading %}<p class="hero__sub">{{ section.subheading }}</p>{%- endif %}
+      <p class="hero__actions">
+        <a class="btn" href="{{ section.data.cta_href }}">{{ section.data.cta_label }}</a>
+        {%- if brief.contact.phone %}
+        <a class="btn btn--ghost" href="tel:{{ brief.contact.phone | tel }}">{{ brief.contact.phone }}</a>
+        {%- endif %}
+      </p>
+      {%- if section.data.facts %}
+      <ul class="hero__facts">
+        {%- for fact in section.data.facts %}<li>{{ fact }}</li>{%- endfor %}
+      </ul>
+      {%- endif %}
+    </div>
+    {%- if style.hero == 'split' %}
+    <div class="hero__figure" aria-hidden="true">
+      {%- if section.data.image %}<img src="{{ section.data.image }}" alt="">
+      {%- else %}<span class="hero__figure-note">{{ brief.brand.logo_text[:2] }}</span>{%- endif %}
+    </div>
+    {%- endif %}
+  </div>
+</section>

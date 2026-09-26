@@ -1,0 +1,13 @@
+<section class="band" id="faq">
+  <div class="container band__narrow">
+    <div class="band__head"><h2 class="h2">{{ section.heading }}</h2></div>
+    <div class="faq">
+      {%- for item in section.data['items'] %}
+      <details class="faq__row"{% if loop.first %} open{% endif %}>
+        <summary>{{ item.question }}</summary>
+        <div class="faq__answer"><p>{{ item.answer }}</p></div>
+      </details>
+      {%- endfor %}
+    </div>
+  </div>
+</section>

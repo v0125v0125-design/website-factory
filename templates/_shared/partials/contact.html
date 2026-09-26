@@ -1,0 +1,47 @@
+<section class="band band--surface" id="contact">
+  <div class="container contact">
+    <div class="contact__info">
+      <h2 class="h2">{{ section.heading }}</h2>
+      <dl class="factlist factlist--stack">
+        {%- for label, value, href in section.data['rows'] %}
+        <div>
+          <dt>{{ label }}</dt>
+          <dd>{% if href %}<a href="{{ href }}" rel="noopener">{{ value }}</a>{% else %}{{ value }}{% endif %}</dd>
+        </div>
+        {%- endfor %}
+      </dl>
+      {%- if section.data.map_url %}
+      <p><a class="btn btn--ghost" href="{{ section.data.map_url }}" rel="noopener">지도에서 보기</a></p>
+      {%- elif section.data.map_requested %}
+      <p class="note">[지도 링크를 넣어 주세요 — 네이버·카카오 지도 공유 주소]</p>
+      {%- endif %}
+    </div>
+    {%- if section.data.form %}
+    <form class="contact__form" method="post" action="{{ form_action or '#' }}">
+      <p class="field">
+        <label for="f-name">이름</label>
+        <input id="f-name" name="name" type="text" required autocomplete="name">
+      </p>
+      <p class="field">
+        <label for="f-phone">연락처</label>
+        <input id="f-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel">
+      </p>
+      <p class="field">
+        <label for="f-message">문의 내용</label>
+        <textarea id="f-message" name="message" rows="5" required></textarea>
+      </p>
+      <p class="field field--check">
+        <input id="f-agree" name="agree" type="checkbox" required>
+        <label for="f-agree">개인정보 수집·이용에 동의합니다. (문의 답변 목적으로만 사용)</label>
+      </p>
+      <p><button class="btn" type="submit">{{ section.data.cta_label }}</button></p>
+      <p class="note">보내는 곳을 아직 연결하지 않았습니다 — 폼 처리 주소(form_action)를 지정하세요.</p>
+    </form>
+    {%- else %}
+    <div class="contact__cta">
+      <p class="lede">{{ brief.business.name }}에 바로 연락하실 수 있습니다.</p>
+      <p><a class="btn" href="{{ section.data.cta_href }}">{{ section.data.cta_label }}</a></p>
+    </div>
+    {%- endif %}
+  </div>
+</section>

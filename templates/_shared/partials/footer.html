@@ -1,0 +1,26 @@
+<footer class="site-foot">
+  <div class="container site-foot__inner">
+    <div>
+      <p class="site-foot__name">{{ brief.business.name }}</p>
+      {%- if brief.contact.address %}<p>{{ brief.contact.address }}</p>{%- endif %}
+      {%- if brief.contact.phone %}<p><a href="tel:{{ brief.contact.phone | tel }}">{{ brief.contact.phone }}</a></p>{%- endif %}
+      {%- if brief.contact.email %}<p><a href="mailto:{{ brief.contact.email }}">{{ brief.contact.email }}</a></p>{%- endif %}
+      {%- if brief.business.owner %}<p>대표 {{ brief.business.owner }}</p>{%- endif %}
+    </div>
+    <div class="site-foot__side">
+      {%- if brief.contact.links %}
+      <ul class="site-foot__links">
+        {%- for label, url in brief.contact.links.items() %}
+        <li><a href="{{ url }}" rel="noopener">{{ label }}</a></li>
+        {%- endfor %}
+      </ul>
+      {%- endif %}
+      {%- if content.nav and page.spec.slug is not none and content.pages | length > 1 %}
+      <ul class="site-foot__links">
+        {%- for link in content.nav %}<li><a href="{{ link.href }}">{{ link.label }}</a></li>{%- endfor %}
+      </ul>
+      {%- endif %}
+      <p class="site-foot__copy">© {{ year }} {{ brief.business.name }}</p>
+    </div>
+  </div>
+</footer>

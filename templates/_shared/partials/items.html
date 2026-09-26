@@ -1,0 +1,20 @@
+{%- set count = section.data['items'] | length -%}
+{%- set cols = 1 if count == 1 else (2 if count in (2, 4) else 3) -%}
+<section class="band band--surface" id="{{ section.kind }}">
+  <div class="container">
+    <div class="band__head">
+      <h2 class="h2">{{ section.heading }}</h2>
+      {%- if section.data.has_price %}<p class="lede">가격은 부가세 포함 여부 등 조건에 따라 달라질 수 있습니다.</p>{%- endif %}
+    </div>
+    <ul class="cards" style="--cols:{{ cols }}">
+      {%- for item in section.data['items'] %}
+      <li class="card">
+        {%- if item.icon %}<span class="card__icon" aria-hidden="true">{{ item.icon }}</span>{%- endif %}
+        <h3 class="card__title">{{ item.title }}</h3>
+        {%- if item.summary %}<p class="card__text">{{ item.summary }}</p>{%- endif %}
+        {%- if item.price %}<p class="card__price">{{ item.price }}</p>{%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

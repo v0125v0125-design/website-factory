@@ -1,0 +1,8 @@
+{% include "assets/_core.css.j2" %}
+
+/* ---------- 원페이지 클래식만의 손질 ---------- */
+/* 한 장뿐이니 섹션 경계가 눈에 보여야 한다. 띠가 연달아 같은 색이면 선을 넣는다. */
+.band + .band{border-top:1px solid var(--color-border)}
+.band--surface + .band--surface{border-top:1px solid var(--color-border)}
+/* 앵커로 내려갈 때 고정 머리에 가리지 않게. */
+[id]{scroll-margin-top:84px}

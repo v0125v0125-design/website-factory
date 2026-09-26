@@ -1,0 +1,17 @@
+{%- set count = section.data['items'] | length -%}
+{%- set cols = 1 if count == 1 else (2 if count in (2, 4) else 3) -%}
+<section class="band band--surface" id="testimonials">
+  <div class="container">
+    <div class="band__head"><h2 class="h2">{{ section.heading }}</h2></div>
+    <ul class="quotes" style="--cols:{{ cols }}">
+      {%- for item in section.data['items'] %}
+      <li class="quote">
+        <blockquote><p>{{ item.quote }}</p></blockquote>
+        {%- if item.name or item.role %}
+        <p class="quote__by">{{ item.name }}{% if item.role %} · {{ item.role }}{% endif %}</p>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

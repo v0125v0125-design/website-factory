@@ -1,0 +1,9 @@
+<section class="cta-band">
+  <div class="container cta-band__inner">
+    <h2 class="h2">{{ section.heading }}</h2>
+    <p class="cta-band__actions">
+      <a class="btn btn--invert" href="{{ section.data.cta_href }}">{{ section.data.cta_label }}</a>
+      {%- if section.data.phone %}<a class="btn btn--ghost btn--ghost-invert" href="tel:{{ section.data.phone | tel }}">{{ section.data.phone }}</a>{%- endif %}
+    </p>
+  </div>
+</section>

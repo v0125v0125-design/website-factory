@@ -1,0 +1,14 @@
+<section class="band" id="process">
+  <div class="container">
+    <div class="band__head"><h2 class="h2">{{ section.heading }}</h2></div>
+    <ol class="steps">
+      {%- for step in section.data['steps'] %}
+      <li class="step">
+        <span class="step__no" aria-hidden="true">{{ step.step }}</span>
+        <h3 class="step__title">{{ step.title }}</h3>
+        {%- if step.summary %}<p class="step__text">{{ step.summary }}</p>{%- endif %}
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>

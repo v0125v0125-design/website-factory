@@ -1,0 +1,20 @@
+<section class="band" id="about">
+  <div class="container band__inner">
+    <div class="band__head">
+      <h2 class="h2">{{ section.heading }}</h2>
+      {%- if section.subheading %}<p class="lede">{{ section.subheading }}</p>{%- endif %}
+    </div>
+    <div class="band__body prose">
+      {%- for paragraph in section.data.paragraphs %}
+      <p>{{ paragraph }}</p>
+      {%- endfor %}
+      {%- if section.data.facts %}
+      <dl class="factlist">
+        {%- for label, value in section.data.facts %}
+        <div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+        {%- endfor %}
+      </dl>
+      {%- endif %}
+    </div>
+  </div>
+</section>

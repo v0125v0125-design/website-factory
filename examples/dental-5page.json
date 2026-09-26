@@ -1,0 +1,41 @@
+{
+  "business": {
+    "name": "연서치과",
+    "industry": "치과",
+    "tagline": "오래 쓰실 치아를 먼저 생각합니다",
+    "description": "2014년에 문을 연 동네 치과입니다. 원장이 진료 전 과정을 직접 봅니다.\n\n과잉 진료를 하지 않기 위해 치료 계획을 먼저 종이로 드리고, 필요하면 다른 병원 의견도 들어 보시라고 말씀드립니다.",
+    "founded": "2014",
+    "owner": "박연서"
+  },
+  "contact": {
+    "phone": "031-712-9040",
+    "email": "yeonseo@dental.example",
+    "address": "경기 성남시 분당구 서현로 210, 3층",
+    "hours": "평일 09:30–18:30 · 토 09:30–13:00 · 목/일 휴진",
+    "links": { "블로그": "https://blog.example.com/yeonseo" }
+  },
+  "site": {
+    "pages": 5,
+    "domain": "yeonseo-dental.kr",
+    "goals": ["예약", "상담"],
+    "features": ["지도", "문의폼", "자주묻는질문", "후기", "진행과정", "갤러리"]
+  },
+  "brand": {
+    "primary_color": "#0f6f8a",
+    "mood": ["깔끔", "신뢰"],
+    "font_preference": "sans"
+  },
+  "items": [
+    { "title": "충치 치료", "summary": "가능한 한 적게 갈아 냅니다." },
+    { "title": "임플란트", "summary": "뼈 상태를 먼저 보고 계획을 세웁니다.", "price": "상담 후 안내" },
+    { "title": "치아 교정", "summary": "성인 교정도 상담받으실 수 있습니다." },
+    { "title": "스케일링", "summary": "연 1회 보험 적용됩니다.", "price": "보험 적용" }
+  ],
+  "testimonials": [
+    { "quote": "치료 계획을 종이로 주셔서 이해하기 편했습니다.", "name": "김○○" }
+  ],
+  "faq": [
+    { "question": "예약 없이 가도 됩니까?", "answer": "가능하지만 대기가 길 수 있어 전화 예약을 권합니다." },
+    { "question": "주차는 됩니까?", "answer": "건물 지하 주차장을 2시간 무료로 쓰실 수 있습니다." }
+  ]
+}

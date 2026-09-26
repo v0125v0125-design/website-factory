@@ -1,0 +1,19 @@
+{
+  "id": "five-pages-corp",
+  "name": "5페이지 기본형",
+  "summary": "홈·소개·서비스·사진·문의 다섯 장. 설명할 것이 많은 병원·법무·학원·시공 업체에 맞는 구성.",
+  "page_count": 5,
+  "hero": "split",
+  "density": "regular",
+  "industries": ["clinic", "legal", "academy", "construction", "realestate", "tech", "fitness", "wellness", "studio", "general"],
+  "moods": ["clean", "trustworthy", "professional", "modern", "minimal", "bold", "cool"],
+  "features": ["map", "gallery", "form", "pricing", "faq", "testimonials", "team", "process", "hours", "sns", "reservation", "notice"],
+  "goals": ["inquiry", "reservation", "brand", "recruit", "sell"],
+  "pages": [
+    {"slug": "", "title": "홈", "nav_label": "홈", "sections": ["hero", "about", "services", "testimonials", "cta"]},
+    {"slug": "about", "title": "소개", "nav_label": "소개", "sections": ["about", "process", "cta"]},
+    {"slug": "services", "title": "서비스", "nav_label": "서비스", "sections": ["services", "faq", "cta"]},
+    {"slug": "gallery", "title": "갤러리", "nav_label": "갤러리", "sections": ["gallery", "cta"]},
+    {"slug": "contact", "title": "문의", "nav_label": "문의", "sections": ["contact"]}
+  ]
+}

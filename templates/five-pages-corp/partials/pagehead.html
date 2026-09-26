@@ -1,0 +1,9 @@
+{%- if page.spec.slug %}
+<section class="pagehead">
+  <div class="container">
+    <p class="pagehead__crumb"><a href="index.html">홈</a> <span aria-hidden="true">›</span> {{ page.nav_label }}</p>
+    <h1 class="pagehead__title">{{ page.nav_label }}</h1>
+    {%- if page.description %}<p class="pagehead__sub">{{ page.description }}</p>{%- endif %}
+  </div>
+</section>
+{%- endif %}
