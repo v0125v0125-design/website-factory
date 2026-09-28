@@ -1,0 +1,66 @@
+# 미리보기 발행 — 고객 사이트를 GitHub Pages 에 올린다.
+#
+#   https://<계정>.github.io/website-factory/<고객 slug>/
+#
+# 고객 도메인은 연결하지 않는다. 검수용 임시 주소이고, robots 로 검색을 막는다.
+name: preview
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "examples/**"
+      - "templates/**"
+      - "factory/**"
+      - "tools/build_previews.py"
+      - ".github/workflows/preview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: preview-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 의존성
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt Pillow
+
+      - name: 주문서 규격 검사
+        run: |
+          for brief in examples/master-interior-01.json examples/customers/*.json; do
+            python -m factory.cli validate "$brief"
+          done
+
+      - name: 미리보기 짓기
+        run: python tools/build_previews.py _site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
