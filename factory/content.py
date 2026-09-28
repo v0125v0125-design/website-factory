@@ -167,15 +167,17 @@ class CopyEngine:
         body_paragraphs = spec.paragraphs or _paragraphs(biz.description)
         if not body_paragraphs:
             body_paragraphs = [self._need("소개 글 2~3문장", "소개")]
+        # 소개 블록이 표를 직접 줬으면 그것만 쓴다. 안 주면 아는 사실로 채운다.
         facts: list[tuple[str, str]] = list(spec.facts)
-        if biz.founded:
-            facts.append(("시작", biz.founded))
-        if biz.owner:
-            facts.append(("대표", biz.owner))
-        if self.brief.contact.hours:
-            facts.append(("영업시간", self.brief.contact.hours))
-        if self.brief.contact.address:
-            facts.append(("위치", self.brief.contact.address))
+        if not facts:
+            if biz.founded:
+                facts.append(("시작", biz.founded))
+            if biz.owner:
+                facts.append(("대표", biz.owner))
+            if self.brief.contact.hours:
+                facts.append(("영업시간", self.brief.contact.hours))
+            if self.brief.contact.address:
+                facts.append(("위치", self.brief.contact.address))
         return Section(
             kind="about",
             heading=spec.heading or self.lex.about_heading,
@@ -193,7 +195,8 @@ class CopyEngine:
             self.skipped.append(f"{kind}: 항목이 하나도 없어 뺐습니다")
             return None
         rows = [
-            {"title": i.title, "summary": i.summary, "price": i.price, "icon": i.icon}
+            {"title": i.title, "summary": i.summary, "price": i.price,
+             "icon": i.icon, "image": i.image, "bullets": i.bullets}
             for i in self.brief.items
         ]
         return Section(

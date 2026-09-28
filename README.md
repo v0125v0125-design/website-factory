@@ -27,6 +27,9 @@ python -m factory.cli templates                                  # 찍을 수 �
 python -m factory.cli plan  examples/cafe-onepage.json           # 무엇을 지을지만 본다
 python -m factory.cli build examples/cafe-onepage.json -o out/bloom
 python -m factory.cli serve out/bloom                            # http://127.0.0.1:8765
+
+# 인테리어 마스터 (양산형)
+python -m factory.cli build examples/master-interior-01.json -o out/gonggan --offline
 ```
 
 `out/bloom` 이 그대로 상품입니다. 빌드 과정도, 서버도 필요 없습니다.
@@ -104,9 +107,22 @@ python -m factory.cli serve out/bloom                            # http://127.0.
 
 ---
 
+## 템플릿
+
+| id | 쪽수 | 쓰는 곳 |
+| --- | --- | --- |
+| `onepage-classic` | 1 | 동네 가게·1인 사업자 |
+| `five-pages-corp` | 5 | 설명할 것이 많은 병원·법무·학원 |
+| `master-interior-01` | 1 | **인테리어·리모델링·시공 업체 양산형 마스터** — [설계 문서](문서/MASTER_INTERIOR_01.md) |
+
+`master-interior-01` 은 고객 데이터만 갈아 끼워 반복 판매하도록 만든 마스터입니다.
+강점 숫자 띠 · 시공 사례 격자(크게 보기) · 진행 절차 · 모바일 하단 문의 바를 갖췄고,
+색 버전을 `theme` 한 줄로 바꿉니다 (charcoal · beige · black · green).
+
 ## 스타일은 이 순서로 정해집니다
 
-1. **주문서에 못 박은 값** — `브랜드.주색`, `모드`, `서체`
+0. **테마** — `theme: charcoal` 또는 `theme: { preset, primary, accent, ... }`
+1. **주문서에 못 박은 값** — `브랜드.주색`, `모드`, `서체` (테마보다 앞섭니다)
 2. **레퍼런스에서 실제로 읽어 낸 값** — `meta theme-color`, 가장 많이 쓰인 색,
    `body` 배경, 구글 폰트 링크, 가장 잦은 `border-radius`, 가장 큰 블록 여백
 3. **업종 기본값** — `factory/theming.py` 의 `PRESETS`
@@ -218,7 +234,7 @@ testimonials · faq · process · contact · cta` 입니다.
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q          # 94개
+python -m pytest -q          # 133개 (브라우저 검사 11개 포함)
 ```
 
 지어진 결과물을 실제로 뜯어봅니다 — 템플릿 문법이 새어 나왔는지,
@@ -229,7 +245,8 @@ python -m pytest -q          # 94개
 
 ## 앞으로
 
-- 템플릿 늘리기 (요식업 사진 중심형, 전문직 문서 중심형, 다크 모드 전용)
+- 관리자 웹 — 폼으로 주문서를 채우고 미리보기를 띄우는 곳 (구조는 이미 맞춰 두었습니다)
+- 템플릿 늘리기 (요식업 사진 중심형, 전문직 문서 중심형)
 - 문의폼 수신함 (Formspree 연동은 `--form-action` 으로 이미 가능)
 - 레퍼런스 분석에 스크린샷 기반 판단 더하기 (지금은 CSS 만 읽는다)
 - 원고를 사람이 고쳐 넣는 자리를 `content.py` 의 `CopyEngine` 에 열어 두었음

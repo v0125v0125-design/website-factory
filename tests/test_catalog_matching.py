@@ -70,9 +70,10 @@ def test_page_count_outweighs_industry():
 
 
 def test_unsupported_feature_is_named_in_penalties():
-    brief = _brief(1, "카페", features=["공지"])
+    # 블로그는 아직 어느 템플릿도 담지 못한다 — 그 사실이 견적에 드러나야 한다.
+    brief = _brief(1, "카페", features=["블로그"])
     match = choose(brief, load_catalog())
-    assert any("공지" in p or "notice" in p for p in match.penalties)
+    assert any("블로그" in p or "blog" in p for p in match.penalties)
 
 
 def test_rank_is_stable_and_sorted():

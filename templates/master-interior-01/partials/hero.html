@@ -1,0 +1,23 @@
+<section class="hero" id="top">
+  <div class="hero__bg"{% if section.data.image %} style="background-image:url('{{ section.data.image }}')"{% endif %} role="img"
+       aria-label="{{ brief.business.name }} 시공 사진"></div>
+  {%- if section.data.get('image_placeholder') %}
+  <p class="hero__slot">{{ section.data.get('image_placeholder') }}</p>
+  {%- endif %}
+  <div class="wrap hero__inner">
+    {%- if section.data.kicker %}<p class="hero__kicker">{{ section.data.kicker }}</p>{%- endif %}
+    <h1 class="hero__title">{{ section.heading }}</h1>
+    {%- if section.subheading %}<p class="hero__sub">{{ section.subheading }}</p>{%- endif %}
+    <div class="hero__actions">
+      <a class="btn" href="{{ section.data.cta_href }}">{{ section.data.cta_label }}</a>
+      {%- if section.data.sub_cta_label %}
+      <a class="btn btn--ghost" href="{{ section.data.sub_cta_href }}"{% if section.data.kakao and section.data.sub_cta_href == section.data.kakao %} rel="noopener" target="_blank"{% endif %}>{{ section.data.sub_cta_label }}</a>
+      {%- endif %}
+    </div>
+    {%- if section.data.badges %}
+    <ul class="hero__badges">
+      {%- for badge in section.data.badges %}<li>{{ badge }}</li>{%- endfor %}
+    </ul>
+    {%- endif %}
+  </div>
+</section>

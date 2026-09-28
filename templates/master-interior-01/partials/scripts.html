@@ -1,0 +1,100 @@
+<script>
+/* MASTER_INTERIOR_01 — 없어도 페이지가 도는 것들만 붙인다.
+   머리 색 바꾸기 · 모바일 메뉴 · 사례 분류 · 사례 크게 보기. */
+(function () {
+  "use strict";
+
+  /* 1. 첫 화면 위에서는 머리를 투명하게. 내려가면 원래대로. */
+  var head = document.getElementById("site-head");
+  if (head && head.dataset.ghost === "yes") {
+    var onScroll = function () {
+      var atTop = window.scrollY < 40 && !head.classList.contains("is-open");
+      head.classList.toggle("mh--ghost", atTop);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
+  /* 2. 모바일 메뉴 */
+  var toggle = document.querySelector(".mh__toggle");
+  if (toggle && head) {
+    toggle.addEventListener("click", function () {
+      var open = head.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) head.classList.remove("mh--ghost");
+      else window.dispatchEvent(new Event("scroll"));
+    });
+    head.addEventListener("click", function (e) {
+      if (e.target.tagName === "A" && head.classList.contains("is-open")) {
+        head.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
+  /* 3. 시공 사례 분류 */
+  var chips = document.querySelectorAll(".pj__chip");
+  var cells = document.querySelectorAll("#pj-grid .pj__cell");
+  chips.forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      var want = chip.dataset.filter;
+      chips.forEach(function (c) { c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
+      cells.forEach(function (cell) {
+        cell.hidden = !(want === "*" || cell.dataset.category === want);
+      });
+    });
+  });
+
+  /* 4. 사례 크게 보기 */
+  var box = document.getElementById("lightbox");
+  if (!box) return;
+  var img = document.getElementById("lb-img");
+  var title = document.getElementById("lb-title");
+  var meta = document.getElementById("lb-meta");
+  var count = document.getElementById("lb-count");
+  var shots = [];
+  var at = 0;
+  var opener = null;
+
+  function show(i) {
+    if (!shots.length) return;
+    at = (i + shots.length) % shots.length;
+    img.src = shots[at];
+    img.alt = title.textContent + " 사진 " + (at + 1);
+    count.textContent = shots.length > 1 ? (at + 1) + " / " + shots.length : "";
+  }
+  function open(button) {
+    try { shots = JSON.parse(button.dataset.images || "[]"); } catch (e) { shots = []; }
+    shots = shots.filter(Boolean);
+    if (!shots.length) return;
+    opener = button;
+    title.textContent = button.dataset.title || "";
+    meta.textContent = button.dataset.meta || "";
+    box.hidden = false;
+    box.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    show(0);
+    box.querySelector("[data-close]").focus();
+  }
+  function close() {
+    box.classList.remove("is-open");
+    box.hidden = true;
+    document.body.style.overflow = "";
+    if (opener) opener.focus();
+  }
+
+  document.querySelectorAll(".pj__open").forEach(function (button) {
+    button.addEventListener("click", function () { open(button); });
+  });
+  box.querySelector("[data-close]").addEventListener("click", close);
+  box.querySelector("[data-prev]").addEventListener("click", function () { show(at - 1); });
+  box.querySelector("[data-next]").addEventListener("click", function () { show(at + 1); });
+  box.addEventListener("click", function (e) { if (e.target === box) close(); });
+  document.addEventListener("keydown", function (e) {
+    if (box.hidden) return;
+    if (e.key === "Escape") close();
+    if (e.key === "ArrowLeft") show(at - 1);
+    if (e.key === "ArrowRight") show(at + 1);
+  });
+})();
+</script>

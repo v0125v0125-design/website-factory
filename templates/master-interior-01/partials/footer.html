@@ -1,0 +1,48 @@
+{%- set bar = [] -%}
+{%- if brief.contact.phone %}{% set _ = bar.append(('전화 상담', content.meta.tel_href, true)) %}{% endif -%}
+{%- if brief.contact.kakao %}{% set _ = bar.append(('카카오톡', brief.contact.kakao, false)) %}{% endif -%}
+{%- set _ = bar.append((content.meta.cta_label, '#contact', not brief.contact.phone)) -%}
+
+<footer class="mf">
+  <div class="wrap">
+    <div class="mf__grid">
+      <div>
+        <p class="mf__name">{{ brief.business.name }}</p>
+        {%- if brief.business.tagline %}<p>{{ brief.business.tagline }}</p>{%- endif %}
+        {%- if brief.contact.address %}<p>{{ brief.contact.address }}</p>{%- endif %}
+        {%- if brief.business.owner %}<p>대표 {{ brief.business.owner }}</p>{%- endif %}
+      </div>
+      <div>
+        <h4>둘러보기</h4>
+        <ul class="mf__links">
+          {%- for link in content.nav %}
+          <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+          {%- endfor %}
+        </ul>
+      </div>
+      <div>
+        <h4>문의</h4>
+        <ul class="mf__links">
+          {%- if brief.contact.phone %}<li><a href="{{ content.meta.tel_href }}">{{ brief.contact.phone }}</a></li>{%- endif %}
+          {%- if brief.contact.email %}<li><a href="mailto:{{ brief.contact.email }}">{{ brief.contact.email }}</a></li>{%- endif %}
+          {%- if brief.contact.kakao %}<li><a href="{{ brief.contact.kakao }}" rel="noopener" target="_blank">카카오톡 상담</a></li>{%- endif %}
+          {%- if brief.contact.hours %}<li>{{ brief.contact.hours }}</li>{%- endif %}
+          {%- for label, url in brief.contact.links.items() %}
+          <li><a href="{{ url }}" rel="noopener" target="_blank">{{ label }}</a></li>
+          {%- endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="mf__bottom">
+      <span>© {{ year }} {{ brief.business.name }}</span>
+      {%- if brief.seo.keywords %}<span>{{ brief.seo.keywords | join(' · ') }}</span>{%- endif %}
+    </div>
+  </div>
+</footer>
+
+{#- 모바일 하단 바. 좁은 화면에서 전화·카카오톡·견적이 늘 손끝에 있어야 한다. -#}
+<nav class="mbar" style="--n:{{ bar | length }}" aria-label="빠른 문의">
+  {%- for label, href, primary in bar %}
+  <a class="{{ 'is-primary' if primary else '' }}" href="{{ href }}"{% if href.startswith('http') %} rel="noopener" target="_blank"{% endif %}>{{ label }}</a>
+  {%- endfor %}
+</nav>

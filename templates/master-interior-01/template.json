@@ -1,0 +1,20 @@
+{
+  "id": "master-interior-01",
+  "name": "인테리어 마스터 01",
+  "summary": "인테리어·리모델링·집수리·시공 업체를 위한 양산형 원페이지 마스터. 사진이 주인공이고, 전화·카카오톡·견적 문의 세 갈래로 전환을 받는다. 고객 데이터만 갈아 끼우면 다른 업체 홈페이지가 된다.",
+  "page_count": 1,
+  "hero": "image",
+  "density": "airy",
+  "industries": ["construction", "realestate", "shop", "studio", "wellness", "general"],
+  "moods": ["modern", "clean", "minimal", "luxury", "trustworthy", "professional", "warm", "natural"],
+  "features": ["map", "gallery", "form", "pricing", "reservation", "faq", "testimonials", "process", "hours", "sns", "notice", "team"],
+  "goals": ["inquiry", "reservation", "brand", "sell", "visit"],
+  "pages": [
+    {
+      "slug": "",
+      "title": "홈",
+      "nav_label": "홈",
+      "sections": ["hero", "strengths", "services", "about", "projects", "cta", "process", "testimonials", "faq", "contact"]
+    }
+  ]
+}

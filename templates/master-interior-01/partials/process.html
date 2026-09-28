@@ -1,0 +1,19 @@
+{%- set count = section.data['steps'] | length -%}
+<section class="sec sec--tint" id="process">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">PROCESS</p>
+      <h2 class="h2">{{ section.heading }}</h2>
+    </div>
+    <ol class="steps" style="--cols:{{ [count, 4] | min }}">
+      {%- for step in section.data['steps'] %}
+      <li class="step">
+        <p class="step__no">STEP {{ step.step or loop.index }}</p>
+        <h3 class="step__title">{{ step.title }}</h3>
+        {%- if step.summary %}<p class="step__text">{{ step.summary }}</p>{%- endif %}
+        {%- if step.duration %}<span class="step__time">{{ step.duration }}</span>{%- endif %}
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>

@@ -102,6 +102,7 @@ _ALIASES: dict[str, tuple[str, ...]] = {
     "map_url": ("지도", "map", "지도링크"),
     "links": ("링크", "sns", "social"),
     "pages": ("페이지", "page_count", "페이지수"),
+    "template": ("템플릿", "서식", "양식"),
     "goals": ("목표", "목적", "purpose"),
     "features": ("기능", "요구사항", "needs"),
     "primary_cta": ("행동유도", "cta", "버튼"),
@@ -112,6 +113,7 @@ _ALIASES: dict[str, tuple[str, ...]] = {
     "mood": ("분위기", "톤", "tone", "느낌"),
     "mode": ("모드", "배경", "theme"),
     "logo_text": ("로고", "logo"),
+    "logo_image": ("로고이미지", "로고파일", "logo_url", "logo_file"),
     "font_preference": ("서체", "font", "글꼴"),
     "url": ("주소", "링크", "site_url"),
     "html_path": ("파일", "file", "local_html", "html"),
@@ -237,6 +239,14 @@ def _text(value: Any) -> str:
     if isinstance(value, str):
         return value.strip()
     return str(value).strip()
+
+
+_IMAGE_SUFFIX = (".svg", ".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif")
+
+
+def _looks_like_image(value: str) -> bool:
+    text = value.strip().lower()
+    return text.startswith(("http://", "https://", "data:image")) or text.endswith(_IMAGE_SUFFIX)
 
 
 def normalize_industry(raw: str) -> str:
@@ -581,6 +591,7 @@ def parse_brief(data: dict[str, Any], source_path: str = "") -> tuple[Brief, lis
         goals=_normalize_tokens(_as_list(_pick(site_raw, "goals")), _GOAL_ALIASES),
         features=features,
         primary_cta=_text(_pick(site_raw, "primary_cta")),
+        template=_text(_pick(site_raw, "template") or _pick(data, "template")),
     )
 
     brand_raw = _as_dict(_pick(data, "brand"), "brand", problems)
@@ -592,12 +603,19 @@ def parse_brief(data: dict[str, Any], source_path: str = "") -> tuple[Brief, lis
     elif mode:
         warnings.append(f"brand.mode 를 알 수 없어 자동으로 둡니다: {mode!r}")
         mode = ""
+    # 로고 칸에 파일을 적어 오기도 하고 글자를 적어 오기도 한다. 생긴 것으로 가른다.
+    logo_value = _text(_pick(brand_raw, "logo_text"))
+    logo_image = _text(_pick(brand_raw, "logo_image"))
+    if not logo_image and _looks_like_image(logo_value):
+        logo_image, logo_value = logo_value, ""
+
     brand = Brand(
+        logo=logo_image,
         primary_color=_text(_pick(brand_raw, "primary_color")),
         accent_color=_text(_pick(brand_raw, "accent_color")),
         mood=_normalize_tokens(_as_list(_pick(brand_raw, "mood")), _MOOD_ALIASES),
         mode=mode,
-        logo_text=_text(_pick(brand_raw, "logo_text")) or name,
+        logo_text=logo_value or name,
         font_preference=_text(_pick(brand_raw, "font_preference")).lower(),
     )
 

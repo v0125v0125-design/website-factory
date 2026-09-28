@@ -1,0 +1,27 @@
+{%- set count = section.data['items'] | length -%}
+{%- set cols = 1 if count == 1 else (2 if count in (2, 4) else 3) -%}
+<section class="sec" id="testimonials">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">REVIEWS</p>
+      <h2 class="h2">{{ section.heading }}</h2>
+    </div>
+    <ul class="reviews" style="--cols:{{ cols }}">
+      {%- for item in section.data['items'] %}
+      <li class="review">
+        {%- if item.rating %}
+        <p class="review__stars" aria-label="5점 만점에 {{ item.rating }}점">{{ '★' * item.rating }}{{ '☆' * (5 - item.rating) }}</p>
+        {%- endif %}
+        <blockquote class="review__quote">{{ item.quote }}</blockquote>
+        {%- if item.name or item.project or item.role %}
+        <p class="review__by">
+          <span class="review__who">{{ item.name }}</span>
+          {%- if item.project %} · {{ item.project }}{% endif %}
+          {%- if item.role %} · {{ item.role }}{% endif %}
+        </p>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

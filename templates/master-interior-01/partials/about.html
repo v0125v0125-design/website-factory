@@ -1,0 +1,28 @@
+<section class="sec sec--tint" id="about">
+  <div class="wrap about">
+    <div class="about__figure">
+      {%- if section.data.image %}
+      <img src="{{ section.data.image }}" alt="{{ brief.business.name }}" loading="lazy" decoding="async">
+      {%- else %}
+      <span class="svc__slot">[업체 사진 또는 대표 사진]</span>
+      {%- endif %}
+    </div>
+    <div class="about__text">
+      <p class="eyebrow">ABOUT</p>
+      <h2 class="h2">{{ section.heading }}</h2>
+      <div style="margin-top:1.2em">
+        {%- for paragraph in section.data.paragraphs %}
+        <p>{{ paragraph }}</p>
+        {%- endfor %}
+      </div>
+      {%- if section.data.facts %}
+      <dl class="about__facts">
+        {%- for label, value in section.data.facts %}
+        <div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+        {%- endfor %}
+      </dl>
+      {%- endif %}
+      {%- if section.data.signature %}<p class="about__sign">— {{ section.data.signature }}</p>{%- endif %}
+    </div>
+  </div>
+</section>

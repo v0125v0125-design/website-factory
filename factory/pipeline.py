@@ -62,6 +62,7 @@ def _stage_assets(brief: Brief, out_dir: Path) -> tuple[list[str], list[str]]:
 
     for image in brief.gallery:
         image.src = move(image.src)
+    brief.brand.logo = move(brief.brand.logo)
     brief.hero.image = move(brief.hero.image)
     brief.about.image = move(brief.about.image)
     for item in brief.items:
@@ -95,10 +96,13 @@ def make_plan(
     style = theming.build_style(brief, findings)
     tokens = theming.build_tokens(style)
 
-    if template_id:
-        template: TemplateSpec = get_template(template_id, templates_dir)
+    chosen = template_id or brief.site.template
+    if chosen:
+        template: TemplateSpec = get_template(chosen, templates_dir)
         match = matching.score_template(brief, template)
-        match.reasons.insert(0, "사람이 직접 지정한 템플릿")
+        match.reasons.insert(
+            0, "사람이 직접 지정한 템플릿" if template_id else "주문서가 지정한 템플릿"
+        )
     else:
         match = matching.choose(brief, load_catalog(templates_dir))
         template = match.template

@@ -51,6 +51,7 @@ class SiteSpec:
     goals: list[str] = field(default_factory=list)     # reservation, inquiry, brand ...
     features: list[str] = field(default_factory=list)  # map, gallery, form, pricing ...
     primary_cta: str = ""
+    template: str = ""     # 주문서가 템플릿을 직접 고를 때 (관리자 웹의 "템플릿 선택")
 
 
 @dataclass
@@ -60,6 +61,7 @@ class Brand:
     mood: list[str] = field(default_factory=list)  # warm, minimal, bold, trustworthy ...
     mode: str = ""                                 # light | dark | ""(자동)
     logo_text: str = ""
+    logo: str = ""                                 # 로고 이미지 파일 (없으면 머리글자를 그린다)
     font_preference: str = ""                      # sans | serif | rounded
 
 

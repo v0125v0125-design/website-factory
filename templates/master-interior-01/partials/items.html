@@ -1,0 +1,34 @@
+{%- set count = section.data['items'] | length -%}
+{%- set cols = 1 if count == 1 else (2 if count in (2, 4) else 3) -%}
+<section class="sec" id="{{ section.kind }}">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">SERVICES</p>
+      <h2 class="h2">{{ section.heading }}</h2>
+      {%- if section.subheading %}<p class="lead">{{ section.subheading }}</p>{%- endif %}
+    </div>
+    <ul class="svc" style="--cols:{{ cols }}">
+      {%- for item in section.data['items'] %}
+      <li class="svc__card">
+        <div class="svc__figure">
+          {%- if item.image %}
+          <img src="{{ item.image }}" alt="{{ item.title }}" loading="lazy" decoding="async">
+          {%- else %}
+          <span class="svc__slot">[{{ item.title }} 사진]</span>
+          {%- endif %}
+        </div>
+        <div class="svc__body">
+          <h3 class="h3">{{ item.title }}</h3>
+          {%- if item.summary %}<p class="muted">{{ item.summary }}</p>{%- endif %}
+          {%- if item.bullets %}
+          <ul class="svc__bullets">
+            {%- for bullet in item.bullets %}<li>{{ bullet }}</li>{%- endfor %}
+          </ul>
+          {%- endif %}
+          {%- if item.price %}<p class="svc__price">{{ item.price }}</p>{%- endif %}
+        </div>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,74 @@
+<section class="sec" id="contact">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">CONTACT</p>
+      <h2 class="h2">{{ section.heading }}</h2>
+      {%- if brief.seo.region %}<p class="lead">서비스 지역 · {{ brief.seo.region }}</p>{%- endif %}
+    </div>
+    <div class="ct">
+      <form class="ct__form" method="post" action="{{ form_action or '#' }}">
+        <div class="field--row">
+          <p class="field">
+            <label for="f-name">이름</label>
+            <input id="f-name" name="name" type="text" required autocomplete="name">
+          </p>
+          <p class="field">
+            <label for="f-phone">연락처</label>
+            <input id="f-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="010-0000-0000">
+          </p>
+        </div>
+        <div class="field--row">
+          <p class="field">
+            <label for="f-kind">문의 종류</label>
+            <select id="f-kind" name="kind">
+              {%- for item in brief.items %}
+              <option>{{ item.title }}</option>
+              {%- endfor %}
+              <option>기타 문의</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="f-size">평형 · 위치 <span class="muted">(선택)</span></label>
+            <input id="f-size" name="size" type="text" placeholder="예: 32평 / 불당동">
+          </p>
+        </div>
+        <p class="field">
+          <label for="f-message">문의 내용</label>
+          <textarea id="f-message" name="message" rows="5" required></textarea>
+        </p>
+        <p class="field field--check">
+          <input id="f-agree" name="agree" type="checkbox" required>
+          <label for="f-agree">개인정보 수집·이용에 동의합니다. (상담 답변 목적으로만 사용하고 답변 후 파기합니다)</label>
+        </p>
+        <p><button class="btn btn--block" type="submit">{{ section.data.cta_label }}</button></p>
+        {%- if not form_action %}
+        <p class="ct__note">※ 폼을 받을 주소가 아직 연결되지 않았습니다 — 빌드할 때 <code>--form-action</code> 으로 지정하십시오.</p>
+        {%- endif %}
+      </form>
+
+      <div class="ct__list">
+        {%- for label, value, href in section.data['rows'] %}
+        <div class="ct__row">
+          <span class="ct__label">{{ label }}</span>
+          <span class="ct__value">
+            {%- if href %}<a href="{{ href }}"{% if href.startswith('http') %} rel="noopener" target="_blank"{% endif %}>{{ value }}</a>{% else %}{{ value }}{% endif -%}
+          </span>
+        </div>
+        {%- endfor %}
+        <div class="ct__actions">
+          {%- if section.data.tel_href %}
+          <a class="btn btn--sm" href="{{ section.data.tel_href }}">전화 상담</a>
+          {%- endif %}
+          {%- if section.data.kakao %}
+          <a class="btn btn--sm btn--line" href="{{ section.data.kakao }}" rel="noopener" target="_blank">카카오톡</a>
+          {%- endif %}
+          {%- if section.data.map_url %}
+          <a class="btn btn--sm btn--line" href="{{ section.data.map_url }}" rel="noopener" target="_blank">지도 보기</a>
+          {%- elif section.data.map_requested %}
+          <span class="ct__note">[지도 링크를 넣어 주세요]</span>
+          {%- endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

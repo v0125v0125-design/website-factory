@@ -1,0 +1,36 @@
+{#- 첫 화면 위에서는 투명, 내려가면 흰 머리. 자바스크립트가 없으면 계속 흰 머리다. -#}
+{%- set wanted = ['#services', '#about', '#projects', '#process', '#contact'] -%}
+{%- set desktop_nav = content.nav | selectattr('href', 'in', wanted) | list -%}
+<header class="mh" id="site-head" data-ghost="{{ 'yes' if page.sections and page.sections[0].kind == 'hero' else 'no' }}">
+  <div class="wrap mh__inner">
+    <a class="mh__brand" href="#top">
+      <span class="mh__mark" aria-hidden="true">
+        {%- if brief.brand.logo %}<img src="{{ brief.brand.logo }}" alt="">{% else %}{{ initial }}{% endif -%}
+      </span>
+      <span>{{ brief.brand.logo_text }}</span>
+    </a>
+
+    <button class="mh__toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+      <span class="sr-only">메뉴 열기</span>
+    </button>
+
+    <nav class="mh__nav" id="site-menu" aria-label="주요 메뉴">
+      <ul class="mh__list">
+        {%- for link in desktop_nav %}
+        <li class="mh__item"><a href="{{ link.href }}">{{ link.label }}</a></li>
+        {%- endfor %}
+        {%- for link in content.nav if link not in desktop_nav %}
+        <li class="mh__item mh__item--more"><a href="{{ link.href }}">{{ link.label }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+
+    <div class="mh__aside">
+      {%- if brief.contact.phone %}
+      <a class="mh__tel" href="{{ content.meta.tel_href }}">{{ brief.contact.phone }}</a>
+      {%- endif %}
+      <a class="btn btn--sm" href="#contact">{{ content.meta.cta_label }}</a>
+    </div>
+  </div>
+</header>

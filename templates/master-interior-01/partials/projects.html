@@ -1,0 +1,60 @@
+{#- 인테리어 홈페이지의 본체. 첫 칸은 크게, 나머지는 격자로. -#}
+<section class="sec" id="projects">
+  <div class="wrap">
+    <div class="pj__top">
+      <div class="sec__head" style="margin-bottom:0">
+        <p class="eyebrow">PROJECTS</p>
+        <h2 class="h2">{{ section.heading }}</h2>
+      </div>
+      {%- if section.data.categories | length > 1 %}
+      <div class="pj__chips" role="group" aria-label="사례 분류">
+        <button class="pj__chip" type="button" data-filter="*" aria-pressed="true">전체</button>
+        {%- for category in section.data.categories %}
+        <button class="pj__chip" type="button" data-filter="{{ category }}" aria-pressed="false">{{ category }}</button>
+        {%- endfor %}
+      </div>
+      {%- endif %}
+    </div>
+
+    <ul class="pj__grid" id="pj-grid">
+      {%- for item in section.data['items'] %}
+      <li class="pj__cell" data-category="{{ item.category }}">
+        {%- if item.image %}
+        <button class="pj__open" type="button"
+                data-title="{{ item.title }}" data-meta="{{ item.meta }}"
+                data-images='{{ ([item.image] + item.images) | tojson }}'>
+          <img src="{{ item.image }}" alt="{{ item.title }}{% if item.meta %} — {{ item.meta }}{% endif %}"
+               loading="{{ 'eager' if loop.first else 'lazy' }}" decoding="async">
+          <span class="pj__veil"></span>
+          {%- if item.count > 1 %}<span class="pj__count">사진 {{ item.count }}장</span>{%- endif %}
+          <span class="pj__cap">
+            <span class="pj__name h3">{{ item.title }}</span>
+            {%- if item.meta %}<span class="pj__meta">{{ item.meta }}</span>{%- endif %}
+          </span>
+        </button>
+        {%- else %}
+        <span class="pj__slot">[{{ item.title }} 사진]</span>
+        <span class="pj__cap"><span class="pj__name h3" style="color:var(--color-text)">{{ item.title }}</span></span>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+
+  {#- 크게 보기. 자바스크립트가 없으면 뜨지 않고, 격자는 그대로 보인다. -#}
+  <div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lb-title" hidden>
+    <div class="lb__bar">
+      <div>
+        <p class="lb__title" id="lb-title"></p>
+        <p class="lb__meta" id="lb-meta"></p>
+      </div>
+      <button class="lb__close" type="button" data-close aria-label="닫기">×</button>
+    </div>
+    <div class="lb__stage">
+      <button class="lb__nav lb__nav--prev" type="button" data-prev aria-label="이전 사진">‹</button>
+      <img id="lb-img" alt="">
+      <button class="lb__nav lb__nav--next" type="button" data-next aria-label="다음 사진">›</button>
+    </div>
+    <p class="lb__foot" id="lb-count"></p>
+  </div>
+</section>

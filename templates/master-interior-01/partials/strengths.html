@@ -1,0 +1,16 @@
+{%- set count = section.data['items'] | length -%}
+<section class="strip" id="strengths" aria-label="{{ section.heading }}">
+  <div class="wrap">
+    <div class="strip__card" style="--cols:{{ [count, 4] | min }}">
+      {%- for item in section.data['items'] %}
+      <div class="strip__item">
+        {%- if item.number %}
+        <p class="strip__num">{{ item.number }}{% if item.unit %}<span class="strip__unit">{{ item.unit }}</span>{% endif %}</p>
+        {%- endif %}
+        <h3 class="strip__title">{{ item.title }}</h3>
+        {%- if item.summary %}<p class="strip__text">{{ item.summary }}</p>{%- endif %}
+      </div>
+      {%- endfor %}
+    </div>
+  </div>
+</section>

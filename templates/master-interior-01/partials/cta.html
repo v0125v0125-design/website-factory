@@ -1,0 +1,17 @@
+<section class="band">
+  <div class="wrap band__inner">
+    <div>
+      <h2 class="band__title">{{ section.heading }}</h2>
+      {%- if brief.contact.hours %}<p class="band__text">{{ brief.contact.hours }}</p>{%- endif %}
+    </div>
+    <div class="band__actions">
+      {%- if section.data.tel_href %}
+      <a class="btn btn--light" href="{{ section.data.tel_href }}">전화 {{ section.data.phone }}</a>
+      {%- endif %}
+      {%- if section.data.kakao %}
+      <a class="btn btn--line" href="{{ section.data.kakao }}" rel="noopener" target="_blank">카카오톡 상담</a>
+      {%- endif %}
+      <a class="btn btn--line" href="#contact">{{ section.data.cta_label }}</a>
+    </div>
+  </div>
+</section>
