@@ -246,6 +246,7 @@ def build_palette(
     mode: str = "light",
     accent: str | None = None,
     background: str | None = None,
+    surface: str | None = None,
 ) -> Palette:
     """주색 하나에서 한 벌을 짠다. 글자 대비는 AA(4.5)를 맞춰 놓는다.
 
@@ -254,6 +255,7 @@ def build_palette(
     """
     if mode not in ("light", "dark"):
         raise ValueError("mode 는 light 또는 dark")
+    surface_given = surface   # 아래 분기에서 surface 를 다시 계산하므로 먼저 붙잡는다
     base = to_hex(parse(primary))
     h, s, _ = to_hsl(parse(base))
     acc = to_hex(parse(accent)) if accent else rotate(saturate(base, 0.08), 152)
@@ -285,6 +287,15 @@ def build_palette(
         text = to_hex(from_hsl(h, 0.14, 0.13))
         muted = to_hex(from_hsl(h, 0.10, 0.42))
 
+    if surface_given:
+        surface = to_hex(parse(surface_given))
+        border = darken(surface, 0.07) if not is_dark(surface) else lighten(surface, 0.12)
+
+    # 글자는 바탕에서도 면에서도 읽혀야 한다. 둘 중 더 빡빡한 쪽까지 민다.
+    for backdrop in (background, surface):
+        text = ensure_contrast(text, backdrop, 7.0)
+        muted = ensure_contrast(muted, backdrop, 4.5)
+
     primary = button_safe(ensure_contrast(base, background, 3.2), background)
     return Palette(
         primary=primary,
@@ -293,8 +304,8 @@ def build_palette(
         background=background,
         surface=surface,
         border=border,
-        text=ensure_contrast(text, background, 7.0),
-        text_muted=ensure_contrast(muted, background, 4.5),
+        text=text,
+        text_muted=muted,
         on_primary=readable_on(primary),
         mode=mode,
     )

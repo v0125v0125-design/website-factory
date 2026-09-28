@@ -31,10 +31,16 @@ class Contact:
     address: str = ""
     hours: str = ""
     map_url: str = ""
-    links: dict[str, str] = field(default_factory=dict)  # instagram, kakao, blog ...
+    kakao: str = ""        # 카카오톡 채널/오픈채팅 주소
+    links: dict[str, str] = field(default_factory=dict)  # instagram, blog ...
 
     def has_any(self) -> bool:
-        return bool(self.phone or self.email or self.address or self.links)
+        return bool(self.phone or self.email or self.address or self.kakao or self.links)
+
+    def tel_href(self) -> str:
+        import re as _re
+
+        return "tel:" + _re.sub(r"[^0-9+]", "", self.phone) if self.phone else ""
 
 
 @dataclass
@@ -69,12 +75,14 @@ class ReferenceSpec:
 
 @dataclass
 class Item:
-    """메뉴 한 줄, 서비스 하나, 요금 하나."""
+    """메뉴 한 줄, 서비스 하나, 시공 분야 하나."""
 
     title: str
     summary: str = ""
     price: str = ""
     icon: str = ""
+    image: str = ""
+    bullets: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -89,12 +97,112 @@ class Testimonial:
     quote: str
     name: str = ""
     role: str = ""
+    rating: int = 0        # 0 이면 별을 그리지 않는다
+    project: str = ""      # "32평 아파트" 처럼 어떤 일이었는지
 
 
 @dataclass
 class FaqEntry:
     question: str
     answer: str
+
+
+@dataclass
+class Strength:
+    """왜 이 업체인가 — 숫자 하나와 한 줄."""
+
+    title: str
+    summary: str = ""
+    number: str = ""       # "1,200" · "15"
+    unit: str = ""         # "건" · "년"
+    icon: str = ""
+
+
+@dataclass
+class Project:
+    """시공 사례 하나. 인테리어 홈페이지에서 가장 중요한 덩어리."""
+
+    title: str
+    category: str = ""     # 아파트 · 상가 · 주택
+    location: str = ""     # 천안 불당동
+    summary: str = ""
+    image: str = ""        # 대표 사진
+    images: list[str] = field(default_factory=list)  # 추가 사진
+    year: str = ""
+    size: str = ""         # 32평
+
+    def all_images(self) -> list[str]:
+        out = [self.image] if self.image else []
+        return out + [i for i in self.images if i and i != self.image]
+
+
+@dataclass
+class ProcessStep:
+    """상담부터 완료까지 한 칸."""
+
+    title: str
+    summary: str = ""
+    duration: str = ""     # "1~2일"
+    step: str = ""         # 비우면 순번을 자동으로 넣는다
+
+
+@dataclass
+class HeroSpec:
+    """첫 화면. 비우면 회사 정보에서 끌어온다."""
+
+    headline: str = ""
+    subline: str = ""
+    image: str = ""
+    badges: list[str] = field(default_factory=list)   # "A/S 2년" 같은 짧은 신뢰 조각
+    cta_label: str = ""
+    cta_href: str = ""
+    sub_cta_label: str = ""
+    sub_cta_href: str = ""
+
+
+@dataclass
+class AboutSpec:
+    """업체 소개. 비우면 business.description 을 쓴다."""
+
+    heading: str = ""
+    paragraphs: list[str] = field(default_factory=list)
+    image: str = ""
+    facts: list[tuple[str, str]] = field(default_factory=list)
+    signature: str = ""    # "대표 김○○" 처럼 맺는 한 줄
+
+
+@dataclass
+class Seo:
+    """검색·공유에 나가는 글자. 지역명이 여기 들어간다."""
+
+    title: str = ""
+    description: str = ""
+    og_title: str = ""
+    og_description: str = ""
+    og_image: str = ""
+    favicon: str = ""
+    region: str = ""       # "천안" · "천안·아산"
+    keywords: list[str] = field(default_factory=list)
+
+
+@dataclass
+class Theme:
+    """같은 템플릿의 색 버전. 관리자 웹에서 고르게 될 칸."""
+
+    preset: str = ""       # charcoal | beige | black | green
+    primary: str = ""
+    accent: str = ""
+    background: str = ""
+    surface: str = ""
+    mode: str = ""
+    radius: str = ""
+    font: str = ""         # sans | serif
+
+    def is_empty(self) -> bool:
+        return not any(
+            (self.preset, self.primary, self.accent, self.background,
+             self.surface, self.mode, self.radius, self.font)
+        )
 
 
 @dataclass
@@ -110,6 +218,14 @@ class Brief:
     gallery: list[GalleryImage] = field(default_factory=list)
     testimonials: list[Testimonial] = field(default_factory=list)
     faq: list[FaqEntry] = field(default_factory=list)
+    # 아래는 마스터 템플릿용으로 늘린 칸. 없으면 없는 대로 돈다.
+    hero: HeroSpec = field(default_factory=HeroSpec)
+    about: AboutSpec = field(default_factory=AboutSpec)
+    strengths: list[Strength] = field(default_factory=list)
+    projects: list[Project] = field(default_factory=list)
+    process: list[ProcessStep] = field(default_factory=list)
+    seo: Seo = field(default_factory=Seo)
+    theme: Theme = field(default_factory=Theme)
     slug: str = ""
     source_path: str = ""
 
@@ -148,10 +264,13 @@ class StyleProfile:
     radius: str                # "0px" | "6px" | "18px" ...
     density: str               # compact | regular | airy
     hero: str                  # split | center | image
-    background: str = ""       # 레퍼런스에서 가져온 바탕색 (없으면 자동)
-    source: str = "preset"     # reference:<url> | brief | preset:<name>
+    background: str = ""       # 레퍼런스나 테마에서 가져온 바탕색 (없으면 자동)
+    surface: str = ""          # 띠 배경으로 쓸 면 색 (없으면 주색에서 만든다)
+    source: str = "preset"     # reference:<url> | brief | preset:<name> | theme:<name>
     confidence: float = 0.0    # 0.0 ~ 1.0
     evidence: list[str] = field(default_factory=list)
+    # theme 이 직접 못 박는 토큰들. 맨 마지막에 덮어쓴다.
+    overrides: dict[str, str] = field(default_factory=dict)
 
 
 # ---------------------------------------------------------------- 템플릿

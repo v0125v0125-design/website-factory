@@ -30,6 +30,8 @@ class Lexicon:
     process_heading: str = "진행 방법"
     cta: str = "문의하기"
     hero_kicker: str = ""
+    strengths_heading: str = "우리가 하는 방식"
+    projects_heading: str = "시공 사례"
 
 
 LEXICONS: dict[str, Lexicon] = {
@@ -104,6 +106,16 @@ class CopyEngine:
                 return CTA_BY_GOAL[goal]
         return self.lex.cta
 
+    def second_cta_label(self) -> str:
+        """히어로와 유도 띠에서 주 버튼 옆에 설 두 번째 버튼."""
+        if self.brief.contact.kakao:
+            return "카카오톡 상담"
+        return self.brief.contact.phone or ""
+
+    def second_cta_href(self) -> str:
+        contact = self.brief.contact
+        return contact.kakao or contact.tel_href()
+
     def cta_href(self) -> str:
         contact = self.brief.contact
         if contact.phone:
@@ -114,31 +126,48 @@ class CopyEngine:
 
     # ---------------------------------------------------------- 섹션들
 
+    def hero_image(self) -> str:
+        """첫 화면에 깔 사진. 지정이 없으면 시공 사례나 갤러리에서 한 장 빌린다."""
+        if self.brief.hero.image:
+            return self.brief.hero.image
+        for project in self.brief.projects:
+            if project.image:
+                return project.image
+        return self.brief.gallery[0].src if self.brief.gallery else ""
+
     def hero(self) -> Section:
         biz = self.brief.business
-        heading = biz.tagline or biz.name
-        sub = _first_sentence(biz.description)
+        spec = self.brief.hero
+        heading = spec.headline or biz.tagline or biz.name
+        sub = spec.subline or _first_sentence(biz.description)
         if not sub:
             sub = self._need("한 줄 소개", "히어로")
+        image = self.hero_image()
         data = {
             "name": biz.name,
-            "cta_label": self.cta_label(),
-            "cta_href": self.cta_href(),
+            "cta_label": spec.cta_label or self.cta_label(),
+            "cta_href": spec.cta_href or self.cta_href(),
+            "sub_cta_label": spec.sub_cta_label or self.second_cta_label(),
+            "sub_cta_href": spec.sub_cta_href or self.second_cta_href(),
             # 제목이 한 줄 소개로 들어가면 상호를 그 위에 작게 올린다.
-            "kicker": biz.name if biz.tagline else "",
-            "image": self.brief.gallery[0].src if self.brief.gallery else "",
+            "kicker": biz.name if heading != biz.name else "",
+            "image": image,
+            "badges": spec.badges,
+            "phone": self.brief.contact.phone,
+            "kakao": self.brief.contact.kakao,
             "facts": [f for f in (self.brief.contact.hours, self.brief.contact.address) if f][:2],
         }
-        if self.style.hero == "image" and not data["image"]:
+        if self.style.hero == "image" and not image:
             data["image_placeholder"] = self._need("대표 사진 1장", "히어로")
         return Section(kind="hero", heading=heading, subheading=sub, data=data)
 
     def about(self) -> Section:
         biz = self.brief.business
-        body_paragraphs = _paragraphs(biz.description)
+        spec = self.brief.about
+        body_paragraphs = spec.paragraphs or _paragraphs(biz.description)
         if not body_paragraphs:
             body_paragraphs = [self._need("소개 글 2~3문장", "소개")]
-        facts: list[tuple[str, str]] = []
+        facts: list[tuple[str, str]] = list(spec.facts)
         if biz.founded:
             facts.append(("시작", biz.founded))
         if biz.owner:
@@ -149,9 +178,14 @@ class CopyEngine:
             facts.append(("위치", self.brief.contact.address))
         return Section(
             kind="about",
-            heading=self.lex.about_heading,
+            heading=spec.heading or self.lex.about_heading,
             subheading=biz.tagline,
-            data={"paragraphs": body_paragraphs, "facts": facts},
+            data={
+                "paragraphs": body_paragraphs,
+                "facts": facts,
+                "image": spec.image,
+                "signature": spec.signature or (f"대표 {biz.owner}" if biz.owner else ""),
+            },
         )
 
     def items(self, kind: str = "services") -> Section | None:
@@ -169,6 +203,52 @@ class CopyEngine:
                   "has_price": any(i.price for i in self.brief.items)},
         )
 
+    def strengths(self) -> Section | None:
+        if not self.brief.strengths:
+            self.skipped.append("strengths: 강점이 적혀 있지 않아 뺐습니다")
+            return None
+        rows = [
+            {"title": s.title, "summary": s.summary, "number": s.number,
+             "unit": s.unit, "icon": s.icon}
+            for s in self.brief.strengths
+        ]
+        return Section(
+            kind="strengths",
+            heading=self.lex.strengths_heading,
+            data={"items": rows, "has_numbers": any(s.number for s in self.brief.strengths)},
+        )
+
+    def projects(self) -> Section | None:
+        if not self.brief.projects:
+            self.skipped.append("projects: 시공 사례가 없어 뺐습니다")
+            return None
+        rows = []
+        for project in self.brief.projects:
+            images = project.all_images()
+            if not images:
+                self.todo.append(f"시공 사례 '{project.title}': 사진")
+            meta = " · ".join(x for x in (project.category, project.location, project.size) if x)
+            rows.append(
+                {
+                    "title": project.title,
+                    "category": project.category,
+                    "location": project.location,
+                    "summary": project.summary,
+                    "size": project.size,
+                    "year": project.year,
+                    "meta": meta,
+                    "image": images[0] if images else "",
+                    "images": images[1:],
+                    "count": len(images),
+                }
+            )
+        categories = list(dict.fromkeys(p.category for p in self.brief.projects if p.category))
+        return Section(
+            kind="projects",
+            heading=self.lex.projects_heading,
+            data={"items": rows, "categories": categories},
+        )
+
     def gallery(self) -> Section | None:
         if not self.brief.gallery:
             self.skipped.append("gallery: 사진이 없어 뺐습니다")
@@ -183,7 +263,11 @@ class CopyEngine:
         if not self.brief.testimonials:
             self.skipped.append("testimonials: 받은 후기가 없어 뺐습니다")
             return None
-        rows = [{"quote": t.quote, "name": t.name, "role": t.role} for t in self.brief.testimonials]
+        rows = [
+            {"quote": t.quote, "name": t.name, "role": t.role,
+             "rating": t.rating, "project": t.project}
+            for t in self.brief.testimonials
+        ]
         return Section(kind="testimonials", heading="고객 후기", data={"items": rows})
 
     def faq(self) -> Section | None:
@@ -194,11 +278,19 @@ class CopyEngine:
         return Section(kind="faq", heading="자주 묻는 질문", data={"items": rows})
 
     def process(self) -> Section | None:
-        # 절차는 사실이라 지어낼 수 없다. 요청이 있으면 자리만 만든다.
+        # 절차는 사실이라 지어낼 수 없다. 적어 준 것이 있으면 그것을 쓰고,
+        # 요청만 있고 내용이 없으면 사람이 채울 자리만 만든다.
+        if self.brief.process:
+            steps = [
+                {"step": s.step, "title": s.title, "summary": s.summary, "duration": s.duration}
+                for s in self.brief.process
+            ]
+            return Section(kind="process", heading=self.lex.process_heading, data={"steps": steps})
         if "process" not in self.brief.site.features:
             return None
         steps = [
-            {"step": str(n), "title": self._need(f"{n}단계 제목", "진행 방법"), "summary": ""}
+            {"step": f"{n:02d}", "title": self._need(f"{n}단계 제목", "진행 방법"),
+             "summary": "", "duration": ""}
             for n in (1, 2, 3)
         ]
         return Section(kind="process", heading=self.lex.process_heading, data={"steps": steps})
@@ -208,6 +300,8 @@ class CopyEngine:
         rows: list[tuple[str, str, str]] = []
         if contact.phone:
             rows.append(("전화", contact.phone, "tel:" + re.sub(r"[^0-9+]", "", contact.phone)))
+        if contact.kakao:
+            rows.append(("카카오톡", "카카오톡으로 상담하기", contact.kakao))
         if contact.email:
             rows.append(("이메일", contact.email, "mailto:" + contact.email))
         if contact.address:
@@ -232,6 +326,9 @@ class CopyEngine:
                 "map_requested": wants_map,
                 "cta_label": self.cta_label(),
                 "cta_href": self.cta_href(),
+                "phone": contact.phone,
+                "tel_href": contact.tel_href(),
+                "kakao": contact.kakao,
             },
         )
 
@@ -240,7 +337,11 @@ class CopyEngine:
             kind="cta",
             heading=self.brief.business.tagline or f"{self.brief.business.name}에 문의해 보세요",
             data={"cta_label": self.cta_label(), "cta_href": self.cta_href(),
-                  "phone": self.brief.contact.phone},
+                  "phone": self.brief.contact.phone,
+                  "tel_href": self.brief.contact.tel_href(),
+                  "kakao": self.brief.contact.kakao,
+                  "sub_cta_label": self.second_cta_label(),
+                  "sub_cta_href": self.second_cta_href()},
         )
 
     # ---------------------------------------------------------- 조립
@@ -252,6 +353,8 @@ class CopyEngine:
             "services": lambda: self.items("services"),
             "menu": lambda: self.items("menu"),
             "pricing": lambda: self.items("pricing"),
+            "strengths": self.strengths,
+            "projects": self.projects,
             "gallery": self.gallery,
             "testimonials": self.testimonials,
             "faq": self.faq,
@@ -346,6 +449,9 @@ def build_content(brief: Brief, template: TemplateSpec, style: StyleProfile) -> 
     if len(pages) == 1:
         # 원페이지는 섹션 앵커로 메뉴를 만든다.
         labels = {
+            "strengths": engine.lex.strengths_heading,
+            "projects": engine.lex.projects_heading,
+            "process": engine.lex.process_heading,
             "about": engine.lex.about_heading,
             "services": engine.lex.items_heading,
             "menu": engine.lex.items_heading,
@@ -371,6 +477,9 @@ def build_content(brief: Brief, template: TemplateSpec, style: StyleProfile) -> 
             # 메뉴에 같은 말이 이미 있으면 머리의 버튼은 접는다.
             "head_cta": cta_label not in [link["label"] for link in nav],
             "cta_label": cta_label,
+            "phone": brief.contact.phone,
+            "tel_href": brief.contact.tel_href(),
+            "kakao": brief.contact.kakao,
             "cta_href": engine.cta_href(),
             "lexicon": engine.lex.__dict__,
         },

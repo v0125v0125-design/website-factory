@@ -16,16 +16,23 @@ from pathlib import Path
 from typing import Any
 
 from .models import (
+    AboutSpec,
     Brand,
     Brief,
     Business,
     Contact,
     FaqEntry,
     GalleryImage,
+    HeroSpec,
     Item,
+    ProcessStep,
+    Project,
     ReferenceSpec,
+    Seo,
     SiteSpec,
+    Strength,
     Testimonial,
+    Theme,
 )
 
 
@@ -39,11 +46,43 @@ class BriefError(ValueError):
 
 # 같은 뜻으로 쓰이는 키들. 왼쪽이 정식 이름.
 _ALIASES: dict[str, tuple[str, ...]] = {
-    "business": ("고객", "사업자", "company", "client", "업체"),
+    "business": ("고객", "사업자", "company", "client", "업체", "회사"),
     "contact": ("연락처", "contacts", "정보"),
     "site": ("홈페이지", "website", "site_spec", "사이트"),
     "brand": ("브랜드", "design", "스타일", "style"),
     "reference": ("레퍼런스", "ref", "참고", "benchmark"),
+    "hero": ("히어로", "메인", "첫화면", "대표영역"),
+    "about_block": ("about", "소개", "회사소개", "업체소개"),
+    "strengths": ("강점", "장점", "특징", "차별점", "핵심강점", "trust"),
+    "projects": ("시공사례", "포트폴리오", "사례", "작업사례", "portfolio", "works"),
+    "process": ("절차", "진행과정", "시공절차", "과정", "공정", "steps"),
+    "seo": ("검색", "메타", "seo설정"),
+    "theme": ("테마", "색상", "컬러", "색"),
+    "headline": ("대표문구", "메인문구", "제목", "핵심메시지", "title"),
+    "subline": ("서브문구", "보조문구", "부제", "설명문구"),
+    "badges": ("뱃지", "배지", "신뢰문구", "태그", "라벨"),
+    "image": ("사진", "이미지", "대표사진", "대표이미지", "img"),
+    "images": ("추가사진", "사진들", "이미지들", "추가이미지"),
+    "category": ("분류", "종류", "유형", "공간"),
+    "location": ("위치", "지역", "현장", "장소"),
+    "year": ("연도", "시공연도", "시공년도"),
+    "size": ("평형", "규모", "면적", "평수"),
+    "number": ("숫자", "수치", "실적"),
+    "unit": ("단위",),
+    "duration": ("기간", "소요", "소요기간"),
+    "bullets": ("항목", "포함", "포함항목", "세부", "list"),
+    "paragraphs": ("문단", "본문", "내용"),
+    "facts": ("정보", "요약정보", "표"),
+    "signature": ("맺음", "서명", "끝맺음"),
+    "rating": ("별점", "평점", "점수"),
+    "project": ("공사", "시공", "현장"),
+    "kakao": ("카카오톡", "카톡", "카카오", "kakaotalk"),
+    "region": ("지역명", "서비스지역", "영업지역"),
+    "preset": ("프리셋", "버전", "색버전"),
+    "og_title": ("공유제목",),
+    "og_description": ("공유설명",),
+    "og_image": ("공유이미지", "대표공유이미지"),
+    "favicon": ("파비콘", "아이콘"),
     "items": ("메뉴", "서비스", "services", "menu", "products", "요금",
               "시술", "상품", "프로그램", "진료", "업무", "과정", "품목", "수업"),
     "gallery": ("갤러리", "사진", "images", "photos"),
@@ -183,6 +222,15 @@ def _as_list(value: Any) -> list[Any]:
     return [value]
 
 
+def _str(value: Any) -> str:
+    """글로 쓰인 값만 받는다.
+
+    `소개` 는 한 줄 소개(문자)일 수도, 소개 블록(사전)일 수도 있다.
+    문자가 아니면 여기서 거르고 블록 파서가 가져가게 둔다.
+    """
+    return _text(value) if isinstance(value, (str, int, float)) else ""
+
+
 def _text(value: Any) -> str:
     if value is None:
         return ""
@@ -253,6 +301,8 @@ def _parse_items(raw: Any) -> list[Item]:
                 summary=_text(_pick(entry, "summary")),
                 price=_text(_pick(entry, "price")),
                 icon=_text(entry.get("icon")),
+                image=_text(_pick(entry, "image")),
+                bullets=[_text(b) for b in _as_list(_pick(entry, "bullets")) if _text(b)],
             )
         )
     return items
@@ -290,11 +340,18 @@ def _parse_testimonials(raw: Any) -> list[Testimonial]:
         quote = _text(_pick(entry, "quote"))
         if not quote:
             continue
+        rating_raw = _pick(entry, "rating")
+        try:
+            rating = int(rating_raw) if rating_raw not in (None, "") else 0
+        except (TypeError, ValueError):
+            rating = 0
         out.append(
             Testimonial(
                 quote=quote,
                 name=_text(_pick(entry, "name")),
                 role=_text(entry.get("role") or entry.get("역할")),
+                rating=max(0, min(5, rating)),
+                project=_text(_pick(entry, "project")),
             )
         )
     return out
@@ -310,6 +367,148 @@ def _parse_faq(raw: Any) -> list[FaqEntry]:
         if q and a:
             out.append(FaqEntry(question=q, answer=a))
     return out
+
+
+def _parse_strengths(raw: Any) -> list[Strength]:
+    out: list[Strength] = []
+    for entry in _as_list(raw):
+        if isinstance(entry, str):
+            out.append(Strength(title=_text(entry)))
+            continue
+        if not isinstance(entry, dict):
+            continue
+        title = _text(_pick(entry, "name") or entry.get("title"))
+        if not title:
+            continue
+        out.append(
+            Strength(
+                title=title,
+                summary=_text(_pick(entry, "summary")),
+                number=_text(_pick(entry, "number")),
+                unit=_text(_pick(entry, "unit")),
+                icon=_text(entry.get("icon")),
+            )
+        )
+    return out
+
+
+def _parse_projects(raw: Any) -> list[Project]:
+    out: list[Project] = []
+    for entry in _as_list(raw):
+        if not isinstance(entry, dict):
+            continue
+        title = _text(_pick(entry, "name") or entry.get("title"))
+        if not title:
+            continue
+        images = [_text(i) for i in _as_list(_pick(entry, "images")) if _text(i)]
+        out.append(
+            Project(
+                title=title,
+                category=_text(_pick(entry, "category")),
+                location=_text(_pick(entry, "location")),
+                summary=_text(_pick(entry, "summary")),
+                image=_text(_pick(entry, "image")),
+                images=images,
+                year=_text(_pick(entry, "year")),
+                size=_text(_pick(entry, "size")),
+            )
+        )
+    return out
+
+
+def _parse_process(raw: Any) -> list[ProcessStep]:
+    out: list[ProcessStep] = []
+    for index, entry in enumerate(_as_list(raw), start=1):
+        if isinstance(entry, str):
+            out.append(ProcessStep(title=_text(entry), step=f"{index:02d}"))
+            continue
+        if not isinstance(entry, dict):
+            continue
+        title = _text(_pick(entry, "name") or entry.get("title"))
+        if not title:
+            continue
+        out.append(
+            ProcessStep(
+                title=title,
+                summary=_text(_pick(entry, "summary")),
+                duration=_text(_pick(entry, "duration")),
+                step=_text(entry.get("step")) or f"{index:02d}",
+            )
+        )
+    return out
+
+
+def _parse_hero(raw: Any, problems: list[str]) -> HeroSpec:
+    data = _as_dict(raw, "hero", problems) if not isinstance(raw, str) else {"headline": raw}
+    cta = _as_dict(data.get("cta"), "hero.cta", problems)
+    return HeroSpec(
+        headline=_str(_pick(data, "headline")),
+        subline=_str(_pick(data, "subline")),
+        image=_text(_pick(data, "image")),
+        badges=[_text(b) for b in _as_list(_pick(data, "badges")) if _text(b)],
+        cta_label=_text(_pick(cta, "name") or cta.get("label") or data.get("cta_label")),
+        cta_href=_text(cta.get("href") or data.get("cta_href")),
+        sub_cta_label=_text(data.get("sub_cta_label")),
+        sub_cta_href=_text(data.get("sub_cta_href")),
+    )
+
+
+def _parse_about(raw: Any, problems: list[str]) -> AboutSpec:
+    if not isinstance(raw, dict):
+        return AboutSpec()
+    data = raw
+    facts: list[tuple[str, str]] = []
+    raw_facts = _pick(data, "facts")
+    if isinstance(raw_facts, dict):
+        facts = [(_text(k), _text(v)) for k, v in raw_facts.items() if _text(v)]
+    else:
+        for entry in _as_list(raw_facts):
+            if isinstance(entry, dict):
+                label = _text(entry.get("label") or entry.get("항목") or entry.get("이름"))
+                value = _text(entry.get("value") or entry.get("값") or entry.get("내용"))
+                if label and value:
+                    facts.append((label, value))
+    paragraphs = [_text(t) for t in _as_list(_pick(data, "paragraphs")) if _text(t)]
+    if not paragraphs:
+        body = _str(_pick(data, "description"))
+        paragraphs = [p.strip() for p in re.split(r"\n{2,}", body) if p.strip()]
+    return AboutSpec(
+        heading=_str(_pick(data, "headline")) or _text(data.get("heading")),
+        paragraphs=paragraphs,
+        image=_text(_pick(data, "image")),
+        facts=facts,
+        signature=_text(_pick(data, "signature")),
+    )
+
+
+def _parse_seo(raw: Any, problems: list[str]) -> Seo:
+    data = _as_dict(raw, "seo", problems)
+    return Seo(
+        title=_str(_pick(data, "title")),
+        description=_str(_pick(data, "description")),
+        og_title=_text(_pick(data, "og_title")),
+        og_description=_text(_pick(data, "og_description")),
+        og_image=_text(_pick(data, "og_image")),
+        favicon=_text(_pick(data, "favicon")),
+        region=_text(_pick(data, "region")),
+        keywords=[_text(k) for k in _as_list(_pick(data, "keywords")) if _text(k)],
+    )
+
+
+def _parse_theme(raw: Any, problems: list[str]) -> Theme:
+    if isinstance(raw, str):
+        return Theme(preset=_text(raw).lower())
+    data = _as_dict(raw, "theme", problems)
+    return Theme(
+        preset=_text(_pick(data, "preset")).lower(),
+        primary=_text(_pick(data, "primary_color") or data.get("primary")),
+        accent=_text(_pick(data, "accent_color") or data.get("accent")),
+        background=_text(data.get("background") or data.get("배경")),
+        surface=_text(data.get("surface") or data.get("면")),
+        mode=_text(_pick(data, "mode")).lower(),
+        radius=_text(data.get("radius") or data.get("모서리")),
+        font=_text(_pick(data, "font_preference") or data.get("font")).lower(),
+    )
 
 
 def parse_brief(data: dict[str, Any], source_path: str = "") -> tuple[Brief, list[str]]:
@@ -338,10 +537,10 @@ def parse_brief(data: dict[str, Any], source_path: str = "") -> tuple[Brief, lis
     business = Business(
         name=name,
         industry=normalize_industry(industry_raw),
-        tagline=_text(biz("tagline")),
-        description=_text(biz("description")),
-        founded=_text(biz("founded")),
-        owner=_text(biz("owner")),
+        tagline=_str(biz("tagline")),
+        description=_str(biz("description")),
+        founded=_str(biz("founded")),
+        owner=_str(biz("owner")),
         keywords=[_text(k) for k in _as_list(biz("keywords"))],
     )
 
@@ -353,6 +552,7 @@ def parse_brief(data: dict[str, Any], source_path: str = "") -> tuple[Brief, lis
         address=_text(_pick(contact_raw, "address")),
         hours=_text(_pick(contact_raw, "hours")),
         map_url=_text(_pick(contact_raw, "map_url")),
+        kakao=_text(_pick(contact_raw, "kakao")),
         links={_text(k): _text(v) for k, v in links_raw.items() if _text(v)},
     )
     if not contact.has_any():
@@ -412,8 +612,9 @@ def parse_brief(data: dict[str, Any], source_path: str = "") -> tuple[Brief, lis
         html_path=_text(_pick(ref_raw, "html_path")),
         notes=_text(_pick(ref_raw, "notes")),
     )
-    if reference.is_empty() and not brand.primary_color:
-        warnings.append("레퍼런스도 주색도 없습니다 — 업종 기본 스타일로 짓습니다")
+    theme = _parse_theme(_pick(data, "theme"), problems)
+    if reference.is_empty() and not brand.primary_color and theme.is_empty():
+        warnings.append("레퍼런스도 주색도 테마도 없습니다 — 업종 기본 스타일로 짓습니다")
 
     if problems:
         raise BriefError(problems)
@@ -429,6 +630,13 @@ def parse_brief(data: dict[str, Any], source_path: str = "") -> tuple[Brief, lis
         gallery=_parse_gallery(_pick(data, "gallery")),
         testimonials=_parse_testimonials(_pick(data, "testimonials")),
         faq=_parse_faq(_pick(data, "faq")),
+        hero=_parse_hero(_pick(data, "hero"), problems),
+        about=_parse_about(_pick(data, "about_block"), problems),
+        strengths=_parse_strengths(_pick(data, "strengths")),
+        projects=_parse_projects(_pick(data, "projects")),
+        process=_parse_process(_pick(data, "process")),
+        seo=_parse_seo(_pick(data, "seo"), problems),
+        theme=theme,
         slug=slugify(slug, fallback_seed=name),
         source_path=source_path,
     )

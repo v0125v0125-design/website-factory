@@ -51,6 +51,80 @@ PRESETS: dict[str, Preset] = {
     "general":      Preset("#2f6fed", "#12b886", ("clean", "modern"), 10, "regular", "split"),
 }
 
+@dataclass(frozen=True)
+class ThemePreset:
+    """같은 템플릿의 색 버전. 관리자 웹에서 고르게 될 것들."""
+
+    name: str
+    label: str
+    primary: str
+    accent: str
+    background: str
+    surface: str
+    mode: str = "light"
+    radius: str = "4px"
+    font: str = "sans"
+
+
+# 마스터 템플릿이 쓰는 색 버전. 포인트 컬러는 언제나 하나(accent)만 쓴다.
+THEMES: dict[str, ThemePreset] = {
+    "charcoal": ThemePreset(
+        "charcoal", "차콜 (기본)",
+        primary="#2E3338", accent="#A8763C",
+        background="#FFFFFF", surface="#F4F1ED",
+    ),
+    "beige": ThemePreset(
+        "beige", "베이지",
+        primary="#6B5947", accent="#9A6B3F",
+        background="#FBF8F4", surface="#F1E9DF", radius="6px",
+    ),
+    "black": ThemePreset(
+        "black", "블랙",
+        primary="#E8E4DE", accent="#C9A227",
+        background="#101112", surface="#191A1C", mode="dark", radius="2px",
+    ),
+    "green": ThemePreset(
+        "green", "그린",
+        primary="#2C463C", accent="#9A7B3F",
+        background="#FFFFFF", surface="#EFF3F0",
+    ),
+}
+
+
+def theme_preset(name: str) -> ThemePreset | None:
+    return THEMES.get((name or "").strip().lower())
+
+
+def resolve_theme(brief: Brief) -> tuple[dict[str, str], list[str]]:
+    """theme 블록을 실제 값 한 벌로 편다. (값, 근거)
+
+    프리셋을 깔고 그 위에 개별 지정을 덮는다 — 관리자 웹에서
+    "블랙 버전인데 포인트만 초록" 같은 주문이 바로 들어올 자리다.
+    """
+    theme = brief.theme
+    values: dict[str, str] = {}
+    notes: list[str] = []
+    if theme.is_empty():
+        return values, notes
+
+    preset = theme_preset(theme.preset)
+    if preset:
+        values.update(
+            primary=preset.primary, accent=preset.accent, background=preset.background,
+            surface=preset.surface, mode=preset.mode, radius=preset.radius, font=preset.font,
+        )
+        notes.append(f"테마 {preset.label} [{preset.name}]")
+    elif theme.preset:
+        notes.append(f"모르는 테마 이름이라 넘어갑니다: {theme.preset}")
+
+    for key in ("primary", "accent", "background", "surface", "mode", "radius", "font"):
+        given = getattr(theme, key, "")
+        if given:
+            values[key] = given
+            notes.append(f"테마 {key} 직접 지정: {given}")
+    return values, notes
+
+
 # 분위기 말이 치수를 조금 밀고 당긴다.
 _MOOD_RADIUS = {"minimal": -6, "luxury": -4, "modern": 0, "playful": 10, "soft": 6, "bold": -2}
 _MOOD_DENSITY = {"minimal": "airy", "luxury": "airy", "soft": "airy", "bold": "compact", "vivid": "compact"}
@@ -217,10 +291,21 @@ def build_style(brief: Brief, findings: ReferenceFindings | None = None) -> Styl
     evidence: list[str] = []
     signals = 0
 
+    # 테마는 "이 템플릿을 어떤 색 버전으로 찍을까" 다. 레퍼런스보다 앞선다.
+    theme, theme_notes = resolve_theme(brief)
+    evidence.extend(theme_notes)
+    if theme:
+        signals += 2
+
     if brief.brand.primary_color and colorkit.is_color(brief.brand.primary_color):
         primary = colorkit.to_hex(colorkit.parse(brief.brand.primary_color))
         evidence.append(f"주색: 주문서 지정 {primary}")
         source = "brief"
+        signals += 3
+    elif theme.get("primary") and colorkit.is_color(theme["primary"]):
+        primary = colorkit.to_hex(colorkit.parse(theme["primary"]))
+        evidence.append(f"주색: 테마 {primary}")
+        source = f"theme:{brief.theme.preset or 'custom'}"
         signals += 3
     else:
         found = _usable_brand_color(findings)
@@ -240,6 +325,10 @@ def build_style(brief: Brief, findings: ReferenceFindings | None = None) -> Styl
         accent = colorkit.to_hex(colorkit.parse(brief.brand.accent_color))
         evidence.append(f"강조색: 주문서 지정 {accent}")
         signals += 1
+    elif theme.get("accent") and colorkit.is_color(theme["accent"]):
+        accent = colorkit.to_hex(colorkit.parse(theme["accent"]))
+        evidence.append(f"강조색: 테마 {accent}")
+        signals += 1
     else:
         found_accent = _usable_accent(findings, primary)
         if found_accent:
@@ -250,17 +339,30 @@ def build_style(brief: Brief, findings: ReferenceFindings | None = None) -> Styl
             accent = preset.accent
             evidence.append(f"강조색: 업종 기본 {accent}")
 
-    mode, mode_why = _decide_mode(brief.brand, findings)
+    if theme.get("mode") in ("light", "dark"):
+        mode, mode_why = theme["mode"], f"테마가 {theme['mode']} 모드를 지정"
+    else:
+        mode, mode_why = _decide_mode(brief.brand, findings)
     evidence.append("배경: " + mode_why)
     if brief.brand.mode or findings.page_background():
         signals += 1
 
+    if theme.get("font") and not brief.brand.font_preference:
+        brief.brand.font_preference = theme["font"]
+        evidence.append(f"서체: 테마가 {theme['font']} 지정")
     fonts, font_notes = _decide_fonts(brief, findings, preset)
     evidence.extend("서체: " + note for note in font_notes)
     if findings.google_fonts or findings.fonts or brief.brand.font_preference:
         signals += 1
 
-    radius, radius_why = _decide_radius(brief, findings, preset, moods)
+    if theme.get("radius"):
+        radius_text = str(theme["radius"]).strip().rstrip("px") or "0"
+        try:
+            radius, radius_why = int(float(radius_text)), f"테마 지정 {theme['radius']}"
+        except ValueError:
+            radius, radius_why = _decide_radius(brief, findings, preset, moods)
+    else:
+        radius, radius_why = _decide_radius(brief, findings, preset, moods)
     evidence.append("모서리: " + radius_why)
     if findings.dominant_radius() is not None:
         signals += 1
@@ -271,7 +373,15 @@ def build_style(brief: Brief, findings: ReferenceFindings | None = None) -> Styl
         signals += 1
 
     background = ""
-    reference_background = findings.page_background()
+    surface = ""
+    if theme.get("background") and colorkit.is_color(theme["background"]):
+        background = colorkit.to_hex(colorkit.parse(theme["background"]))
+        evidence.append(f"바탕색: 테마 {background}")
+    if theme.get("surface") and colorkit.is_color(theme["surface"]):
+        surface = colorkit.to_hex(colorkit.parse(theme["surface"]))
+        evidence.append(f"면 색: 테마 {surface}")
+
+    reference_background = findings.page_background() if not background else ""
     if reference_background:
         _, _, bg_lightness = colorkit.to_hsl(colorkit.parse(reference_background))
         bg_chroma = colorkit.chroma(reference_background)
@@ -303,6 +413,7 @@ def build_style(brief: Brief, findings: ReferenceFindings | None = None) -> Styl
         density=density,
         hero=hero,
         background=background,
+        surface=surface,
         source=source,
         confidence=confidence,
         evidence=evidence,
@@ -312,7 +423,11 @@ def build_style(brief: Brief, findings: ReferenceFindings | None = None) -> Styl
 def build_tokens(style: StyleProfile) -> dict[str, str]:
     """StyleProfile → CSS 커스텀 속성 한 벌."""
     palette = colorkit.build_palette(
-        style.primary, mode=style.mode, accent=style.accent, background=style.background or None
+        style.primary,
+        mode=style.mode,
+        accent=style.accent,
+        background=style.background or None,
+        surface=style.surface or None,
     )
     section_pad, gap, body_size, heading_scale = _DENSITY_SCALE[style.density]
     radius_px = int(style.radius.rstrip("px") or 0)
@@ -347,6 +462,8 @@ def build_tokens(style: StyleProfile) -> dict[str, str]:
             ),
         }
     )
+    # 마지막 한 겹: 관리자 웹이 토큰을 직접 못 박고 싶을 때의 자리.
+    tokens.update(style.overrides)
     return tokens
 
 

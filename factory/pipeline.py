@@ -24,30 +24,53 @@ from .render import render_site
 IMAGE_DIR = "assets/img"
 
 
-def _stage_images(brief: Brief, out_dir: Path) -> tuple[list[str], list[str]]:
-    """주문서가 가리키는 로컬 사진을 산출물 안으로 옮기고 경로를 고친다."""
+def _stage_assets(brief: Brief, out_dir: Path) -> tuple[list[str], list[str]]:
+    """주문서가 가리키는 로컬 파일을 산출물 안으로 옮기고 경로를 고친다.
+
+    사진이 들어갈 수 있는 칸이 여러 곳(히어로·소개·서비스·시공사례·공유이미지·
+    파비콘)이므로 한 군데서 전부 훑는다. 고객 파일을 바꿔 넣는 것만으로
+    홈페이지 이미지가 통째로 바뀌는 구조를 여기가 떠받친다.
+    """
     copied: list[str] = []
     warnings: list[str] = []
-    if not brief.gallery:
-        return copied, warnings
-
     base = Path(brief.source_path).parent if brief.source_path else Path.cwd()
     target = out_dir / IMAGE_DIR
+    seen: dict[str, str] = {}
+
+    def move(src: str) -> str:
+        if not src or src.startswith(("http://", "https://", "data:", IMAGE_DIR + "/")):
+            return src
+        if src in seen:
+            return seen[src]
+        found = next((c for c in (Path(src), base / src) if c.is_file()), None)
+        if found is None:
+            warnings.append(f"파일을 못 찾았습니다: {src} (주소를 그대로 둡니다)")
+            seen[src] = src
+            return src
+        target.mkdir(parents=True, exist_ok=True)
+        name = found.name
+        destination = target / name
+        if destination.exists() and destination.stat().st_size != found.stat().st_size:
+            # 다른 폴더의 같은 이름. 덮어쓰지 않고 이름을 벌린다.
+            name = f"{found.parent.name}-{found.name}"
+            destination = target / name
+        shutil.copy2(found, destination)
+        moved = f"{IMAGE_DIR}/{name}"
+        seen[src] = moved
+        copied.append(moved)
+        return moved
 
     for image in brief.gallery:
-        src = image.src
-        if src.startswith(("http://", "https://", "data:", IMAGE_DIR)):
-            continue
-        candidates = [Path(src), base / src]
-        found = next((c for c in candidates if c.is_file()), None)
-        if found is None:
-            warnings.append(f"사진 파일을 못 찾았습니다: {src} (주소를 그대로 둡니다)")
-            continue
-        target.mkdir(parents=True, exist_ok=True)
-        destination = target / found.name
-        shutil.copy2(found, destination)
-        image.src = f"{IMAGE_DIR}/{found.name}"
-        copied.append(image.src)
+        image.src = move(image.src)
+    brief.hero.image = move(brief.hero.image)
+    brief.about.image = move(brief.about.image)
+    for item in brief.items:
+        item.image = move(item.image)
+    for project in brief.projects:
+        project.image = move(project.image)
+        project.images = [move(i) for i in project.images]
+    brief.seo.og_image = move(brief.seo.og_image)
+    brief.seo.favicon = move(brief.seo.favicon)
     return copied, warnings
 
 
@@ -80,10 +103,16 @@ def make_plan(
         match = matching.choose(brief, load_catalog(templates_dir))
         template = match.template
 
-    # 템플릿이 권하는 히어로 형태가 있으면 존중한다 (스타일 쪽이 사진 유무로 이미 바꿨을 수 있다).
-    if style.hero != template.hero and not brief.gallery:
+    # 템플릿이 권하는 형태를 존중한다 — 레퍼런스가 말해 준 것이 없을 때만.
+    changes: dict[str, str] = {}
+    if style.hero != template.hero and not (brief.gallery or brief.projects or brief.hero.image):
+        changes["hero"] = template.hero
         style.evidence.append(f"히어로: 템플릿 기본 {template.hero}형으로 맞춤")
-        style = theming.StyleProfile(**{**style.__dict__, "hero": template.hero})
+    if style.density != template.density and not findings.max_block_padding:
+        changes["density"] = template.density
+        style.evidence.append(f"간격: 템플릿 기본 {template.density}로 맞춤")
+    if changes:
+        style = theming.StyleProfile(**{**style.__dict__, **changes})
         tokens = theming.build_tokens(style)
 
     content = build_content(brief, template, style)
@@ -237,7 +266,7 @@ def build(
     out.mkdir(parents=True, exist_ok=True)
 
     warnings = list(extra_warnings or [])
-    copied, image_warnings = _stage_images(brief, out)
+    copied, image_warnings = _stage_assets(brief, out)
     warnings.extend(image_warnings)
 
     plan, findings = make_plan(

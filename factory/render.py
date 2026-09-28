@@ -22,6 +22,8 @@ from .models import BuildPlan, SiteContent
 SECTION_PARTIALS = {
     "hero": "partials/hero.html",
     "about": "partials/about.html",
+    "strengths": "partials/strengths.html",
+    "projects": "partials/projects.html",
     "services": "partials/items.html",
     "menu": "partials/items.html",
     "pricing": "partials/items.html",
@@ -102,23 +104,64 @@ def build_jsonld(plan: BuildPlan) -> str:
             else:
                 images.append(f"{base}/{image.src.lstrip('/')}")
         data["image"] = images
-    if brief.contact.links:
-        data["sameAs"] = [u for u in brief.contact.links.values() if u.startswith("http")]
+    links = list(brief.contact.links.values())
+    if brief.contact.kakao:
+        links.append(brief.contact.kakao)
+    if links:
+        data["sameAs"] = [u for u in links if u.startswith("http")]
+    if brief.seo.region:
+        data["areaServed"] = [r.strip() for r in brief.seo.region.replace("·", ",").split(",") if r.strip()]
+        if isinstance(data.get("address"), dict):
+            data["address"]["addressLocality"] = data["areaServed"][0]
     # <script> 안에 그대로 들어가므로 이스케이프를 걸지 않는다.
     # 대신 "</script>" 를 만들 수 있는 조각만 막는다.
     payload = json.dumps(data, ensure_ascii=False, indent=2).replace("</", "<\\/")
     return Markup(payload)
 
 
+def absolute(plan: BuildPlan, path: str) -> str:
+    if not path:
+        return ""
+    if path.startswith(("http://", "https://")):
+        return path
+    base = site_url(plan.brief.site.domain)
+    return f"{base}/{path.lstrip('/')}" if base else ""
+
+
+def seo_block(plan: BuildPlan, page) -> dict[str, str]:
+    """검색·공유에 나가는 글자 한 벌. seo 블록이 있으면 그것이 이긴다."""
+    seo = plan.brief.seo
+    biz = plan.brief.business
+    name = biz.name
+    if seo.title:
+        title = seo.title
+    else:
+        head = f"{seo.region} {name}".strip() if seo.region else name
+        if page.spec.slug:
+            head = f"{page.nav_label} · {head}"
+        title = f"{head} | {biz.tagline}" if biz.tagline and not page.spec.slug else head
+    description = seo.description or page.description
+    return {
+        "title": title[:70],
+        "description": description[:160],
+        "og_title": seo.og_title or title[:70],
+        "og_description": (seo.og_description or description)[:160],
+        "og_image": absolute(plan, seo.og_image) or og_image(plan),
+        "keywords": ", ".join(seo.keywords),
+        "region": seo.region,
+        "favicon": seo.favicon,
+    }
+
+
 def og_image(plan: BuildPlan) -> str:
     """대표 이미지 한 장의 절대 주소. 도메인이 없으면 비운다."""
-    if not plan.brief.gallery:
+    candidates = [plan.brief.hero.image]
+    candidates += [p.image for p in plan.brief.projects]
+    candidates += [g.src for g in plan.brief.gallery]
+    src = next((c for c in candidates if c), "")
+    if not src:
         return ""
-    src = plan.brief.gallery[0].src
-    if src.startswith(("http://", "https://")):
-        return src
-    base = site_url(plan.brief.site.domain)
-    return f"{base}/{src.lstrip('/')}" if base else ""
+    return absolute(plan, src)
 
 
 def base_context(plan: BuildPlan, form_action: str = "") -> dict[str, object]:
@@ -133,6 +176,7 @@ def base_context(plan: BuildPlan, form_action: str = "") -> dict[str, object]:
         "year": date.today().year,
         "jsonld": build_jsonld(plan),
         "og_image": og_image(plan),
+        "favicon_href": "assets/favicon.svg",
         "form_action": form_action,
         "radius_px": int(plan.style.radius.rstrip("px") or 0),
         "initial": (plan.brief.brand.logo_text or plan.brief.business.name or "·")[:1],
@@ -179,18 +223,29 @@ def render_site(plan: BuildPlan, out_dir: str | Path, form_action: str = "") -> 
         html = template.render(
             **context,
             page=page,
+            seo=seo_block(plan, page),
             canonical=_canonical(plan.brief.site.domain, page.filename),
         )
         (out / page.filename).write_text(html, encoding="utf-8")
         written.append(page.filename)
 
-    css = env.get_template("assets/styles.css.j2").render(**context, page=plan.content.pages[0])
+    first = plan.content.pages[0]
+    css = env.get_template("assets/styles.css.j2").render(
+        **context, page=first, seo=seo_block(plan, first)
+    )
     (out / "assets" / "styles.css").write_text(css, encoding="utf-8")
     written.append("assets/styles.css")
 
-    favicon = env.get_template("assets/favicon.svg.j2").render(**context, page=plan.content.pages[0])
-    (out / "assets" / "favicon.svg").write_text(favicon, encoding="utf-8")
-    written.append("assets/favicon.svg")
+    # 파비콘 파일을 준 고객이면 그것을 쓰고, 없으면 주색과 머리글자로 하나 그린다.
+    given_favicon = plan.brief.seo.favicon
+    if given_favicon and not given_favicon.startswith(("http://", "https://")):
+        context["favicon_href"] = given_favicon
+    else:
+        favicon = env.get_template("assets/favicon.svg.j2").render(
+            **context, page=first, seo=seo_block(plan, first)
+        )
+        (out / "assets" / "favicon.svg").write_text(favicon, encoding="utf-8")
+        written.append("assets/favicon.svg")
 
     (out / "sitemap.xml").write_text(
         render_sitemap(plan.content, plan.brief.site.domain), encoding="utf-8"
