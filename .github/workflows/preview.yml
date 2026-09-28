@@ -1,6 +1,7 @@
 # 미리보기 발행 — 고객 사이트를 GitHub Pages(gh-pages 브랜치) 로 올린다.
 #
-#   https://v0125v0125-design.github.io/website-factory/<고객 slug>/
+#   https://v0125v0125-design.github.io/website-factory/store/       판매 홈페이지
+#   https://v0125v0125-design.github.io/website-factory/<고객 slug>/  고객 견본
 #
 # 고객 도메인은 연결하지 않는다. 검수용 임시 주소이고, noindex 와 robots 로 검색을 막는다.
 # main 에 주문서나 템플릿이 올라오면 자동으로 다시 올라간다.
@@ -13,6 +14,7 @@ on:
       - "examples/**"
       - "templates/**"
       - "factory/**"
+      - "storefront/**"
       - "tools/build_previews.py"
       - ".github/workflows/preview.yml"
   workflow_dispatch:
