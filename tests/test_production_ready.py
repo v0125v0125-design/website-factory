@@ -344,3 +344,89 @@ def test_the_shipped_site_stays_light(three):
         assert "cdn." not in html and "unpkg" not in html   # 바깥 프레임워크를 끌어오지 않는다
         assert 'loading="lazy"' in html
         assert 'rel="preload" as="image"' in html  # 첫 화면 사진은 미리 받는다
+
+
+# ── 공개 미리보기 위생 ────────────────────────────────────────────
+# 검수용 임시 주소는 고객과 잠재 구매자가 그대로 봅니다.
+# 개발자용 문구와 내부 서류가 거기 섞여 나가면 그 자리에서 상품성이 깎입니다.
+
+import subprocess  # noqa: E402
+import sys  # noqa: E402
+
+DEV_WORDS = ("--form-action", "form_action", "빌드할 때", "지정하십시오",
+             "build_report", "납품메모", "placeholder 또는")
+
+
+def _dev_words_in(html: str) -> list[str]:
+    return [word for word in DEV_WORDS if word in html]
+
+
+def test_the_form_never_explains_itself_to_the_customer(tmp_path):
+    """받는 곳이 없어도 설정 이야기를 손님에게 하지 않는다."""
+    result = build_from_file(CUSTOMERS / "a-gonggan.json", tmp_path / "quiet", offline=True)
+    html = (result.out_dir / "index.html").read_text(encoding="utf-8")
+    assert not _dev_words_in(html), _dev_words_in(html)
+    assert 'data-noaction="1"' in html            # 새로고침 대신 안내를 띄운다
+    note = html.split('class="ct__sent"')[1].split("</p>")[0]
+    assert "hidden" in note or "hidden" in html.split('class="ct__sent"')[0][-40:]
+    assert "전화" in note and "카카오톡" in note
+    assert "--form" not in note and "빌드" not in note
+
+
+def test_a_real_form_target_turns_the_notice_off(tmp_path):
+    brief, _ = load_brief(CUSTOMERS / "a-gonggan.json")
+    result = build(brief, tmp_path / "wired", offline=True,
+                   form_action="https://formspree.io/f/abcd")
+    html = (result.out_dir / "index.html").read_text(encoding="utf-8")
+    assert 'action="https://formspree.io/f/abcd"' in html
+    form_tag = html.split('<form class="ct__form"')[1].split(">")[0]
+    assert "data-noaction" not in form_tag      # 스크립트의 선택자 문자열과 혼동하지 않는다
+    assert 'class="ct__sent"' not in html
+    assert not _dev_words_in(html)
+
+
+def test_sample_customers_carry_no_developer_looking_contacts():
+    """견본 연락처가 개발용처럼 보이면 쇼케이스가 아니라 테스트 화면이 된다."""
+    for path in [EXAMPLES / "master-interior-01.json"] + sorted(CUSTOMERS.glob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        contact = data.get("contact", {})
+        flat = json.dumps(contact, ensure_ascii=False)
+        assert "000-0000" not in contact.get("전화", ""), f"{path.name}: 전화"
+        assert "○○" not in flat, f"{path.name}: 주소에 ○○"
+        assert "이메일" not in contact, f"{path.name}: 예시 이메일은 빼 둡니다"
+        assert ".example" not in flat, f"{path.name}: .example 주소"
+        assert "가상" in data.get("_주의", ""), f"{path.name}: 가상 업체 표시"
+
+
+def _build_preview_bundle(out: Path) -> Path:
+    subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "build_previews.py"), str(out)],
+        cwd=ROOT, check=True, capture_output=True, text=True,
+    )
+    return out
+
+
+def test_preview_bundle_ships_only_what_a_browser_needs(tmp_path):
+    site = _build_preview_bundle(tmp_path / "_site")
+    for folder in sorted(p for p in site.iterdir() if p.is_dir()):
+        names = {child.name for child in folder.iterdir()}
+        assert names == {"index.html", "assets"}, f"{folder.name}: {names}"
+    assert not list(site.rglob("build_report.json"))
+    assert not list(site.rglob("납품메모.md"))
+    assert not list(site.rglob("CNAME"))
+
+
+def test_preview_bundle_keeps_search_engines_out(tmp_path):
+    site = _build_preview_bundle(tmp_path / "_site")
+    assert "Disallow: /" in (site / "robots.txt").read_text(encoding="utf-8")
+    for page in site.rglob("index.html"):
+        assert 'content="noindex, nofollow"' in page.read_text(encoding="utf-8"), page
+
+
+def test_preview_pages_point_at_the_preview_address(tmp_path, monkeypatch):
+    monkeypatch.setenv("PREVIEW_BASE", "https://preview.example.test/factory")
+    site = _build_preview_bundle(tmp_path / "_site")
+    html = (site / "gonggan-interior" / "index.html").read_text(encoding="utf-8")
+    assert 'href="https://preview.example.test/factory/gonggan-interior/"' in html
+    assert "gonggan-interior.example" not in html      # 없는 도메인을 가리키지 않는다
+    assert not _dev_words_in(html)

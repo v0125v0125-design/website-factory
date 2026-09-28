@@ -2,6 +2,9 @@
 
     python tools/build_previews.py _site [주문서 ...]
 
+`PREVIEW_BASE` 를 주면 그 주소를 기준으로 canonical·og:image 를 만듭니다
+(기본값은 git remote 에서 뽑은 GitHub Pages 주소).
+
 인자를 주지 않으면 `examples/master-interior-01.json` 과 `examples/customers/*.json`
 을 모두 짓습니다. 결과는 이렇게 놓입니다.
 
@@ -10,15 +13,24 @@
     _site/a-gonggan-interior/
     ...
 
-**템플릿은 건드리지 않습니다.** 다만 미리보기는 검수용이므로, 지어진 HTML 에
-`noindex` 한 줄만 얹습니다 — 가상 업체 데모가 검색에 잡히면 안 되기 때문입니다.
+**템플릿은 건드리지 않습니다.** 다만 미리보기는 공개 주소이므로 세 가지를 합니다.
+
+  · 지어진 HTML 에 `noindex` 한 줄 (가상 업체 데모가 검색에 잡히면 안 됩니다)
+  · 고객에게 보일 필요가 없는 내부 파일(견적 보고서·납품 메모·호스팅 설정)은 빼고
+    브라우저가 쓰는 것만 올립니다
+  · 아직 고객 도메인이 없으므로 canonical·og:image 를 미리보기 주소로 맞춥니다
+    — 링크를 공유했을 때 없는 주소를 가리키지 않게 하기 위해서입니다
+
 고객 도메인에 실제로 올릴 때는 이 스크립트를 쓰지 않습니다.
 """
 
 from __future__ import annotations
 
 import html
+import os
+import re
 import shutil
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -26,12 +38,39 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from factory.pipeline import build_from_file  # noqa: E402
+from factory.intake import load_brief  # noqa: E402
+from factory.pipeline import build  # noqa: E402
 
 NOINDEX = '<meta name="robots" content="noindex, nofollow">'
+# 브라우저가 실제로 쓰는 것만 올린다. 나머지는 우리 쪽 서류다.
+PUBLISH = ("index.html", "assets")
 DEFAULT_BRIEFS = [ROOT / "examples" / "master-interior-01.json"] + sorted(
     (ROOT / "examples" / "customers").glob("*.json")
 )
+
+
+def preview_base() -> str:
+    """미리보기가 놓이는 주소. 없으면 git remote 에서 GitHub Pages 주소를 만든다."""
+    given = os.environ.get("PREVIEW_BASE", "").strip().rstrip("/")
+    if given:
+        return given
+    try:
+        remote = subprocess.run(
+            ["git", "remote", "get-url", "origin"], cwd=ROOT,
+            capture_output=True, text=True, check=True,
+        ).stdout.strip()
+    except Exception:
+        return ""
+    found = re.search(r"github\.com[:/]([^/]+?)/(.+?)(?:\.git)?$", remote)
+    return f"https://{found.group(1)}.github.io/{found.group(2)}" if found else ""
+
+
+def _keep_only_web_files(folder: Path) -> None:
+    """고객에게 보일 필요가 없는 것을 걷어낸다 (보고서·납품메모·호스팅 설정)."""
+    for child in list(folder.iterdir()):
+        if child.name in PUBLISH:
+            continue
+        shutil.rmtree(child) if child.is_dir() else child.unlink()
 
 
 def _mark_noindex(page: Path) -> None:
@@ -106,14 +145,20 @@ def main(argv: list[str]) -> int:
         shutil.rmtree(out)
     out.mkdir(parents=True)
 
+    base = preview_base()
     rows: list[dict] = []
     for brief_path in briefs:
-        result = build_from_file(brief_path, out / "___tmp", offline=True, clean=True)
-        slug = result.plan.brief.slug
+        brief, _warnings = load_brief(brief_path)
+        slug = brief.slug
+        if base:
+            # 아직 고객 도메인이 없다. 그 자리에 미리보기 주소를 넣는다.
+            brief.site.domain = f"{base}/{slug}"
+        result = build(brief, out / "___tmp", offline=True, clean=True)
         target = out / slug
         if target.exists():
             shutil.rmtree(target)
         (out / "___tmp").rename(target)
+        _keep_only_web_files(target)
         _mark_noindex(target / "index.html")
         weight = sum(f.stat().st_size for f in target.rglob("*") if f.is_file())
         rows.append({

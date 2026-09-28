@@ -45,7 +45,17 @@
     });
   });
 
-  /* 4. 사례 크게 보기 */
+  /* 4. 받는 곳이 없는 문의폼 — 새로고침 대신 연락 방법을 알린다 */
+  var quietForm = document.querySelector('.ct__form[data-noaction]');
+  if (quietForm) {
+    quietForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var note = quietForm.querySelector(".ct__sent");
+      if (note) { note.hidden = false; note.scrollIntoView({ block: "nearest" }); }
+    });
+  }
+
+  /* 5. 사례 크게 보기 */
   var box = document.getElementById("lightbox");
   if (!box) return;
   var img = document.getElementById("lb-img");

@@ -6,7 +6,8 @@
       {%- if brief.seo.region %}<p class="lead">서비스 지역 · {{ brief.seo.region }}</p>{%- endif %}
     </div>
     <div class="ct">
-      <form class="ct__form" method="post" action="{{ form_action or '#' }}">
+      <form class="ct__form" method="post" action="{{ form_action or '#contact' }}"
+            {% if not form_action %}data-noaction="1"{% endif %}>
         <div class="field--row">
           <p class="field">
             <label for="f-name">이름</label>
@@ -42,7 +43,11 @@
         </p>
         <p><button class="btn btn--block" type="submit">{{ section.data.cta_label }}</button></p>
         {%- if not form_action %}
-        <p class="ct__note">※ 폼을 받을 주소가 아직 연결되지 않았습니다 — 빌드할 때 <code>--form-action</code> 으로 지정하십시오.</p>
+        {#- 받는 곳이 아직 없을 때. 고객에게는 연락 방법만 알린다 — 설정 이야기는 하지 않는다. -#}
+        <p class="ct__sent" role="status" hidden>
+          지금은 온라인 접수 대신 전화와 카카오톡으로 상담을 받고 있습니다.
+          {%- if section.data.phone %} {{ section.data.phone }} 로 연락해 주세요.{% endif %}
+        </p>
         {%- endif %}
       </form>
 

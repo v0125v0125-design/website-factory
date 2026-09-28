@@ -98,8 +98,8 @@ def test_no_template_syntax_and_no_missing_images(sample, sample_html):
             assert (sample.out_dir / src).is_file(), src
 
 
-def test_phone_and_kakao_reach_the_customer(sample_html):
-    assert 'href="tel:0410000000"' in sample_html
+def test_phone_and_kakao_reach_the_customer(sample, sample_html):
+    assert f'href="{sample.plan.brief.contact.tel_href()}"' in sample_html
     assert "pf.kakao.com" in sample_html
 
 
