@@ -167,6 +167,22 @@ def test_preparing_samples_are_marked_not_linked(page, data):
     assert page.count("chip--soon") == len(preparing)
 
 
+def test_every_live_sample_can_be_chosen_in_the_order_form(data):
+    """고를 수 있는 디자인이 늘면 신청 폼에도 같이 늘어야 한다."""
+    live = [s["title"] for s in data["samples"]["items"] if s.get("status") == "available"]
+    options = next(f["options"] for f in data["order"]["fields"] if f["name"] == "design")
+    assert live, "고를 수 있는 샘플이 하나도 없다"
+    for title in live:
+        assert title in options, title
+    for title in (s["title"] for s in data["samples"]["items"] if s.get("status") != "available"):
+        assert title not in options, f"준비 중인 {title} 이 신청 폼에 있다"
+
+
+def test_more_than_one_industry_is_actually_on_sale(data):
+    live = [s for s in data["samples"]["items"] if s.get("status") == "available"]
+    assert len({s["category"] for s in live}) >= 2, "업종이 하나뿐이면 '골라 보세요'가 성립하지 않는다"
+
+
 def test_the_anchors_the_buttons_point_at_all_exist(page):
     targets = set(re.findall(r'href="#([a-z-]+)"', page))
     ids = set(re.findall(r'id="([a-z-]+)"', page))

@@ -48,6 +48,7 @@ PRESETS: dict[str, Preset] = {
     "shop":         Preset("#111827", "#ef4444", ("modern", "minimal"), 10, "regular", "image"),
     "tech":         Preset("#4c6ef5", "#12b886", ("modern", "clean"), 12, "regular", "split"),
     "wellness":     Preset("#6f9e7e", "#d1a054", ("soft", "natural"), 18, "airy", "image"),
+    "cleaning":     Preset("#16324F", "#0E9F8C", ("clean", "trustworthy"), 8, "regular", "split"),
     "general":      Preset("#2f6fed", "#12b886", ("clean", "modern"), 10, "regular", "split"),
 }
 
@@ -87,6 +88,18 @@ THEMES: dict[str, ThemePreset] = {
         "green", "그린",
         primary="#2C463C", accent="#9A7B3F",
         background="#FFFFFF", surface="#EFF3F0",
+    ),
+    # 아래 둘은 현장 방문형 생활서비스(청소·방역·홈케어) 용. 흰 바탕에
+    # 짙은 남색 글자, 포인트는 하나. 물방울색으로 화면을 덮지 않는다.
+    "sky": ThemePreset(
+        "sky", "네이비 · 프레시",
+        primary="#16324F", accent="#0E9F8C",
+        background="#FFFFFF", surface="#F2F5F8", radius="8px",
+    ),
+    "mist": ThemePreset(
+        "mist", "그레이 · 미스트",
+        primary="#24303A", accent="#2F7FA8",
+        background="#FFFFFF", surface="#F1F3F4", radius="8px",
     ),
 }
 

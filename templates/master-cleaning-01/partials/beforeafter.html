@@ -1,0 +1,40 @@
+{#- 청소 마스터의 심장. 같은 자리를 전·후로 겹쳐 놓고 손잡이로 밀어 본다.
+    라이브러리를 쓰지 않는다 — range 하나와 clip-path 한 줄이면 된다.
+    한 장만 온 사례도 버리지 않고 있는 쪽만 보여 준다. -#}
+<section class="sec" id="beforeafter">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">BEFORE / AFTER</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+      <p class="sec__lead">손잡이를 좌우로 밀면 같은 자리의 작업 전과 후가 바뀝니다.</p>
+    </div>
+    <ul class="ba">
+      {%- for row in section.data['items'] %}
+      <li class="ba__card">
+        {%- if row.paired %}
+        <div class="ba__view" style="--pos:50%">
+          <img class="ba__img" src="{{ row.after }}" alt="{{ row.title }} 작업 후" loading="lazy">
+          <span class="ba__clip"><img src="{{ row.before }}" alt="{{ row.title }} 작업 전" loading="lazy"></span>
+          <span class="ba__tag ba__tag--a">작업 전</span>
+          <span class="ba__tag ba__tag--b">작업 후</span>
+          <span class="ba__bar" aria-hidden="true"></span>
+          <input class="ba__range" type="range" min="0" max="100" value="50" step="1"
+                 aria-label="{{ row.title }} 작업 전·후 비교">
+        </div>
+        {%- else %}
+        <div class="ba__view ba__view--one">
+          <img class="ba__img" src="{{ row.after or row.before }}"
+               alt="{{ row.title }} {{ '작업 후' if row.after else '작업 전' }}" loading="lazy">
+          <span class="ba__tag ba__tag--a">{{ '작업 후' if row.after else '작업 전' }}</span>
+        </div>
+        {%- endif %}
+        <div class="ba__body">
+          <h3>{{ row.title }}</h3>
+          {%- if row.meta %}<p class="ba__meta">{{ row.meta }}</p>{%- endif %}
+          {%- if row.summary %}<p>{{ row.summary }}</p>{%- endif %}
+        </div>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

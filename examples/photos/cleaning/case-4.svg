@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="예시 이미지 · 작업 사례"><defs>
+  <linearGradient id="w17" x1="0" y1="0" x2=".3" y2="1">
+    <stop offset="0" stop-color="#F4F5F3"/><stop offset="1" stop-color="#BEC6BF" stop-opacity=".4"/>
+  </linearGradient>
+  <linearGradient id="f17" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#E0E3DE"/><stop offset="1" stop-color="#26302C" stop-opacity=".42"/>
+  </linearGradient>
+  <linearGradient id="l17" x1="0" y1="0" x2="1" y2=".9">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+    <stop offset=".6" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#26302C" stop-opacity=".16"/>
+  </linearGradient>
+  <linearGradient id="g17" x1="0" y1="0" x2=".5" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+    <stop offset="1" stop-color="#F4F5F3" stop-opacity=".6"/>
+  </linearGradient>
+</defs><rect width="1600" height="900" fill="url(#w17)"/><rect y="612" width="1600" height="288" fill="url(#f17)"/><rect x="64" y="72" width="1472" height="468" fill="url(#g17)" opacity=".85"/><line x1="432" y1="72" x2="432" y2="540" stroke="#26302C" stroke-opacity=".3" stroke-width="4"/><line x1="800" y1="72" x2="800" y2="540" stroke="#26302C" stroke-opacity=".3" stroke-width="4"/><line x1="1168" y1="72" x2="1168" y2="540" stroke="#26302C" stroke-opacity=".3" stroke-width="4"/><rect x="64" y="540" width="1472" height="10" fill="#26302C" opacity=".45"/><polygon points="160,612 880,612 1280,900 32,900" fill="#fff" opacity=".15"/><rect width="1600" height="900" fill="url(#l17)"/><text x="800" y="864" text-anchor="middle" font-family="sans-serif" font-size="32" fill="#26302C" opacity=".42">예시 이미지 · 작업 사례</text></svg>

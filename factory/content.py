@@ -32,6 +32,8 @@ class Lexicon:
     hero_kicker: str = ""
     strengths_heading: str = "우리가 하는 방식"
     projects_heading: str = "시공 사례"
+    beforeafter_heading: str = "작업 전 · 후"
+    area_heading: str = "서비스 지역"
 
 
 LEXICONS: dict[str, Lexicon] = {
@@ -48,6 +50,10 @@ LEXICONS: dict[str, Lexicon] = {
     "shop": Lexicon("취급 품목", "품목", "브랜드 소개", "제품 사진", "주문 문의", "주문 방법", "주문 문의"),
     "tech": Lexicon("제공 서비스", "서비스", "회사 소개", "화면 미리보기", "도입 문의", "도입 절차", "도입 문의"),
     "wellness": Lexicon("케어 프로그램", "프로그램", "센터 소개", "공간 사진", "예약 문의", "이용 절차", "예약 문의"),
+    # 청소는 "무엇을 어디까지 해 주는가" 가 곧 상품이다. 말씨를 거기에 맞춘다.
+    "cleaning": Lexicon("청소 서비스", "서비스", "업체 소개", "작업 사진", "견적 문의",
+                        "작업 순서", "견적 문의", strengths_heading="맡기시기 전에 약속드리는 것",
+                        projects_heading="작업 사례"),
     "general": Lexicon(),
 }
 
@@ -222,11 +228,13 @@ class CopyEngine:
         )
 
     def projects(self) -> Section | None:
-        if not self.brief.projects:
+        # 전·후 짝은 비교 섹션이 맡는다. 같은 사진을 두 번 보여 주지 않는다.
+        plain = [p for p in self.brief.projects if not p.is_pair()]
+        if not plain:
             self.skipped.append("projects: 시공 사례가 없어 뺐습니다")
             return None
         rows = []
-        for project in self.brief.projects:
+        for project in plain:
             images = project.all_images()
             if not images:
                 self.todo.append(f"시공 사례 '{project.title}': 사진")
@@ -245,11 +253,70 @@ class CopyEngine:
                     "count": len(images),
                 }
             )
-        categories = list(dict.fromkeys(p.category for p in self.brief.projects if p.category))
+        categories = list(dict.fromkeys(p.category for p in plain if p.category))
         return Section(
             kind="projects",
             heading=self.lex.projects_heading,
             data={"items": rows, "categories": categories},
+        )
+
+    def beforeafter(self) -> Section | None:
+        """작업 전과 후. 청소·방역·복원 업종에서 가장 설득력이 센 자리다.
+
+        새 최상단 칸을 만들지 않고 `projects` 안의 before/after 를 쓴다.
+        한 장만 온 사례도 버리지 않고, 있는 쪽만 보여 준다.
+        """
+        rows = []
+        for project in self.brief.projects:
+            if not (project.before or project.after):
+                continue
+            if not project.is_pair():
+                self.todo.append(
+                    f"작업 전·후 '{project.title}': "
+                    + ("작업 후 사진" if project.before else "작업 전 사진")
+                )
+            meta = " · ".join(x for x in (project.category, project.location, project.size) if x)
+            rows.append({
+                "title": project.title,
+                "summary": project.summary,
+                "meta": meta,
+                "category": project.category,
+                "location": project.location,
+                "size": project.size,
+                "before": project.before,
+                "after": project.after,
+                "paired": project.is_pair(),
+            })
+        if not rows:
+            self.skipped.append("beforeafter: 작업 전·후 사진이 없어 뺐습니다")
+            return None
+        return Section(
+            kind="beforeafter",
+            heading=self.lex.beforeafter_heading,
+            data={"items": rows, "paired": sum(1 for r in rows if r["paired"])},
+        )
+
+    def area(self) -> Section | None:
+        """어디까지 갑니까. 찾아가는 업종은 이것이 가격보다 먼저 걸린다."""
+        contact = self.brief.contact
+        areas = [a for a in contact.areas if a]
+        if not areas:
+            self.skipped.append("area: 서비스 지역이 적혀 있지 않아 뺐습니다")
+            return None
+        return Section(
+            kind="area",
+            heading=self.lex.area_heading,
+            data={
+                "areas": areas,
+                "note": contact.area_note,
+                "region": self.brief.seo.region,
+                "hours": contact.hours,
+                "cta_label": self.cta_label(),
+                "cta_href": self.cta_href(),
+                "phone": contact.phone,
+                "tel_href": contact.tel_href(),
+                "kakao": contact.kakao,
+            },
         )
 
     def gallery(self) -> Section | None:
@@ -358,6 +425,8 @@ class CopyEngine:
             "pricing": lambda: self.items("pricing"),
             "strengths": self.strengths,
             "projects": self.projects,
+            "beforeafter": self.beforeafter,
+            "area": self.area,
             "gallery": self.gallery,
             "testimonials": self.testimonials,
             "faq": self.faq,
@@ -454,6 +523,8 @@ def build_content(brief: Brief, template: TemplateSpec, style: StyleProfile) -> 
         labels = {
             "strengths": engine.lex.strengths_heading,
             "projects": engine.lex.projects_heading,
+            "beforeafter": engine.lex.beforeafter_heading,
+            "area": engine.lex.area_heading,
             "process": engine.lex.process_heading,
             "about": engine.lex.about_heading,
             "services": engine.lex.items_heading,

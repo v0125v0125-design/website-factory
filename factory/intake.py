@@ -68,6 +68,10 @@ _ALIASES: dict[str, tuple[str, ...]] = {
     "images": ("추가사진", "사진들", "이미지들", "추가이미지"),
     "category": ("분류", "종류", "유형", "공간"),
     "location": ("위치", "지역", "현장", "장소"),
+    "before": ("작업전", "청소전", "시공전", "before", "전"),
+    "after": ("작업후", "청소후", "시공후", "after", "후"),
+    "areas": ("서비스지역", "가능지역", "출장지역", "방문지역", "service_areas", "areas", "지역목록"),
+    "area_note": ("지역안내", "지역메모", "area_note", "인근지역"),
     "year": ("연도", "시공연도", "시공년도"),
     "size": ("평형", "규모", "면적", "평수"),
     "number": ("숫자", "수치", "실적"),
@@ -143,6 +147,8 @@ _INDUSTRY: dict[str, tuple[str, ...]] = {
     "legal": ("법률", "변호사", "법무사", "세무", "회계", "노무", "law", "tax", "특허"),
     "academy": ("학원", "교육", "과외", "레슨", "academy", "school", "공부방", "어학"),
     "construction": ("인테리어", "건축", "시공", "리모델링", "설비", "construction", "이사"),
+    "cleaning": ("청소", "입주청소", "이사청소", "거주청소", "상가청소", "홈케어", "방역",
+                 "줄눈", "에어컨청소", "특수청소", "정리수납", "cleaning", "housekeeping"),
     "realestate": ("부동산", "중개", "공인중개", "realestate", "분양"),
     "shop": ("쇼핑몰", "판매", "소매", "매장", "shop", "store", "공방"),
     "tech": ("it", "소프트웨어", "개발", "saas", "스타트업", "앱", "tech", "solution"),
@@ -433,6 +439,8 @@ def _parse_projects(raw: Any) -> list[Project]:
                 images=images,
                 year=_text(_pick(entry, "year")),
                 size=_text(_pick(entry, "size")),
+                before=_text(_pick(entry, "before")),
+                after=_text(_pick(entry, "after")),
             )
         )
     return out
@@ -604,6 +612,8 @@ def parse_brief(data: dict[str, Any], source_path: str = "") -> tuple[Brief, lis
         map_url=_text(_pick(contact_raw, "map_url")),
         kakao=_text(_pick(contact_raw, "kakao")),
         links={_text(k): _text(v) for k, v in links_raw.items() if _text(v)},
+        areas=[_text(a) for a in _as_list(_pick(contact_raw, "areas")) if _text(a)],
+        area_note=_text(_pick(contact_raw, "area_note")),
     )
     if not contact.has_any():
         warnings.append("연락처가 하나도 없습니다 — 문의 유도 섹션이 비게 됩니다")

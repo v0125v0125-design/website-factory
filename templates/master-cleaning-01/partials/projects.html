@@ -1,0 +1,23 @@
+{#- 작업 사례. 인테리어처럼 크게 펼치지 않는다 — 훑고 지나가는 자리다. -#}
+<section class="sec sec--tint" id="projects">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">CASES</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+    </div>
+    <ul class="cs">
+      {%- for row in section.data['items'] %}
+      <li class="cs__cell">
+        {%- if row.image %}
+        <span class="cs__shot"><img src="{{ row.image }}" alt="{{ row.title }}" loading="lazy"></span>
+        {%- else %}
+        <span class="cs__shot cs__shot--empty">사진 자리</span>
+        {%- endif %}
+        <h3>{{ row.title }}</h3>
+        {%- if row.meta %}<p class="cs__meta">{{ row.meta }}</p>{%- endif %}
+        {%- if row.summary %}<p class="cs__sum">{{ row.summary }}</p>{%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

@@ -33,6 +33,9 @@ class Contact:
     map_url: str = ""
     kakao: str = ""        # 카카오톡 채널/오픈채팅 주소
     links: dict[str, str] = field(default_factory=dict)  # instagram, blog ...
+    # 현장에 찾아가는 업종(청소·방역·수리)은 "어디까지 갑니까" 가 전화보다 먼저 나온다.
+    areas: list[str] = field(default_factory=list)       # 천안 전 지역 · 아산 전 지역 ...
+    area_note: str = ""                                  # "인근 지역은 상담 후 방문합니다"
 
     def has_any(self) -> bool:
         return bool(self.phone or self.email or self.address or self.kakao or self.links)
@@ -132,6 +135,13 @@ class Project:
     images: list[str] = field(default_factory=list)  # 추가 사진
     year: str = ""
     size: str = ""         # 32평
+    # 전·후 비교. 둘 다 있을 때만 비교 섹션에 선다 (청소·방역·복원 업종).
+    # 새 최상단 칸을 만들지 않으려고 사례 한 건 안에 둔다.
+    before: str = ""
+    after: str = ""
+
+    def is_pair(self) -> bool:
+        return bool(self.before and self.after)
 
     def all_images(self) -> list[str]:
         out = [self.image] if self.image else []

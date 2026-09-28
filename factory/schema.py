@@ -58,7 +58,7 @@ OBJECTS = ("company", "contact", "site", "seo", "layout", "brand")
 #   about: "소개글" / hero: "대표문구" / theme: "charcoal" / reference: "https://..."
 OBJECT_OR_TEXT = ("about", "hero", "theme", "reference")
 
-KNOWN_THEMES = ("charcoal", "beige", "black", "green")
+KNOWN_THEMES = ("charcoal", "beige", "black", "green", "sky", "mist")
 
 
 @dataclass
@@ -213,10 +213,19 @@ def validate(data: Any) -> Result:
     _check_rows(result, _entries(get(data, "faq")), "faq", ("question", "answer"), "질문")
 
     for index, row in enumerate(_entries(get(data, "projects"))):
-        if isinstance(row, dict) and not (_has(row, "image") or _has(row, "images")):
+        if not isinstance(row, dict):
+            continue
+        # 전·후 짝(before/after)도 사진이다 — 청소·방역처럼 비교로 파는 업종이 그렇다.
+        has_shot = any(_has(row, k) for k in ("image", "images", "before", "after"))
+        if not has_shot:
             result.warnings.append(
                 Problem(f"projects[{index}].image", "사례에 사진이 없습니다",
-                        "인테리어 홈페이지에서 가장 값이 나가는 자리입니다")
+                        "사례 사진은 홈페이지에서 가장 값이 나가는 자리입니다")
+            )
+        elif _has(row, "before") != _has(row, "after"):
+            result.warnings.append(
+                Problem(f"projects[{index}]", "작업 전·후 중 한 장만 있습니다",
+                        "둘 다 있어야 비교로 보여 줍니다 — 한 장만 있으면 그 한 장만 나갑니다")
             )
 
     # 6. 쪽수·테마·배치

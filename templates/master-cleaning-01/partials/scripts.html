@@ -1,0 +1,43 @@
+<script>
+/* MASTER_CLEANING_01 — 없어도 페이지가 도는 것만 붙인다.
+   모바일 메뉴 · 작업 전·후 손잡이 · 받는 곳 없는 문의폼. */
+(function () {
+  "use strict";
+
+  /* 1. 모바일 메뉴 */
+  var head = document.getElementById("site-head");
+  var toggle = head && head.querySelector(".ch__toggle");
+  if (head && toggle) {
+    toggle.addEventListener("click", function () {
+      var open = head.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    head.addEventListener("click", function (e) {
+      if (e.target.tagName === "A" && head.classList.contains("is-open")) {
+        head.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
+  /* 2. 작업 전·후 — range 값을 그대로 clip-path 로 넘긴다.
+        자바스크립트가 죽어도 손잡이가 가운데 선 비교 화면으로 남는다. */
+  document.querySelectorAll(".ba__range").forEach(function (range) {
+    var view = range.closest(".ba__view");
+    var draw = function () { view.style.setProperty("--pos", range.value + "%"); };
+    range.addEventListener("input", draw);
+    range.addEventListener("change", draw);
+    draw();
+  });
+
+  /* 3. 받는 곳이 없는 문의폼 — 새로고침 대신 연락 방법을 알린다 */
+  var quiet = document.querySelector('.ct__form[data-noaction]');
+  if (quiet) {
+    quiet.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var note = quiet.querySelector(".ct__sent");
+      if (note) { note.hidden = false; note.scrollIntoView({ block: "nearest" }); }
+    });
+  }
+})();
+</script>

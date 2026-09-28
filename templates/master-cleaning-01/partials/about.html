@@ -1,0 +1,24 @@
+<section class="sec sec--tint" id="about">
+  <div class="wrap wh">
+    <div class="wh__text">
+      <p class="eyebrow">WHY US</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+      {%- for para in section.data['paragraphs'] %}
+      <p>{{ para }}</p>
+      {%- endfor %}
+      {%- if section.data.signature %}<p class="wh__sign">{{ section.data.signature }}</p>{%- endif %}
+    </div>
+    <div class="wh__side">
+      {%- if section.data.image %}
+      <img class="wh__shot" src="{{ section.data.image }}" alt="{{ brief.business.name }}" loading="lazy">
+      {%- endif %}
+      {%- if section.data['facts'] %}
+      <dl class="wh__facts">
+        {%- for label, value in section.data['facts'] %}
+        <div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+        {%- endfor %}
+      </dl>
+      {%- endif %}
+    </div>
+  </div>
+</section>

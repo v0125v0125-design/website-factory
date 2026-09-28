@@ -1,0 +1,15 @@
+{#- 숫자를 세우지 않는다. 확인할 수 없는 실적 대신 "우리가 이렇게 합니다" 만 적는다.
+    number/unit 이 와도 청소판에서는 쓰지 않는다 — 가짜 실적처럼 읽히기 때문이다. -#}
+<section class="sec sec--tint" id="strengths">
+  <div class="wrap">
+    <h2 class="sec__title">{{ section.heading }}</h2>
+    <ul class="tr">
+      {%- for item in section.data['items'] %}
+      <li class="tr__cell">
+        <h3>{{ item.title }}</h3>
+        {%- if item.summary %}<p>{{ item.summary }}</p>{%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

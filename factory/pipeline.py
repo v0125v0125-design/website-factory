@@ -71,6 +71,8 @@ def _stage_assets(
     for project in brief.projects:
         project.image = move(project.image, "project")
         project.images = [move(i, "project") for i in project.images]
+        project.before = move(project.before, "project")
+        project.after = move(project.after, "project")
     brief.seo.og_image = move(brief.seo.og_image, "og")
     brief.seo.favicon = move(brief.seo.favicon, "logo")
     warnings.extend(report.warnings)

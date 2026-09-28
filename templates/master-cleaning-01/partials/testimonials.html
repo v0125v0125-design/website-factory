@@ -1,0 +1,23 @@
+<section class="sec sec--tint" id="testimonials">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">REVIEW</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+    </div>
+    <ul class="rv">
+      {%- for row in section.data['items'] %}
+      <li class="rv__card">
+        {%- if row.rating %}
+        <p class="rv__stars" aria-label="5점 만점에 {{ row.rating }}점">{{ '★' * row.rating }}<span>{{ '★' * (5 - row.rating) }}</span></p>
+        {%- endif %}
+        <blockquote>{{ row.quote }}</blockquote>
+        <p class="rv__who">
+          {%- if row.name %}<b>{{ row.name }}</b>{% endif %}
+          {%- if row.project %}<span>{{ row.project }}</span>{% endif %}
+          {%- if row.role %}<span>{{ row.role }}</span>{% endif %}
+        </p>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

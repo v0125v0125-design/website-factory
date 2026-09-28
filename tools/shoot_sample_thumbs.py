@@ -24,7 +24,10 @@ from factory.pipeline import build_from_file  # noqa: E402
 OUT = ROOT / "storefront" / "assets" / "samples"
 CHROMIUM = ("/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
             "/opt/pw-browsers/chromium/chrome-linux/chrome")
-SHOTS = [("interior-01", ROOT / "examples" / "master-interior-01.json")]
+SHOTS = [
+    ("interior-01", ROOT / "examples" / "master-interior-01.json"),
+    ("cleaning-01", ROOT / "examples" / "customers" / "d-bareungyeol.json"),
+]
 WIDTH, HEIGHT = 1440, 1000          # 위쪽 한 화면 (첫인상이 카드에 실린다)
 
 

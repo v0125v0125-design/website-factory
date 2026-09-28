@@ -1,0 +1,20 @@
+{#- 찾아가는 업종은 "어디까지 갑니까" 가 가격보다 먼저 걸린다. 지도는 쓰지 않는다. -#}
+<section class="sec ar" id="area">
+  <div class="wrap ar__in">
+    <div>
+      <p class="eyebrow eyebrow--on">AREA</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+      <ul class="ar__chips">
+        {%- for name in section.data['areas'] %}<li>{{ name }}</li>{%- endfor %}
+      </ul>
+      {%- if section.data.note %}<p class="ar__note">{{ section.data.note }}</p>{%- endif %}
+      {%- if section.data.hours %}<p class="ar__note">상담 시간 · {{ section.data.hours }}</p>{%- endif %}
+    </div>
+    <div class="ar__act">
+      <a class="btn btn--lg btn--invert" href="#contact">{{ section.data.cta_label }}</a>
+      {%- if section.data.tel_href %}
+      <a class="btn btn--lg btn--ghost-on" href="{{ section.data.tel_href }}">{{ section.data.phone }}</a>
+      {%- endif %}
+    </div>
+  </div>
+</section>

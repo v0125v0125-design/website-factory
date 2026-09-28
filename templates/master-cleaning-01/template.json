@@ -1,0 +1,20 @@
+{
+  "id": "master-cleaning-01",
+  "name": "청소·홈케어 마스터 01",
+  "summary": "입주·이사·거주·상가청소 같은 현장 방문형 생활서비스 업체를 위한 원페이지 마스터. 사진 자랑이 아니라 '무엇을 어디까지 해 주는가'와 '작업 전·후'로 설득하고, 견적 문의 한 갈래로 모은다. 에어컨·줄눈·방역·특수청소로도 데이터만 바꿔 재사용한다.",
+  "page_count": 1,
+  "hero": "split",
+  "density": "regular",
+  "industries": ["cleaning", "wellness", "construction", "shop", "general"],
+  "moods": ["clean", "trustworthy", "professional", "modern", "minimal", "cool"],
+  "features": ["form", "faq", "testimonials", "process", "hours", "pricing", "gallery", "sns", "map"],
+  "goals": ["inquiry", "reservation", "visit"],
+  "pages": [
+    {
+      "slug": "",
+      "title": "홈",
+      "nav_label": "홈",
+      "sections": ["hero", "strengths", "services", "about", "beforeafter", "projects", "process", "area", "testimonials", "faq", "contact"]
+    }
+  ]
+}

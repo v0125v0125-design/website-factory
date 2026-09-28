@@ -1,0 +1,45 @@
+{#- 5초 안에 넷: 무슨 업체인가 · 어디까지 가는가 · 무엇을 하는가 · 어떻게 묻는가. -#}
+<section class="hr hr--{{ brief.layout.hero_align }}" id="top">
+  <div class="wrap hr__in">
+    <div class="hr__copy">
+      {%- if section.data.kicker %}<p class="hr__kicker">{{ section.data.kicker }}</p>{%- endif %}
+      <h1 class="hr__title">{{ section.heading }}</h1>
+      {%- if section.subheading %}<p class="hr__sub">{{ section.subheading }}</p>{%- endif %}
+
+      {%- if brief.items %}
+      <ul class="hr__tags">
+        {%- for item in brief.items[:5] %}<li>{{ item.title }}</li>{%- endfor %}
+      </ul>
+      {%- endif %}
+
+      <div class="hr__actions">
+        <a class="btn btn--lg" href="{{ section.data.cta_href }}">{{ section.data.cta_label }}</a>
+        {%- if section.data.sub_cta_label %}
+        <a class="btn btn--lg btn--line" href="{{ section.data.sub_cta_href }}"{% if section.data.kakao and section.data.sub_cta_href == section.data.kakao %} rel="noopener" target="_blank"{% endif %}>{{ section.data.sub_cta_label }}</a>
+        {%- endif %}
+      </div>
+
+      {%- if section.data.badges %}
+      <ul class="hr__badges">
+        {%- for badge in section.data.badges %}<li>{{ badge }}</li>{%- endfor %}
+      </ul>
+      {%- endif %}
+    </div>
+
+    <figure class="hr__shot">
+      {%- if section.data.image %}
+      <img src="{{ section.data.image }}" alt="{{ brief.business.name }} 작업 사진" fetchpriority="high">
+      {%- else %}
+      <span class="hr__slot">{{ section.data.get('image_placeholder') or '대표 사진 자리' }}</span>
+      {%- endif %}
+      <figcaption class="hr__meta">
+        {%- if brief.contact.areas %}
+        <span><b>서비스 지역</b>{{ brief.contact.areas | join(' · ') }}</span>
+        {%- elif brief.seo.region %}
+        <span><b>서비스 지역</b>{{ brief.seo.region }}</span>
+        {%- endif %}
+        {%- if brief.contact.hours %}<span><b>상담 시간</b>{{ brief.contact.hours }}</span>{%- endif %}
+      </figcaption>
+    </figure>
+  </div>
+</section>

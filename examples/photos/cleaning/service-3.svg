@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="예시 이미지 · 거주청소"><defs>
+  <linearGradient id="w4" x1="0" y1="0" x2=".3" y2="1">
+    <stop offset="0" stop-color="#F2F4F6"/><stop offset="1" stop-color="#B9C4CC" stop-opacity=".4"/>
+  </linearGradient>
+  <linearGradient id="f4" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#DCE2E6"/><stop offset="1" stop-color="#22303A" stop-opacity=".42"/>
+  </linearGradient>
+  <linearGradient id="l4" x1="0" y1="0" x2="1" y2=".9">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+    <stop offset=".6" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#22303A" stop-opacity=".16"/>
+  </linearGradient>
+  <linearGradient id="g4" x1="0" y1="0" x2=".5" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+    <stop offset="1" stop-color="#F2F4F6" stop-opacity=".6"/>
+  </linearGradient>
+</defs><rect width="1200" height="900" fill="url(#w4)"/><rect y="612" width="1200" height="288" fill="url(#f4)"/><rect x="72" y="108" width="480" height="468" rx="4" fill="url(#g4)" opacity=".9"/><rect x="72" y="108" width="480" height="468" rx="4" fill="none" stroke="#22303A" stroke-opacity=".26" stroke-width="2"/><rect x="648" y="342" width="456" height="234" rx="36" fill="#B9C4CC"/><rect x="720" y="144" width="312" height="126" rx="3" fill="#F2F4F6" opacity=".92"/><line x1="150" y1="612" x2="150" y2="900" stroke="#22303A" stroke-opacity="0.12" stroke-width="2"/><line x1="300" y1="612" x2="300" y2="900" stroke="#22303A" stroke-opacity="0.12" stroke-width="2"/><line x1="450" y1="612" x2="450" y2="900" stroke="#22303A" stroke-opacity="0.12" stroke-width="2"/><line x1="600" y1="612" x2="600" y2="900" stroke="#22303A" stroke-opacity="0.12" stroke-width="2"/><line x1="750" y1="612" x2="750" y2="900" stroke="#22303A" stroke-opacity="0.12" stroke-width="2"/><line x1="900" y1="612" x2="900" y2="900" stroke="#22303A" stroke-opacity="0.12" stroke-width="2"/><line x1="1050" y1="612" x2="1050" y2="900" stroke="#22303A" stroke-opacity="0.12" stroke-width="2"/><line x1="0" y1="684" x2="1200" y2="684" stroke="#22303A" stroke-opacity="0.12" stroke-width="2"/><line x1="0" y1="756" x2="1200" y2="756" stroke="#22303A" stroke-opacity="0.12" stroke-width="2"/><line x1="0" y1="828" x2="1200" y2="828" stroke="#22303A" stroke-opacity="0.12" stroke-width="2"/><rect width="1200" height="900" fill="url(#l4)"/><text x="600" y="864" text-anchor="middle" font-family="sans-serif" font-size="32" fill="#22303A" opacity=".42">예시 이미지 · 거주청소</text></svg>

@@ -24,6 +24,8 @@ SECTION_PARTIALS = {
     "about": "partials/about.html",
     "strengths": "partials/strengths.html",
     "projects": "partials/projects.html",
+    "beforeafter": "partials/beforeafter.html",
+    "area": "partials/area.html",
     "services": "partials/items.html",
     "menu": "partials/items.html",
     "pricing": "partials/items.html",

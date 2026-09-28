@@ -1,0 +1,44 @@
+{#- 청소는 첫 화면에서 사진을 자랑하지 않는다. 머리는 처음부터 흰색이고,
+    지역·전화·견적이 언제나 같은 자리에 있다. -#}
+{#- 원페이지 앵커가 열 개 넘게 나오면 머리가 두 줄이 된다.
+    넓은 화면에는 다섯만 세우고 나머지는 모바일 메뉴에만 둔다. -#}
+{%- set wanted = ['#services', '#beforeafter', '#projects', '#process', '#area'] -%}
+{%- set desktop_nav = content.nav | selectattr('href', 'in', wanted) | list -%}
+<header class="ch" id="site-head">
+  <div class="wrap ch__in">
+    <a class="ch__brand" href="#top">
+      <span class="ch__mark" aria-hidden="true">
+        {%- if brief.brand.logo %}<img src="{{ brief.brand.logo }}" alt="">{% else %}{{ initial }}{% endif -%}
+      </span>
+      <span class="ch__name">{{ brief.brand.logo_text }}</span>
+    </a>
+
+    <button class="ch__toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+      <span class="sr-only">메뉴 열기</span>
+    </button>
+
+    <nav class="ch__nav" id="site-menu" aria-label="주요 메뉴">
+      <ul class="ch__list">
+        {%- for link in desktop_nav %}
+        <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+        {%- endfor %}
+        {%- for link in content.nav if link not in desktop_nav %}
+        <li class="ch__more"><a href="{{ link.href }}">{{ link.label }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+
+    <div class="ch__aside">
+      {%- if brief.contact.areas %}
+      <span class="ch__area">{{ brief.contact.areas[0] }}{% if brief.contact.areas | length > 1 %} 외{% endif %}</span>
+      {%- elif brief.seo.region %}
+      <span class="ch__area">{{ brief.seo.region }}</span>
+      {%- endif %}
+      {%- if brief.contact.phone %}
+      <a class="ch__tel" href="{{ content.meta.tel_href }}">{{ brief.contact.phone }}</a>
+      {%- endif %}
+      <a class="btn btn--sm" href="#contact">{{ content.meta.cta_label }}</a>
+    </div>
+  </div>
+</header>

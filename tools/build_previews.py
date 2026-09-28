@@ -149,7 +149,7 @@ def _index_page(rows: list[dict], built_at: str) -> str:
   <ul>
 {cards}
   </ul>
-  <footer>MASTER_INTERIOR_01 · {built_at} 빌드 · 검색 노출 차단(noindex)</footer>
+  <footer>MASTER_INTERIOR_01 · MASTER_CLEANING_01 · {built_at} 빌드 · 검색 노출 차단(noindex)</footer>
 </div>
 </body>
 </html>

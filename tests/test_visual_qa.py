@@ -8,6 +8,7 @@ playwright 가 깔려 있을 때만 돈다 (`pip install playwright`). 없으면
 좁은 화면에서 전화 버튼이 손끝에 있는지, 크게 보기가 열리고 닫히는지.
 """
 
+import json
 from pathlib import Path
 
 import pytest
@@ -164,6 +165,9 @@ def customer_urls(tmp_path_factory):
     root = tmp_path_factory.mktemp("visual-customers")
     urls = {}
     for path in sorted(CUSTOMERS.glob("*.json")):
+        # 이 파일은 인테리어 마스터를 보는 눈이다. 청소 마스터는 제 파일에서 본다.
+        if json.loads(path.read_text(encoding="utf-8")).get("template") != "master-interior-01":
+            continue
         result = build_from_file(path, root / path.stem, offline=True, clean=True)
         urls[path.stem] = (result.out_dir / "index.html").as_uri()
     return urls
@@ -214,3 +218,100 @@ def test_layout_variations_render_differently(browser, customer_urls):
         seen.add((shape["align"], shape["cell"]))
         page.close()
     assert len(seen) >= 2, f"세 고객의 화면 모양이 사실상 같습니다: {seen}"
+
+
+# ── 청소 마스터도 같은 눈으로 본다 ────────────────────────────────
+# 인테리어와 화면이 다르므로 보는 것도 다르다: 비교 손잡이, 서비스 지역,
+# 그리고 두 마스터가 나란히 놓였을 때 같은 사이트로 보이지 않는지.
+
+CLEANING = EXAMPLES / "customers" / "d-bareungyeol.json"
+
+
+@pytest.fixture(scope="module")
+def cleaning_url(tmp_path_factory):
+    result = build_from_file(
+        CLEANING, tmp_path_factory.mktemp("visual-cleaning"), offline=True, clean=True
+    )
+    return (result.out_dir / "index.html").as_uri()
+
+
+@pytest.mark.parametrize("name", list(WIDTHS))
+def test_cleaning_holds_at_every_width(browser, cleaning_url, name):
+    width, height = WIDTHS[name]
+    page, problems = _open(browser, cleaning_url, width, height)
+    doc_width = page.evaluate("() => document.documentElement.scrollWidth")
+    assert doc_width <= width + 1, f"{name}: 가로 스크롤 ({doc_width} > {width})"
+    assert not problems, f"{name}: {problems}"
+    page.evaluate("() => window.scrollTo(0, document.body.scrollHeight)")
+    page.wait_for_timeout(800)
+    broken = page.evaluate(
+        "() => [...document.images].filter(i => !i.complete || i.naturalWidth === 0).length"
+    )
+    assert broken == 0, f"{name}: 깨진 사진 {broken}장"
+    page.close()
+
+
+@pytest.mark.parametrize("name", list(WIDTHS))
+def test_the_before_after_handle_actually_moves(browser, cleaning_url, name):
+    width, height = WIDTHS[name]
+    page, _ = _open(browser, cleaning_url, width, height)
+    before = page.evaluate(
+        "() => getComputedStyle(document.querySelector('.ba__view')).getPropertyValue('--pos').trim()"
+    )
+    page.eval_on_selector(".ba__range", "el => { el.value = 15; el.dispatchEvent(new Event('input')); }")
+    page.wait_for_timeout(120)
+    after = page.evaluate(
+        "() => getComputedStyle(document.querySelector('.ba__view')).getPropertyValue('--pos').trim()"
+    )
+    assert before == "50%" and after == "15%", f"{name}: {before} → {after}"
+    # 손잡이는 사진 위 전체를 덮어야 손가락으로 끌 수 있다
+    box = page.evaluate("""() => {
+      const r = document.querySelector('.ba__range').getBoundingClientRect();
+      const v = document.querySelector('.ba__view').getBoundingClientRect();
+      return Math.round(r.width) === Math.round(v.width) && Math.round(r.height) === Math.round(v.height);
+    }""")
+    assert box, f"{name}: 비교 손잡이가 사진을 덮지 않습니다"
+    page.close()
+
+
+def test_the_estimate_is_always_one_tap_away_on_a_phone(browser, cleaning_url):
+    page, _ = _open(browser, cleaning_url, 375, 812)
+    bar = page.evaluate("""() => {
+      const b = document.querySelector('.cbar');
+      if (!b || getComputedStyle(b).display === 'none') return null;
+      const r = b.getBoundingClientRect();
+      return {bottom: Math.round(window.innerHeight - r.bottom), links: b.querySelectorAll('a').length,
+              tall: Math.round(r.height)};
+    }""")
+    assert bar, "휴대폰 화면에 하단 문의 바가 없습니다"
+    assert bar["bottom"] == 0 and bar["links"] == 3
+    assert bar["tall"] >= 44, f"손끝에 닿기엔 낮습니다 ({bar['tall']}px)"
+    page.close()
+
+
+def test_the_two_masters_do_not_look_like_the_same_site(browser, page_url, cleaning_url):
+    """색만 바꾼 같은 템플릿이면 둘을 나란히 팔 수 없다."""
+    shapes = {}
+    for name, url in (("interior", page_url), ("cleaning", cleaning_url)):
+        page, _ = _open(browser, url, 1440, 900)
+        shapes[name] = page.evaluate("""() => {
+          const head = document.querySelector('header');
+          const hero = document.querySelector('.hero, .hr');
+          const rail = document.querySelector('.rail');
+          return {
+            headClass: head.className.split(' ')[0],
+            heroClass: hero.className.split(' ')[0],
+            heroHeight: Math.round(hero.getBoundingClientRect().height),
+            heroBg: getComputedStyle(hero).backgroundColor,
+            hasRail: !!(rail && getComputedStyle(rail).display !== 'none'),
+            sections: [...document.querySelectorAll('main section[id]')].map(s => s.id),
+          };
+        }""")
+        page.close()
+    assert shapes["interior"]["headClass"] != shapes["cleaning"]["headClass"]
+    assert shapes["interior"]["heroClass"] != shapes["cleaning"]["heroClass"]
+    assert shapes["interior"]["hasRail"] and not shapes["cleaning"]["hasRail"]
+    only_cleaning = set(shapes["cleaning"]["sections"]) - set(shapes["interior"]["sections"])
+    assert {"beforeafter", "area"} <= only_cleaning, only_cleaning
+    # 첫 화면의 덩치가 크게 다르다 — 인테리어는 사진으로 덮고, 청소는 글로 바로 말한다
+    assert abs(shapes["interior"]["heroHeight"] - shapes["cleaning"]["heroHeight"]) > 120

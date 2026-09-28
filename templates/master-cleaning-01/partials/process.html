@@ -1,0 +1,19 @@
+{#- 상담부터 검수까지. 선 하나로 이어 붙여 "빠짐없이 진행된다" 를 눈으로 보인다. -#}
+<section class="sec" id="process">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">PROCESS</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+    </div>
+    <ol class="pr">
+      {%- for step in section.data['steps'] %}
+      <li class="pr__step">
+        <span class="pr__no">{{ step.step or '%02d' % loop.index }}</span>
+        <h3>{{ step.title }}</h3>
+        {%- if step.summary %}<p>{{ step.summary }}</p>{%- endif %}
+        {%- if step.duration %}<p class="pr__dur">{{ step.duration }}</p>{%- endif %}
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>

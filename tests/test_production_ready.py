@@ -184,11 +184,19 @@ def test_optimization_can_be_turned_off(tmp_path):
 
 # ── 고객 셋 양산 ──────────────────────────────────────────────────
 
+def _interior_customers() -> list[Path]:
+    """이 파일은 인테리어 마스터를 지키는 자리다. 다른 마스터의 견본은 제 파일에서 본다."""
+    return [
+        path for path in sorted(CUSTOMERS.glob("*.json"))
+        if json.loads(path.read_text(encoding="utf-8")).get("template") == TEMPLATE
+    ]
+
+
 @pytest.fixture(scope="module")
 def three(tmp_path_factory):
     root = tmp_path_factory.mktemp("demo")
     out = {}
-    for path in sorted(CUSTOMERS.glob("*.json")):
+    for path in _interior_customers():
         result = build_from_file(path, root / path.stem, offline=True, clean=True)
         out[path.stem] = result
     return out

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200" role="img" aria-label="예시 이미지"><defs>
+  <linearGradient id="w7" x1="0" y1="0" x2=".3" y2="1">
+    <stop offset="0" stop-color="#F5F4F1"/><stop offset="1" stop-color="#C3C0B6" stop-opacity=".4"/>
+  </linearGradient>
+  <linearGradient id="f7" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#E2E0DA"/><stop offset="1" stop-color="#2B2A26" stop-opacity=".42"/>
+  </linearGradient>
+  <linearGradient id="l7" x1="0" y1="0" x2="1" y2=".9">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+    <stop offset=".6" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#2B2A26" stop-opacity=".16"/>
+  </linearGradient>
+  <linearGradient id="g7" x1="0" y1="0" x2=".5" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+    <stop offset="1" stop-color="#F5F4F1" stop-opacity=".6"/>
+  </linearGradient>
+</defs><rect width="1600" height="1200" fill="url(#w7)"/><rect y="816" width="1600" height="384" fill="url(#f7)"/><rect x="64" y="120" width="672" height="264" rx="3" fill="#C3C0B6" opacity=".85"/><rect x="800" y="120" width="736" height="264" rx="3" fill="#C3C0B6" opacity=".5"/><rect x="64" y="528" width="1472" height="54" rx="2" fill="#2B2A26" opacity=".5"/><rect x="64" y="582" width="1472" height="240" fill="#F5F4F1" opacity=".9"/><rect x="896" y="408" width="288" height="108" rx="2" fill="#2B2A26" opacity=".28"/><line x1="160" y1="582" x2="160" y2="822" stroke="#2B2A26" stroke-opacity=".16" stroke-width="2"/><line x1="512" y1="582" x2="512" y2="822" stroke="#2B2A26" stroke-opacity=".16" stroke-width="2"/><line x1="864" y1="582" x2="864" y2="822" stroke="#2B2A26" stroke-opacity=".16" stroke-width="2"/><line x1="1216" y1="582" x2="1216" y2="822" stroke="#2B2A26" stroke-opacity=".16" stroke-width="2"/><rect width="1600" height="1200" fill="url(#l7)"/></svg>

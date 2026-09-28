@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="예시 이미지 · 상가청소"><defs>
+  <linearGradient id="w5" x1="0" y1="0" x2=".3" y2="1">
+    <stop offset="0" stop-color="#F4F5F3"/><stop offset="1" stop-color="#BEC6BF" stop-opacity=".4"/>
+  </linearGradient>
+  <linearGradient id="f5" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#E0E3DE"/><stop offset="1" stop-color="#26302C" stop-opacity=".42"/>
+  </linearGradient>
+  <linearGradient id="l5" x1="0" y1="0" x2="1" y2=".9">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+    <stop offset=".6" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#26302C" stop-opacity=".16"/>
+  </linearGradient>
+  <linearGradient id="g5" x1="0" y1="0" x2=".5" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+    <stop offset="1" stop-color="#F4F5F3" stop-opacity=".6"/>
+  </linearGradient>
+</defs><rect width="1200" height="900" fill="url(#w5)"/><rect y="612" width="1200" height="288" fill="url(#f5)"/><rect x="48" y="72" width="1104" height="468" fill="url(#g5)" opacity=".85"/><line x1="324" y1="72" x2="324" y2="540" stroke="#26302C" stroke-opacity=".3" stroke-width="3"/><line x1="600" y1="72" x2="600" y2="540" stroke="#26302C" stroke-opacity=".3" stroke-width="3"/><line x1="876" y1="72" x2="876" y2="540" stroke="#26302C" stroke-opacity=".3" stroke-width="3"/><rect x="48" y="540" width="1104" height="10" fill="#26302C" opacity=".45"/><polygon points="120,612 660,612 960,900 24,900" fill="#fff" opacity=".15"/><rect width="1200" height="900" fill="url(#l5)"/><text x="600" y="864" text-anchor="middle" font-family="sans-serif" font-size="32" fill="#26302C" opacity=".42">예시 이미지 · 상가청소</text></svg>

@@ -87,8 +87,8 @@
 
   "samples": {
     "heading": "디자인을 직접 보고 고르세요",
-    "lede": "아래 샘플은 실제로 돌아가는 홈페이지입니다. 눌러서 PC와 휴대폰으로 그대로 확인해 보세요.",
-    "categories": ["전체", "인테리어 / 시공", "청소 / 생활서비스", "기업 / B2B", "교육", "전문서비스"],
+    "lede": "아래 샘플은 실제로 돌아가는 홈페이지입니다. 눌러서 PC와 휴대폰으로 그대로 확인해 보세요. 업종에 따라 구성이 다릅니다.",
+    "categories": ["전체", "인테리어 / 시공", "청소 / 홈케어", "기업 / B2B", "교육", "전문서비스"],
     "items": [
       {
         "slug": "interior-01",
@@ -104,11 +104,15 @@
       },
       {
         "slug": "cleaning-01",
-        "category": "청소 / 생활서비스",
+        "category": "청소 / 홈케어",
         "title": "CLEANING 01",
-        "subtitle": "청소 · 방역 · 생활서비스 업체",
-        "styleTags": ["깔끔", "신뢰", "가격표 중심"],
-        "status": "preparing"
+        "subtitle": "입주 · 이사 · 거주 · 상가청소 업체",
+        "styleTags": ["깔끔", "신뢰", "전환 중심"],
+        "previewImage": "assets/samples/cleaning-01.webp",
+        "previewUrl": "https://v0125v0125-design.github.io/website-factory/cleaning-01/",
+        "product": "START",
+        "status": "available",
+        "note": "작업 전·후를 손잡이로 밀어 비교하는 구성입니다. 결과 차이를 보여 줘야 하는 업종에 어울립니다."
       },
       {
         "slug": "company-01",
@@ -272,7 +276,7 @@
       { "name": "name", "label": "성함", "type": "text", "required": true },
       { "name": "contact", "label": "연락처", "type": "tel", "required": true, "placeholder": "연락 가능한 번호" },
       { "name": "product", "label": "상품", "type": "select", "options": ["START (169,000원)", "BUSINESS (349,000원)", "아직 정하지 못했습니다"] },
-      { "name": "design", "label": "고른 디자인", "type": "select", "options": ["INTERIOR 01", "아직 고르지 못했습니다"] },
+      { "name": "design", "label": "고른 디자인", "type": "select", "options": ["INTERIOR 01", "CLEANING 01", "아직 고르지 못했습니다"] },
       { "name": "domain", "label": "도메인", "type": "select", "options": ["이미 있습니다", "없습니다", "잘 모르겠습니다"] },
       { "name": "message", "label": "요청사항", "type": "textarea", "required": false, "placeholder": "원하시는 분위기나 꼭 넣고 싶은 내용이 있으면 적어 주세요" }
     ],

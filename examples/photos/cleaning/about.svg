@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" width="900" height="1200" role="img" aria-label="예시 이미지 · 업체 사진 자리"><defs>
+  <linearGradient id="w1" x1="0" y1="0" x2=".3" y2="1">
+    <stop offset="0" stop-color="#F4F5F3"/><stop offset="1" stop-color="#BEC6BF" stop-opacity=".4"/>
+  </linearGradient>
+  <linearGradient id="f1" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#E0E3DE"/><stop offset="1" stop-color="#26302C" stop-opacity=".42"/>
+  </linearGradient>
+  <linearGradient id="l1" x1="0" y1="0" x2="1" y2=".9">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+    <stop offset=".6" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#26302C" stop-opacity=".16"/>
+  </linearGradient>
+  <linearGradient id="g1" x1="0" y1="0" x2=".5" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+    <stop offset="1" stop-color="#F4F5F3" stop-opacity=".6"/>
+  </linearGradient>
+</defs><rect width="900" height="1200" fill="url(#w1)"/><rect y="816" width="900" height="384" fill="url(#f1)"/><rect x="126" y="192" width="162" height="264" rx="3" fill="#F4F5F3" opacity=".8"/><circle cx="450" cy="528" r="171" fill="#BEC6BF"/><circle cx="391" cy="469" r="85" fill="#fff" opacity="0.22"/><rect x="90" y="864" width="720" height="19" rx="2" fill="#26302C" opacity=".35"/><rect width="900" height="1200" fill="url(#l1)"/><text x="450" y="1152" text-anchor="middle" font-family="sans-serif" font-size="32" fill="#26302C" opacity=".42">예시 이미지 · 업체 사진 자리</text></svg>
