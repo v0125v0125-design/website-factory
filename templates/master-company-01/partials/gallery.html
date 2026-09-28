@@ -1,0 +1,16 @@
+<section class="sec" id="gallery">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">PRODUCTS</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+    </div>
+    <ul class="pd">
+      {%- for image in section.data['images'] %}
+      <li class="pd__cell">
+        <span class="pd__shot"><img src="{{ image.src }}" alt="{{ image.alt }}" loading="lazy"></span>
+        {%- if image.caption %}<p>{{ image.caption }}</p>{%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

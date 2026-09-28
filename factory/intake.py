@@ -80,6 +80,8 @@ _ALIASES: dict[str, tuple[str, ...]] = {
     "bullets": ("항목", "포함", "포함항목", "세부", "list"),
     "paragraphs": ("문단", "본문", "내용"),
     "facts": ("정보", "요약정보", "표"),
+    "history": ("연혁", "history", "발자취", "주요연혁"),
+    "credentials": ("인증", "자격", "보유설비", "인증현황", "credentials", "certifications"),
     "signature": ("맺음", "서명", "끝맺음"),
     "rating": ("별점", "평점", "점수"),
     "project": ("공사", "시공", "현장"),
@@ -149,6 +151,9 @@ _INDUSTRY: dict[str, tuple[str, ...]] = {
     "construction": ("인테리어", "건축", "시공", "리모델링", "설비", "construction", "이사"),
     "cleaning": ("청소", "입주청소", "이사청소", "거주청소", "상가청소", "홈케어", "방역",
                  "줄눈", "에어컨청소", "특수청소", "정리수납", "cleaning", "housekeeping"),
+    "manufacturing": ("제조", "제조업", "기계", "장비", "설비", "부품", "자동화", "엔지니어링",
+                      "정밀", "금형", "물류", "유통", "산업", "b2b", "법인", "manufacturing",
+                      "factory", "industrial", "machinery", "회사소개"),
     "realestate": ("부동산", "중개", "공인중개", "realestate", "분양"),
     "shop": ("쇼핑몰", "판매", "소매", "매장", "shop", "store", "공방"),
     "tech": ("it", "소프트웨어", "개발", "saas", "스타트업", "앱", "tech", "solution"),
@@ -483,21 +488,38 @@ def _parse_hero(raw: Any, problems: list[str]) -> HeroSpec:
     )
 
 
+def _pairs(raw: Any) -> list[tuple[str, str]]:
+    """항목·값 목록 한 벌. 사람이 적어 오는 세 가지 꼴을 모두 받는다.
+
+        {"설립": "2018"}                      사전
+        [{"항목": "설립", "값": "2018"}]       항목 사전들
+        [["설립", "2018"]]                    두 칸짜리 줄들
+
+    세 번째 꼴이 가장 자주 오는데 예전에는 조용히 버려졌다.
+    """
+    out: list[tuple[str, str]] = []
+    if isinstance(raw, dict):
+        return [(_text(k), _text(v)) for k, v in raw.items() if _text(k) and _text(v)]
+    for entry in _as_list(raw):
+        if isinstance(entry, dict):
+            label = _text(entry.get("label") or entry.get("항목") or entry.get("이름")
+                          or entry.get("name") or entry.get("연도") or entry.get("year"))
+            value = _text(entry.get("value") or entry.get("값") or entry.get("내용")
+                          or entry.get("설명") or entry.get("summary"))
+            if label and value:
+                out.append((label, value))
+        elif isinstance(entry, (list, tuple)) and len(entry) >= 2:
+            label, value = _text(entry[0]), _text(entry[1])
+            if label and value:
+                out.append((label, value))
+    return out
+
+
 def _parse_about(raw: Any, problems: list[str]) -> AboutSpec:
     if not isinstance(raw, dict):
         return AboutSpec()
     data = raw
-    facts: list[tuple[str, str]] = []
-    raw_facts = _pick(data, "facts")
-    if isinstance(raw_facts, dict):
-        facts = [(_text(k), _text(v)) for k, v in raw_facts.items() if _text(v)]
-    else:
-        for entry in _as_list(raw_facts):
-            if isinstance(entry, dict):
-                label = _text(entry.get("label") or entry.get("항목") or entry.get("이름"))
-                value = _text(entry.get("value") or entry.get("값") or entry.get("내용"))
-                if label and value:
-                    facts.append((label, value))
+    facts = _pairs(_pick(data, "facts"))
     paragraphs = [_text(t) for t in _as_list(_pick(data, "paragraphs")) if _text(t)]
     if not paragraphs:
         body = _str(_pick(data, "description"))
@@ -507,6 +529,8 @@ def _parse_about(raw: Any, problems: list[str]) -> AboutSpec:
         paragraphs=paragraphs,
         image=_text(_pick(data, "image")),
         facts=facts,
+        history=_pairs(_pick(data, "history")),
+        credentials=_pairs(_pick(data, "credentials")),
         signature=_text(_pick(data, "signature")),
     )
 

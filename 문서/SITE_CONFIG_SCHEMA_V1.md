@@ -70,6 +70,24 @@ python -m factory.cli validate 주문서.json     # 오류 0 이면 종료코드
 `headline` · `subline` · `image` · `badges[]` · `cta_label` · `cta_href` · `sub_cta_*`
 글 한 줄만 적으면 `headline` 으로 봅니다. 없으면 `company.tagline` → 상호 순으로 대신합니다.
 
+### about
+
+`headline`/`제목` · `paragraphs`/`문단` · `image`/`사진` · `facts`/`정보` · `signature`/`맺음`
+
+**2026-09-28 추가 — `history`/`연혁` 과 `credentials`/`인증`.**
+둘 다 선택이고, **있을 때만** 그 블록이 화면에 섭니다. 기업 홈페이지에서만 쓰지만
+`about` 안에 두어 최상단 칸이 늘지 않게 했습니다.
+
+`facts` · `history` · `credentials` 는 모두 **항목·값 목록**이고, 세 가지 꼴을 받습니다.
+
+```json
+{"설립": "2018년"}                         사전
+[{"항목": "설립", "값": "2018년"}]          항목 사전들
+[["설립", "2018년"]]                       두 칸짜리 줄들   ← 가장 자주 옵니다
+```
+
+(세 번째 꼴은 2026-09-28 이전에는 조용히 버려졌습니다. 지금은 받습니다.)
+
 ### strengths[] · services[] · process[]
 
 각 항목에 **`name`** 이 있어야 합니다(`이름`·`title`·`제목` 도 됩니다).
@@ -104,9 +122,11 @@ python -m factory.cli validate 주문서.json     # 오류 0 이면 종료코드
 
 ### theme
 
-글 한 줄이면 프리셋 이름: `charcoal` · `beige` · `black` · `green` ·
-`sky`(네이비·프레시) · `mist`(그레이·미스트).
-뒤의 둘은 2026-09-28 에 늘렸습니다 — 청소·홈케어처럼 밝고 단정해야 하는 업종용입니다.
+글 한 줄이면 프리셋 이름:
+`charcoal` · `beige` · `black` · `green` · `sky`(네이비·프레시) · `mist`(그레이·미스트) ·
+`steel`(네이비·인더스트리얼) · `graphite`(그라파이트·블루).
+뒤의 넷은 2026-09-28 에 늘렸습니다 — `sky`·`mist` 는 청소·홈케어,
+`steel`·`graphite` 는 기업·B2B 용입니다.
 사전이면 `preset` 위에 `primary` · `accent` · `background` · `surface` · `mode` · `radius` · `font` 을 덮습니다.
 모르는 이름은 **경고**하고 기본값으로 갑니다.
 

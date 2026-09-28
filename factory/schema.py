@@ -58,7 +58,7 @@ OBJECTS = ("company", "contact", "site", "seo", "layout", "brand")
 #   about: "소개글" / hero: "대표문구" / theme: "charcoal" / reference: "https://..."
 OBJECT_OR_TEXT = ("about", "hero", "theme", "reference")
 
-KNOWN_THEMES = ("charcoal", "beige", "black", "green", "sky", "mist")
+KNOWN_THEMES = ("charcoal", "beige", "black", "green", "sky", "mist", "steel", "graphite")
 
 
 @dataclass

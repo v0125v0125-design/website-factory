@@ -1,0 +1,39 @@
+<footer class="cf">
+  <div class="wrap cf__in">
+    <div class="cf__col cf__col--brand">
+      <p class="cf__name">{{ brief.business.name }}</p>
+      {%- if brief.business.tagline %}<p>{{ brief.business.tagline }}</p>{%- endif %}
+    </div>
+    <div class="cf__col">
+      <h4>바로가기</h4>
+      <ul class="cf__links">
+        {%- for link in content.nav %}
+        <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+        {%- endfor %}
+      </ul>
+    </div>
+    <div class="cf__col">
+      <h4>문의</h4>
+      <ul class="cf__links">
+        {%- if brief.contact.phone %}<li><a href="{{ content.meta.tel_href }}">{{ brief.contact.phone }}</a></li>{%- endif %}
+        {%- if brief.contact.email %}<li><a href="mailto:{{ brief.contact.email }}">{{ brief.contact.email }}</a></li>{%- endif %}
+        {%- if brief.contact.hours %}<li>{{ brief.contact.hours }}</li>{%- endif %}
+        {%- for label, url in brief.contact.links.items() %}
+        <li><a href="{{ url }}" rel="noopener" target="_blank">{{ label }}</a></li>
+        {%- endfor %}
+      </ul>
+    </div>
+    <div class="cf__col">
+      <h4>오시는 길</h4>
+      <ul class="cf__links">
+        {%- if brief.contact.address %}<li>{{ brief.contact.address }}</li>{%- endif %}
+        {%- if brief.business.owner %}<li>대표 {{ brief.business.owner }}</li>{%- endif %}
+        {%- if brief.contact.map_url %}<li><a href="{{ brief.contact.map_url }}" rel="noopener" target="_blank">약도 보기</a></li>{%- endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="wrap cf__bottom">
+    <span>© {{ year }} {{ brief.business.name }}. All rights reserved.</span>
+    {%- if brief.seo.keywords %}<span>{{ brief.seo.keywords | join(' · ') }}</span>{%- endif %}
+  </div>
+</footer>

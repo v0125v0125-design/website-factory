@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="예시 이미지"><defs>
+  <linearGradient id="b16" x1="0" y1="0" x2=".2" y2="1">
+    <stop offset="0" stop-color="#E9ECEF"/><stop offset="1" stop-color="#9AA6B2" stop-opacity=".55"/>
+  </linearGradient>
+  <linearGradient id="l16" x1="0" y1="0" x2=".9" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".46"/>
+    <stop offset=".62" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#1B2836" stop-opacity=".2"/>
+  </linearGradient>
+</defs><rect width="800" height="600" fill="url(#b16)"/><rect x="0" y="432" width="800" height="168" fill="#CFD6DD" opacity="1"/><rect x="48" y="60" width="28" height="372" fill="#9AA6B2" opacity=".9"/><rect x="272" y="60" width="28" height="372" fill="#9AA6B2" opacity=".9"/><rect x="496" y="60" width="28" height="372" fill="#9AA6B2" opacity=".9"/><rect x="720" y="60" width="28" height="372" fill="#9AA6B2" opacity=".9"/><polygon points="0,60 800,12 800,48 0,96" fill="#1B2836" opacity=".18"/><rect x="112" y="36" width="112" height="8" fill="#fff" opacity=".8"/><rect x="352" y="36" width="112" height="8" fill="#fff" opacity=".8"/><rect x="592" y="36" width="112" height="8" fill="#fff" opacity=".8"/><rect x="96" y="264" width="192" height="168" fill="#9AA6B2" opacity="1" stroke="#1B2836" stroke-opacity=".35" stroke-width="2"/><rect x="368" y="228" width="240" height="204" fill="#9AA6B2" opacity=".85" stroke="#1B2836" stroke-opacity=".35" stroke-width="2"/><rect x="400" y="252" width="64" height="30" fill="#E2622A" opacity=".85"/><line x1="0" y1="432" x2="800" y2="432" stroke="#1B2836" stroke-opacity=".3" stroke-width="2"/><rect width="800" height="600" fill="url(#l16)"/></svg>

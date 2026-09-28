@@ -87,8 +87,8 @@
 
   "samples": {
     "heading": "디자인을 직접 보고 고르세요",
-    "lede": "아래 샘플은 실제로 돌아가는 홈페이지입니다. 눌러서 PC와 휴대폰으로 그대로 확인해 보세요. 업종에 따라 구성이 다릅니다.",
-    "categories": ["전체", "인테리어 / 시공", "청소 / 홈케어", "기업 / B2B", "교육", "전문서비스"],
+    "lede": "아래는 저희가 만든 디자인 샘플입니다. 실제로 돌아가는 홈페이지이므로 눌러서 PC와 휴대폰으로 그대로 확인해 보세요. 업종에 따라 구성이 다릅니다.",
+    "categories": ["전체", "인테리어 / 시공", "청소 / 홈케어", "기업 / B2B / 제조", "교육", "전문서비스"],
     "items": [
       {
         "slug": "interior-01",
@@ -116,11 +116,15 @@
       },
       {
         "slug": "company-01",
-        "category": "기업 / B2B",
+        "category": "기업 / B2B / 제조",
         "title": "COMPANY 01",
-        "subtitle": "제조 · 유통 · B2B 회사소개",
-        "styleTags": ["단정", "회사소개", "문서 중심"],
-        "status": "preparing"
+        "subtitle": "제조 · 기계 · 부품 · 설비 · 엔지니어링",
+        "styleTags": ["신뢰", "기술", "전문"],
+        "previewImage": "assets/samples/company-01.webp",
+        "previewUrl": "https://v0125v0125-design.github.io/website-factory/company-01/",
+        "product": "START",
+        "status": "available",
+        "note": "사업영역 · 핵심역량 · 수행사례 · 회사정보를 차례로 보여 주는 구성입니다. 거래처가 회사를 확인하고 문의하는 흐름에 맞췄습니다."
       }
     ]
   },
@@ -276,7 +280,7 @@
       { "name": "name", "label": "성함", "type": "text", "required": true },
       { "name": "contact", "label": "연락처", "type": "tel", "required": true, "placeholder": "연락 가능한 번호" },
       { "name": "product", "label": "상품", "type": "select", "options": ["START (169,000원)", "BUSINESS (349,000원)", "아직 정하지 못했습니다"] },
-      { "name": "design", "label": "고른 디자인", "type": "select", "options": ["INTERIOR 01", "CLEANING 01", "아직 고르지 못했습니다"] },
+      { "name": "design", "label": "고른 디자인", "type": "select", "options": ["INTERIOR 01", "CLEANING 01", "COMPANY 01", "아직 고르지 못했습니다"] },
       { "name": "domain", "label": "도메인", "type": "select", "options": ["이미 있습니다", "없습니다", "잘 모르겠습니다"] },
       { "name": "message", "label": "요청사항", "type": "textarea", "required": false, "placeholder": "원하시는 분위기나 꼭 넣고 싶은 내용이 있으면 적어 주세요" }
     ],

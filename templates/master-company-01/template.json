@@ -1,0 +1,20 @@
+{
+  "id": "master-company-01",
+  "name": "기업·B2B 마스터 01",
+  "summary": "제조·기계·부품·설비·엔지니어링·물류처럼 회사 신뢰도를 보여야 하는 법인용 원페이지 마스터. 감성이나 전후 비교가 아니라 사업영역·핵심역량·수행사례·회사정보로 설득한다. 대형 구축은 필요 없지만 회사 소개 홈페이지는 있어야 하는 중소기업이 대상이다.",
+  "page_count": 1,
+  "hero": "split",
+  "density": "regular",
+  "industries": ["manufacturing", "tech", "construction", "legal", "shop", "general"],
+  "moods": ["professional", "trustworthy", "modern", "minimal", "clean", "bold"],
+  "features": ["form", "faq", "process", "gallery", "hours", "map", "team", "notice", "testimonials"],
+  "goals": ["inquiry", "brand", "sell"],
+  "pages": [
+    {
+      "slug": "",
+      "title": "홈",
+      "nav_label": "홈",
+      "sections": ["hero", "overview", "services", "strengths", "gallery", "projects", "process", "about", "testimonials", "faq", "contact"]
+    }
+  ]
+}

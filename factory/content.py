@@ -34,6 +34,7 @@ class Lexicon:
     projects_heading: str = "시공 사례"
     beforeafter_heading: str = "작업 전 · 후"
     area_heading: str = "서비스 지역"
+    overview_heading: str = "회사 개요"
 
 
 LEXICONS: dict[str, Lexicon] = {
@@ -54,6 +55,10 @@ LEXICONS: dict[str, Lexicon] = {
     "cleaning": Lexicon("청소 서비스", "서비스", "업체 소개", "작업 사진", "견적 문의",
                         "작업 순서", "견적 문의", strengths_heading="맡기시기 전에 약속드리는 것",
                         projects_heading="작업 사례"),
+    # 기업·B2B 는 "무엇을 하는 회사이고 무엇을 할 수 있는가" 다. 말씨를 문어체로.
+    "manufacturing": Lexicon("사업 영역", "사업 영역", "회사 소개", "제품 · 설비", "문의",
+                             "진행 절차", "문의하기", strengths_heading="핵심 역량",
+                             projects_heading="수행 사례", overview_heading="회사 개요"),
     "general": Lexicon(),
 }
 
@@ -192,6 +197,8 @@ class CopyEngine:
                 "paragraphs": body_paragraphs,
                 "facts": facts,
                 "image": spec.image,
+                "history": list(spec.history),
+                "credentials": list(spec.credentials),
                 "signature": spec.signature or (f"대표 {biz.owner}" if biz.owner else ""),
             },
         )
@@ -295,6 +302,35 @@ class CopyEngine:
             heading=self.lex.beforeafter_heading,
             data={"items": rows, "paired": sum(1 for r in rows if r["paired"])},
         )
+
+    def overview(self) -> Section | None:
+        """회사 한눈에 — **페이지에서 직접 셀 수 있는 것만** 숫자로 세운다.
+
+        "누적 고객 1,240곳" 같은 것은 확인할 길이 없으므로 만들지 않는다.
+        사업영역 수 · 대응 단계 수 · 적용 산업 수는 아래 섹션을 세면 바로 맞는다.
+        """
+        rows: list[dict] = []
+        if self.brief.business.founded:
+            rows.append({"value": self.brief.business.founded, "unit": "년",
+                         "label": "설립", "note": ""})
+        if self.brief.items:
+            rows.append({"value": str(len(self.brief.items)), "unit": "개",
+                         "label": self.lex.items_heading, "note": "아래에서 확인하실 수 있습니다"})
+        industries = list(dict.fromkeys(p.category for p in self.brief.projects if p.category))
+        if industries:
+            rows.append({"value": str(len(industries)), "unit": "개",
+                         "label": "적용 산업", "note": " · ".join(industries[:4])})
+        if self.brief.process:
+            rows.append({"value": str(len(self.brief.process)), "unit": "단계",
+                         "label": self.lex.process_heading, "note": "문의부터 사후 대응까지"})
+        if self.brief.seo.region:
+            rows.append({"value": self.brief.seo.region, "unit": "",
+                         "label": "대응 지역", "note": ""})
+        if len(rows) < 2:
+            self.skipped.append("overview: 셀 수 있는 것이 없어 뺐습니다")
+            return None
+        return Section(kind="overview", heading=self.lex.overview_heading,
+                       data={"items": rows[:4]})
 
     def area(self) -> Section | None:
         """어디까지 갑니까. 찾아가는 업종은 이것이 가격보다 먼저 걸린다."""
@@ -427,6 +463,7 @@ class CopyEngine:
             "projects": self.projects,
             "beforeafter": self.beforeafter,
             "area": self.area,
+            "overview": self.overview,
             "gallery": self.gallery,
             "testimonials": self.testimonials,
             "faq": self.faq,
@@ -525,6 +562,7 @@ def build_content(brief: Brief, template: TemplateSpec, style: StyleProfile) -> 
             "projects": engine.lex.projects_heading,
             "beforeafter": engine.lex.beforeafter_heading,
             "area": engine.lex.area_heading,
+            "overview": engine.lex.overview_heading,
             "process": engine.lex.process_heading,
             "about": engine.lex.about_heading,
             "services": engine.lex.items_heading,

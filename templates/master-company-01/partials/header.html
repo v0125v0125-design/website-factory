@@ -1,0 +1,44 @@
+{#- 기업 홈페이지의 머리는 처음부터 짙다. 메뉴는 다섯을 넘기지 않는다 —
+    옛날 기업 사이트가 낡아 보이는 첫 번째 이유가 열 개짜리 상단 메뉴다. -#}
+{%- set wanted = ['#services', '#strengths', '#projects', '#process', '#about'] -%}
+{%- set desktop_nav = content.nav | selectattr('href', 'in', wanted) | list -%}
+<header class="ch" id="site-head">
+  <div class="wrap ch__in">
+    <a class="ch__brand" href="#top">
+      {%- if brief.brand.logo %}
+      <img class="ch__logo" src="{{ brief.brand.logo }}" alt="{{ brief.business.name }}">
+      {%- else %}
+      <span class="ch__mark" aria-hidden="true">{{ initial }}</span>
+      {%- endif %}
+      <span class="ch__names">
+        <b>{{ brief.brand.logo_text }}</b>
+        {%- if brief.business.keywords %}<i>{{ brief.business.keywords[0] }}</i>{%- endif %}
+      </span>
+    </a>
+
+    <button class="ch__toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+      <span class="sr-only">메뉴 열기</span>
+    </button>
+
+    <nav class="ch__nav" id="site-menu" aria-label="주요 메뉴">
+      <ul class="ch__list">
+        {%- for link in desktop_nav %}
+        <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+        {%- endfor %}
+        {%- for link in content.nav if link not in desktop_nav %}
+        <li class="ch__more"><a href="{{ link.href }}">{{ link.label }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+
+    <div class="ch__aside">
+      {%- if brief.contact.phone %}
+      <a class="ch__tel" href="{{ content.meta.tel_href }}">
+        <span>대표번호</span><b>{{ brief.contact.phone }}</b>
+      </a>
+      {%- endif %}
+      <a class="btn btn--sm btn--accent" href="#contact">{{ content.meta.cta_label }}</a>
+    </div>
+  </div>
+</header>

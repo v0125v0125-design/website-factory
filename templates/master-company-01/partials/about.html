@@ -1,0 +1,56 @@
+{#- 회사 정보 한 덩어리 — 대표 메시지 · 회사 개요 · 연혁 · 인증.
+    연혁과 인증은 고객이 자료를 줄 때만 섭니다. 공장이 만들어 내지 않습니다. -#}
+<section class="sec sec--tint" id="about">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">COMPANY</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+    </div>
+    <div class="co">
+      <div class="co__word">
+        {%- if section.data.image %}
+        <img class="co__shot" src="{{ section.data.image }}" alt="{{ brief.business.name }}" loading="lazy">
+        {%- endif %}
+        {%- for para in section.data['paragraphs'] %}
+        <p>{{ para }}</p>
+        {%- endfor %}
+        {%- if section.data.signature %}<p class="co__sign">{{ section.data.signature }}</p>{%- endif %}
+      </div>
+
+      <div class="co__side">
+        {%- if section.data['facts'] %}
+        <div class="co__box">
+          <h3>회사 개요</h3>
+          <dl class="co__facts">
+            {%- for label, value in section.data['facts'] %}
+            <div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+            {%- endfor %}
+          </dl>
+        </div>
+        {%- endif %}
+
+        {%- if section.data['history'] %}
+        <div class="co__box">
+          <h3>연혁</h3>
+          <ol class="co__hist">
+            {%- for when, what in section.data['history'] %}
+            <li><b>{{ when }}</b><span>{{ what }}</span></li>
+            {%- endfor %}
+          </ol>
+        </div>
+        {%- endif %}
+
+        {%- if section.data['credentials'] %}
+        <div class="co__box">
+          <h3>인증 · 보유 설비</h3>
+          <dl class="co__facts">
+            {%- for label, value in section.data['credentials'] %}
+            <div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+            {%- endfor %}
+          </dl>
+        </div>
+        {%- endif %}
+      </div>
+    </div>
+  </div>
+</section>

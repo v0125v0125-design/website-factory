@@ -180,7 +180,15 @@ def test_every_live_sample_can_be_chosen_in_the_order_form(data):
 
 def test_more_than_one_industry_is_actually_on_sale(data):
     live = [s for s in data["samples"]["items"] if s.get("status") == "available"]
-    assert len({s["category"] for s in live}) >= 2, "업종이 하나뿐이면 '골라 보세요'가 성립하지 않는다"
+    assert len({s["category"] for s in live}) >= 3, "업종이 적으면 '골라 보세요'가 성립하지 않는다"
+
+
+def test_samples_are_never_called_customer_work(page):
+    """셋 다 우리가 만든 디자인 샘플이다. 고객 제작 사례로 부르지 않는다."""
+    text = _text(page)
+    for lie in ("고객 제작 사례", "실제 고객사", "납품 실적", "제작 고객", "고객사 로고"):
+        assert lie not in text, lie
+    assert "디자인 샘플" in text
 
 
 def test_the_anchors_the_buttons_point_at_all_exist(page):

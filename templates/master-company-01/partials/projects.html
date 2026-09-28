@@ -1,0 +1,34 @@
+{#- 수행 사례. 인테리어는 모자이크, 청소는 격자, 기업은 **표**다.
+    적용 산업 · 프로젝트 · 범위가 한 줄로 읽혀야 담당자가 자기 경우를 찾는다.
+    실제 고객사 이름과 로고는 쓰지 않는다 — 익명 유형으로만 적는다. -#}
+<section class="sec sec--tint" id="projects">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">REFERENCES</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+      <p class="sec__lead">비밀유지 계약에 따라 발주처명은 표기하지 않고 프로젝트 유형으로만 적습니다.</p>
+    </div>
+    <div class="rf" role="table" aria-label="{{ section.heading }}">
+      <div class="rf__head" role="row">
+        <span role="columnheader">적용 산업</span>
+        <span role="columnheader">프로젝트</span>
+        <span role="columnheader">수행 범위</span>
+      </div>
+      {%- for row in section.data['items'] %}
+      <div class="rf__row" role="row">
+        <span class="rf__cat" role="cell">{{ row.category or '—' }}</span>
+        <span class="rf__name" role="cell">
+          {%- if row.image %}
+          <img src="{{ row.image }}" alt="" loading="lazy">
+          {%- endif %}
+          <span class="rf__text">
+            <b>{{ row.title }}</b>
+            {%- if row.summary %}<i>{{ row.summary }}</i>{%- endif %}
+          </span>
+        </span>
+        <span class="rf__scope" role="cell">{{ row.size or row.location or row.year or '—' }}</span>
+      </div>
+      {%- endfor %}
+    </div>
+  </div>
+</section>

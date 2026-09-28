@@ -1,0 +1,34 @@
+<script>
+/* MASTER_COMPANY_01 — 없어도 페이지가 도는 것만 붙인다.
+   모바일 메뉴 · 머리 그림자 · 받는 곳 없는 문의폼. */
+(function () {
+  "use strict";
+
+  var head = document.getElementById("site-head");
+  var toggle = head && head.querySelector(".ch__toggle");
+  if (head && toggle) {
+    toggle.addEventListener("click", function () {
+      var open = head.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    head.addEventListener("click", function (e) {
+      if (e.target.tagName === "A" && head.classList.contains("is-open")) {
+        head.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+    var onScroll = function () { head.classList.toggle("is-stuck", window.scrollY > 8); };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
+  var quiet = document.querySelector('.ct__form[data-noaction]');
+  if (quiet) {
+    quiet.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var note = quiet.querySelector(".ct__sent");
+      if (note) { note.hidden = false; note.scrollIntoView({ block: "nearest" }); }
+    });
+  }
+})();
+</script>

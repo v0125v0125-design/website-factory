@@ -1,0 +1,21 @@
+{#- 기업 샘플에는 후기를 싣지 않습니다. 받은 것이 있을 때만 이 칸이 섭니다. -#}
+<section class="sec" id="testimonials">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">VOICES</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+    </div>
+    <ul class="vo">
+      {%- for row in section.data['items'] %}
+      <li class="vo__card">
+        <blockquote>{{ row.quote }}</blockquote>
+        <p class="vo__who">
+          {%- if row.name %}<b>{{ row.name }}</b>{% endif %}
+          {%- if row.role %}<span>{{ row.role }}</span>{% endif %}
+          {%- if row.project %}<span>{{ row.project }}</span>{% endif %}
+        </p>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

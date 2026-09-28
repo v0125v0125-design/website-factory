@@ -1,0 +1,19 @@
+{#- 핵심 역량. 사업영역과 다른 칸이다 — 저기는 "무엇을", 여기는 "어떻게".
+    숫자를 세우지 않는다. 세울 실적이 있으면 회사 개요 띠가 맡는다. -#}
+<section class="sec sec--dark" id="strengths">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow eyebrow--on">CORE CAPABILITIES</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+    </div>
+    <ul class="cap">
+      {%- for item in section.data['items'] %}
+      <li class="cap__cell">
+        <p class="cap__no">{{ '%02d' % loop.index }}</p>
+        <h3>{{ item.title }}</h3>
+        {%- if item.summary %}<p>{{ item.summary }}</p>{%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

@@ -27,6 +27,7 @@ CHROMIUM = ("/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
 SHOTS = [
     ("interior-01", ROOT / "examples" / "master-interior-01.json"),
     ("cleaning-01", ROOT / "examples" / "customers" / "d-bareungyeol.json"),
+    ("company-01", ROOT / "examples" / "customers" / "e-brickon.json"),
 ]
 WIDTH, HEIGHT = 1440, 1000          # 위쪽 한 화면 (첫인상이 카드에 실린다)
 

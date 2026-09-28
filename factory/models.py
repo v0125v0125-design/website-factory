@@ -181,6 +181,9 @@ class AboutSpec:
     image: str = ""
     facts: list[tuple[str, str]] = field(default_factory=list)
     signature: str = ""    # "대표 김○○" 처럼 맺는 한 줄
+    # 기업 홈페이지에서만 쓰는 두 칸. 없으면 그 블록이 통째로 빠진다.
+    history: list[tuple[str, str]] = field(default_factory=list)      # ("2018", "법인 설립")
+    credentials: list[tuple[str, str]] = field(default_factory=list)  # ("ISO 9001", "2021.03")
 
 
 @dataclass

@@ -1,0 +1,94 @@
+{#- B2B 문의. 소비자 광고처럼 만들지 않는다 — 회사·담당자·용건이 먼저다. -#}
+<section class="sec sec--dark" id="contact">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow eyebrow--on">CONTACT</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+      <p class="sec__lead sec__lead--on">도면이나 사양서가 없어도 됩니다. 필요한 것과 수량, 일정만 알려 주시면 가능 여부를 먼저 회신드립니다.</p>
+    </div>
+
+    <div class="ct">
+      <form class="ct__form" method="post" action="{{ form_action or '#contact' }}"
+            {% if not form_action %}data-noaction="1"{% endif %}>
+        <div class="field--row">
+          <p class="field">
+            <label for="f-company">회사명</label>
+            <input id="f-company" name="company" type="text" required autocomplete="organization">
+          </p>
+          <p class="field">
+            <label for="f-name">담당자</label>
+            <input id="f-name" name="name" type="text" required autocomplete="name">
+          </p>
+        </div>
+        <div class="field--row">
+          <p class="field">
+            <label for="f-phone">연락처</label>
+            <input id="f-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel">
+          </p>
+          <p class="field">
+            <label for="f-email">이메일 <span class="muted">(선택)</span></label>
+            <input id="f-email" name="email" type="email" autocomplete="email">
+          </p>
+        </div>
+        <div class="field--row">
+          <p class="field">
+            <label for="f-kind">문의 분야</label>
+            <select id="f-kind" name="kind">
+              {%- for item in brief.items %}
+              <option>{{ item.title }}</option>
+              {%- endfor %}
+              <option>사업 제휴</option>
+              <option>기타 문의</option>
+            </select>
+          </p>
+          <p class="field">
+            <label for="f-when">희망 일정 <span class="muted">(선택)</span></label>
+            <input id="f-when" name="when" type="text" placeholder="예: 3개월 내 · 미정">
+          </p>
+        </div>
+        <p class="field">
+          <label for="f-message">요구 사항</label>
+          <textarea id="f-message" name="message" rows="4" required placeholder="필요한 설비·부품, 수량, 현재 공정에서 겪고 계신 문제를 적어 주십시오"></textarea>
+        </p>
+        <p class="field field--check">
+          <input id="f-agree" name="agree" type="checkbox" required>
+          <label for="f-agree">개인정보 수집·이용에 동의합니다. (문의 회신 목적으로만 사용하고 회신 후 파기합니다)</label>
+        </p>
+        <p><button class="btn btn--block btn--lg btn--accent" type="submit">{{ section.data.cta_label }}</button></p>
+        {%- if not form_action %}
+        {#- 받는 곳이 아직 없을 때. 손님에게는 연락 방법만 알린다 — 설정 이야기는 하지 않는다. -#}
+        <p class="ct__sent" role="status" hidden>
+          지금은 온라인 접수 대신 전화로 문의를 받고 있습니다.
+          {%- if section.data.phone %} {{ section.data.phone }} 으로 연락해 주십시오.{% endif %}
+        </p>
+        {%- endif %}
+      </form>
+
+      <aside class="ct__side">
+        <div class="ct__box">
+          <h3>문의처</h3>
+          <div class="ct__list">
+            {%- for label, value, href in section.data['rows'] %}
+            <div class="ct__row">
+              <span class="ct__label">{{ label }}</span>
+              <span class="ct__value">
+                {%- if href %}<a href="{{ href }}"{% if href.startswith('http') %} rel="noopener" target="_blank"{% endif %}>{{ value }}</a>{% else %}{{ value }}{% endif -%}
+              </span>
+            </div>
+            {%- endfor %}
+          </div>
+          {%- if section.data.tel_href or section.data.map_url %}
+          <div class="ct__actions">
+            {%- if section.data.tel_href %}
+            <a class="btn btn--sm btn--invert" href="{{ section.data.tel_href }}">전화 문의</a>
+            {%- endif %}
+            {%- if section.data.map_url %}
+            <a class="btn btn--sm btn--ghost-on" href="{{ section.data.map_url }}" rel="noopener" target="_blank">약도 보기</a>
+            {%- endif %}
+          </div>
+          {%- endif %}
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>

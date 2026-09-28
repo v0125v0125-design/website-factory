@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="예시 이미지 · 회사 사진 자리"><defs>
+  <linearGradient id="b1" x1="0" y1="0" x2=".2" y2="1">
+    <stop offset="0" stop-color="#EDEFF1"/><stop offset="1" stop-color="#A3ABB4" stop-opacity=".55"/>
+  </linearGradient>
+  <linearGradient id="l1" x1="0" y1="0" x2=".9" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".46"/>
+    <stop offset=".62" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#20262C" stop-opacity=".2"/>
+  </linearGradient>
+</defs><rect width="1600" height="1000" fill="url(#b1)"/><rect x="0" y="720" width="1600" height="280" fill="#D5D9DD" opacity="1"/><rect x="96" y="100" width="56" height="620" fill="#A3ABB4" opacity=".9"/><rect x="544" y="100" width="56" height="620" fill="#A3ABB4" opacity=".9"/><rect x="992" y="100" width="56" height="620" fill="#A3ABB4" opacity=".9"/><rect x="1440" y="100" width="56" height="620" fill="#A3ABB4" opacity=".9"/><polygon points="0,100 1600,20 1600,80 0,160" fill="#20262C" opacity=".18"/><rect x="224" y="60" width="224" height="14" fill="#fff" opacity=".8"/><rect x="704" y="60" width="224" height="14" fill="#fff" opacity=".8"/><rect x="1184" y="60" width="224" height="14" fill="#fff" opacity=".8"/><rect x="192" y="440" width="384" height="280" fill="#A3ABB4" opacity="1" stroke="#20262C" stroke-opacity=".35" stroke-width="3"/><rect x="736" y="380" width="480" height="340" fill="#A3ABB4" opacity=".85" stroke="#20262C" stroke-opacity=".35" stroke-width="3"/><rect x="800" y="420" width="128" height="50" fill="#E2622A" opacity=".85"/><line x1="0" y1="720" x2="1600" y2="720" stroke="#20262C" stroke-opacity=".3" stroke-width="2"/><rect width="1600" height="1000" fill="url(#l1)"/><text x="800" y="960" text-anchor="middle" font-family="sans-serif" font-size="36" fill="#20262C" opacity=".40">예시 이미지 · 회사 사진 자리</text></svg>

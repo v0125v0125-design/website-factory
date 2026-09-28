@@ -1,0 +1,19 @@
+{#- 문의부터 사후 대응까지. 화살표로 이어 붙여 "빠짐없이 돈다" 를 눈으로 보인다. -#}
+<section class="sec" id="process">
+  <div class="wrap">
+    <div class="sec__head">
+      <p class="eyebrow">WORKFLOW</p>
+      <h2 class="sec__title">{{ section.heading }}</h2>
+    </div>
+    <ol class="wf">
+      {%- for step in section.data['steps'] %}
+      <li class="wf__step">
+        <p class="wf__no">{{ step.step or '%02d' % loop.index }}</p>
+        <h3>{{ step.title }}</h3>
+        {%- if step.summary %}<p>{{ step.summary }}</p>{%- endif %}
+        {%- if step.duration %}<p class="wf__dur">{{ step.duration }}</p>{%- endif %}
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>

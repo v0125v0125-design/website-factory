@@ -49,6 +49,7 @@ PRESETS: dict[str, Preset] = {
     "tech":         Preset("#4c6ef5", "#12b886", ("modern", "clean"), 12, "regular", "split"),
     "wellness":     Preset("#6f9e7e", "#d1a054", ("soft", "natural"), 18, "airy", "image"),
     "cleaning":     Preset("#16324F", "#0E9F8C", ("clean", "trustworthy"), 8, "regular", "split"),
+    "manufacturing": Preset("#17293D", "#E2622A", ("professional", "modern"), 3, "regular", "split"),
     "general":      Preset("#2f6fed", "#12b886", ("clean", "modern"), 10, "regular", "split"),
 }
 
@@ -100,6 +101,17 @@ THEMES: dict[str, ThemePreset] = {
         "mist", "그레이 · 미스트",
         primary="#24303A", accent="#2F7FA8",
         background="#FFFFFF", surface="#F1F3F4", radius="8px",
+    ),
+    # 아래 둘은 기업·B2B 용. 모서리를 거의 세우고 포인트는 하나만 둔다.
+    "steel": ThemePreset(
+        "steel", "네이비 · 인더스트리얼",
+        primary="#17293D", accent="#E2622A",
+        background="#FFFFFF", surface="#F2F4F7", radius="3px",
+    ),
+    "graphite": ThemePreset(
+        "graphite", "그라파이트 · 블루",
+        primary="#22262B", accent="#2F6FB5",
+        background="#FFFFFF", surface="#F4F5F6", radius="3px",
     ),
 }
 

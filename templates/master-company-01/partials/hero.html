@@ -1,0 +1,37 @@
+{#- 무엇을 만드는 회사인지, 누구에게 주는지가 한 화면에 있어야 한다.
+    감성 문구로 덮지 않는다. 사진은 오른쪽에 도면처럼 잘라 넣는다. -#}
+<section class="hr" id="top">
+  <div class="hr__grid" aria-hidden="true"></div>
+  <div class="wrap hr__in">
+    <div class="hr__copy">
+      {%- if section.data.kicker %}<p class="hr__kicker">{{ section.data.kicker }}</p>{%- endif %}
+      <h1 class="hr__title">{{ section.heading }}</h1>
+      {%- if section.subheading %}<p class="hr__sub">{{ section.subheading }}</p>{%- endif %}
+
+      {%- if brief.items %}
+      <ul class="hr__areas">
+        {%- for item in brief.items[:4] %}
+        <li><span class="hr__no">{{ '%02d' % loop.index }}</span>{{ item.title }}</li>
+        {%- endfor %}
+      </ul>
+      {%- endif %}
+
+      <div class="hr__actions">
+        <a class="btn btn--lg btn--accent" href="{{ section.data.cta_href }}">{{ section.data.cta_label }}</a>
+        <a class="btn btn--lg btn--ghost-on" href="#services">사업 영역 보기</a>
+      </div>
+
+      {%- if section.data.badges %}
+      <ul class="hr__badges">
+        {%- for badge in section.data.badges %}<li>{{ badge }}</li>{%- endfor %}
+      </ul>
+      {%- endif %}
+    </div>
+
+    {%- if section.data.image %}
+    <figure class="hr__shot">
+      <img src="{{ section.data.image }}" alt="{{ brief.business.name }}" fetchpriority="high">
+    </figure>
+    {%- endif %}
+  </div>
+</section>

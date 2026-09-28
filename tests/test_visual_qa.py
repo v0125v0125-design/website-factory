@@ -289,6 +289,92 @@ def test_the_estimate_is_always_one_tap_away_on_a_phone(browser, cleaning_url):
     page.close()
 
 
+COMPANY = EXAMPLES / "customers" / "e-brickon.json"
+
+
+@pytest.fixture(scope="module")
+def company_url(tmp_path_factory):
+    result = build_from_file(
+        COMPANY, tmp_path_factory.mktemp("visual-company"), offline=True, clean=True
+    )
+    return (result.out_dir / "index.html").as_uri()
+
+
+@pytest.mark.parametrize("name", list(WIDTHS))
+def test_company_holds_at_every_width(browser, company_url, name):
+    width, height = WIDTHS[name]
+    page, problems = _open(browser, company_url, width, height)
+    doc_width = page.evaluate("() => document.documentElement.scrollWidth")
+    assert doc_width <= width + 1, f"{name}: 가로 스크롤 ({doc_width} > {width})"
+    assert not problems, f"{name}: {problems}"
+    page.evaluate("() => window.scrollTo(0, document.body.scrollHeight)")
+    page.wait_for_timeout(800)
+    broken = page.evaluate(
+        "() => [...document.images].filter(i => !i.complete || i.naturalWidth === 0).length"
+    )
+    assert broken == 0, f"{name}: 깨진 사진 {broken}장"
+    page.close()
+
+
+def test_the_reference_table_folds_on_a_phone(browser, company_url):
+    """넓은 화면에서는 표, 좁은 화면에서는 줄. 가로로 밀리게 두지 않는다."""
+    wide, _ = _open(browser, company_url, 1440, 900)
+    assert wide.evaluate("() => getComputedStyle(document.querySelector('.rf__head')).display") != "none"
+    wide.close()
+    small, _ = _open(browser, company_url, 375, 812)
+    assert small.evaluate("() => getComputedStyle(document.querySelector('.rf__head')).display") == "none"
+    overflow = small.evaluate("""() => {
+      const t = document.querySelector('.rf');
+      return Math.round(t.scrollWidth - t.clientWidth);
+    }""")
+    assert overflow <= 1, f"표가 가로로 {overflow}px 넘칩니다"
+    small.close()
+
+
+def test_the_overview_band_sits_across_the_hero(browser, company_url):
+    """기업 사이트의 기본기 — 첫 화면 아래 걸친 개요 띠."""
+    page, _ = _open(browser, company_url, 1440, 900)
+    lap = page.evaluate("""() => {
+      const hero = document.querySelector('.hr').getBoundingClientRect();
+      const card = document.querySelector('.ov__card').getBoundingClientRect();
+      return {lap: Math.round(hero.bottom - card.top), cells: document.querySelectorAll('.ov__cell').length};
+    }""")
+    assert lap["lap"] > 20, f"띠가 첫 화면에 걸치지 않습니다 ({lap['lap']}px)"
+    assert lap["cells"] == 4
+    page.close()
+
+
+def test_the_three_masters_do_not_look_like_the_same_site(browser, page_url, cleaning_url, company_url):
+    """색만 바꾼 같은 틀이면 셋을 나란히 팔 수 없다."""
+    shapes = {}
+    for name, url in (("interior", page_url), ("cleaning", cleaning_url), ("company", company_url)):
+        page, _ = _open(browser, url, 1440, 900)
+        shapes[name] = page.evaluate("""() => {
+          const head = document.querySelector('header');
+          const hero = document.querySelector('.hero, .hr');
+          return {
+            headClass: head.className.split(' ')[0],
+            headBg: getComputedStyle(head).backgroundColor,
+            heroHeight: Math.round(hero.getBoundingClientRect().height),
+            sections: [...document.querySelectorAll('main section[id]')].map(s => s.id),
+            bar: !!document.querySelector('.mbar, .cbar, .rail'),
+          };
+        }""")
+        page.close()
+    # 섹션 구성이 서로 겹치지 않는 부분을 저마다 갖는다
+    ids = {k: set(v["sections"]) for k, v in shapes.items()}
+    assert "beforeafter" in ids["cleaning"] - ids["interior"] - ids["company"]
+    assert "overview" in ids["company"] - ids["interior"] - ids["cleaning"]
+    assert "projects" in ids["interior"] & ids["cleaning"] & ids["company"]
+    # 머리 색이 셋 다 다르다 (기업은 짙은 머리, 청소는 흰 머리)
+    assert len({v["headBg"] for v in shapes.values()}) == 3, shapes
+    # 첫 화면 덩치가 셋 다 눈에 띄게 다르다
+    heights = sorted(v["heroHeight"] for v in shapes.values())
+    assert heights[1] - heights[0] > 40 and heights[2] - heights[1] > 40, heights
+    # 빠른 문의 장치는 업종마다 다르다
+    assert shapes["interior"]["bar"] and shapes["cleaning"]["bar"] and not shapes["company"]["bar"]
+
+
 def test_the_two_masters_do_not_look_like_the_same_site(browser, page_url, cleaning_url):
     """색만 바꾼 같은 템플릿이면 둘을 나란히 팔 수 없다."""
     shapes = {}

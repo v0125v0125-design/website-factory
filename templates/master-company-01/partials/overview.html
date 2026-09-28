@@ -1,0 +1,16 @@
+{#- 회사 개요 — **이 페이지에서 직접 셀 수 있는 것만** 세운다.
+    누적 고객 수나 불량률처럼 확인할 길이 없는 숫자는 공장이 만들지 않는다.
+    첫 화면 아래 걸치게 올려 기업 사이트의 기본기를 먼저 보인다. -#}
+<section class="ov" id="overview" aria-label="{{ section.heading }}">
+  <div class="wrap">
+    <dl class="ov__card">
+      {%- for row in section.data['items'] %}
+      <div class="ov__cell">
+        <dt>{{ row.label }}</dt>
+        <dd><b>{{ row.value }}</b>{% if row.unit %}<span>{{ row.unit }}</span>{% endif %}</dd>
+        {%- if row.note %}<p>{{ row.note }}</p>{%- endif %}
+      </div>
+      {%- endfor %}
+    </dl>
+  </div>
+</section>
