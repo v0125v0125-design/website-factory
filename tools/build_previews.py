@@ -9,6 +9,7 @@
 을 모두 짓습니다. 결과는 이렇게 놓입니다.
 
     _site/index.html              미리보기 목록
+    _site/store/                  판매 홈페이지 (storefront/)
     _site/gonggan-interior/       고객별 사이트 (slug 폴더)
     _site/a-gonggan-interior/
     ...
@@ -27,6 +28,7 @@
 from __future__ import annotations
 
 import html
+import json
 import os
 import re
 import shutil
@@ -38,6 +40,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+import storefront.build as storefront  # noqa: E402
 from factory.intake import load_brief  # noqa: E402
 from factory.pipeline import build  # noqa: E402
 
@@ -78,6 +81,20 @@ def _mark_noindex(page: Path) -> None:
     if NOINDEX in text:
         return
     page.write_text(text.replace("<head>", "<head>\n" + NOINDEX, 1), encoding="utf-8")
+
+
+def _build_storefront(out: Path, base: str) -> None:
+    """판매 홈페이지를 /store/ 에 같이 올린다. 주소는 미리보기 주소에 맞춘다."""
+    text = storefront.DATA.read_text(encoding="utf-8")
+    if base:
+        old = json.loads(text)["urls"]["previewBase"].rstrip("/")
+        text = text.replace(old, base)
+    data = json.loads(text)
+    data["urls"]["self"] = f"{base}/store/" if base else data["urls"]["self"]
+    storefront.build(out / "store", data)
+    # 미리보기 묶음에서는 폴더마다 브라우저가 쓰는 것만 둔다 (robots 는 뿌리에 하나)
+    _keep_only_web_files(out / "store")
+    _mark_noindex(out / "store" / "index.html")
 
 
 def _index_page(rows: list[dict], built_at: str) -> str:
@@ -126,6 +143,7 @@ def _index_page(rows: list[dict], built_at: str) -> str:
 <body>
 <div class="wrap">
   <h1>website-factory 미리보기</h1>
+  <p class="lede"><a href="store/"><strong>판매 홈페이지 보기 →</strong></a></p>
   <p class="lede">검수용 임시 주소입니다. 아래는 모두 <strong>가상 업체</strong> 견본이며,
      실제 업체가 아닙니다. 고객 도메인은 아직 연결하지 않았습니다.</p>
   <ul>
@@ -170,6 +188,9 @@ def main(argv: list[str]) -> int:
             "weight": round(weight / 1024),
         })
         print(f"  {slug:24} {result.plan.brief.business.name:16} {weight/1024:5.0f}KB")
+
+    _build_storefront(out, base)
+    print(f"  {'store':24} 판매 홈페이지")
 
     built_at = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M %Z")
     (out / "index.html").write_text(_index_page(rows, built_at), encoding="utf-8")

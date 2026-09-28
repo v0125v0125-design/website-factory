@@ -1,0 +1,571 @@
+{# {{ brand.name }} 판매 홈페이지 — 글과 값은 storefront.json 에만 있습니다. #}
+{%- set showcase = available_samples[0] if available_samples else none -%}
+{%- macro field(f, fid) -%}
+        <div class="field">
+          <label for="{{ fid }}-{{ f.name }}">{{ f.label }}{% if f.get('required') %} *{% endif %}</label>
+          {%- if f.type == 'textarea' %}
+          <textarea id="{{ fid }}-{{ f.name }}" name="{{ f.name }}" data-label="{{ f.label }}"{% if f.get('placeholder') %} placeholder="{{ f.placeholder }}"{% endif %}{% if f.get('required') %} required{% endif %}></textarea>
+          {%- elif f.type == 'select' %}
+          <select id="{{ fid }}-{{ f.name }}" name="{{ f.name }}" data-label="{{ f.label }}">
+            {%- for o in f.options %}
+            <option>{{ o }}</option>
+            {%- endfor %}
+          </select>
+          {%- else %}
+          <input type="{{ f.type }}" id="{{ fid }}-{{ f.name }}" name="{{ f.name }}" data-label="{{ f.label }}"{% if f.get('placeholder') %} placeholder="{{ f.placeholder }}"{% endif %}{% if f.get('required') %} required{% endif %}>
+          {%- endif %}
+        </div>
+{%- endmacro -%}
+{%- macro result(fid) -%}
+        <div class="result" id="{{ fid }}-result" hidden>
+          <h4 data-role="title">작성하신 내용을 복사했습니다</h4>
+          {%- if channels %}
+          <p>아래 창구 중 편한 곳으로 붙여 보내 주시면 확인 후 연락드립니다.</p>
+          {%- else %}
+          <p>온라인 접수 창구를 준비하는 중입니다. 작성하신 내용은 <b>아직 전송되지 않았습니다.</b> 아래 내용이 복사되어 있으니 그대로 보관하거나 보내실 수 있습니다.</p>
+          {%- endif %}
+          <pre data-role="text"></pre>
+          <div class="result__actions">
+            {%- for ch in channels %}
+            {%- if ch[2] == 'tel' %}
+            <a class="btn btn--sm" href="tel:{{ ch[1]|tel }}">전화 {{ ch[1] }}</a>
+            {%- elif ch[2] == 'kakao' %}
+            <a class="btn btn--sm" href="{{ ch[1] }}" target="_blank" rel="noopener">카카오톡으로 보내기</a>
+            {%- else %}
+            <a class="btn btn--sm" href="mailto:{{ ch[1] }}" data-act="mail" data-mail="{{ ch[1] }}">이메일로 보내기</a>
+            {%- endif %}
+            {%- endfor %}
+            <button type="button" class="btn btn--line btn--sm" data-act="copy">다시 복사</button>
+          </div>
+        </div>
+{%- endmacro -%}
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ seo.title }}</title>
+<meta name="description" content="{{ seo.description }}">
+<meta name="keywords" content="{{ seo.keywords|join(', ') }}">
+{% if seo.noindex %}
+<meta name="robots" content="noindex, nofollow">
+{% else %}
+<meta name="robots" content="index, follow">
+{% endif %}
+<link rel="canonical" href="{{ urls.self }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ brand.name }}">
+<meta property="og:title" content="{{ seo.title }}">
+<meta property="og:description" content="{{ seo.description }}">
+<meta property="og:url" content="{{ urls.self }}">
+<meta property="og:image" content="{{ urls.self }}{{ seo.ogImage }}">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+<script type="application/ld+json">{{ jsonld }}</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header class="hd" id="hd">
+  <div class="wrap hd__in">
+    <a class="hd__brand" href="#top"><span class="hd__mark">{{ brand.shortName }}</span>{{ brand.name }}</a>
+    <button class="hd__toggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="hd-nav">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="hd__nav" id="hd-nav" aria-label="주요 메뉴">
+      <ul class="hd__list">
+        {% for n in site.nav %}
+        <li><a href="{{ n.href }}">{{ n.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+    <div class="hd__cta"><a class="btn btn--sm" href="#order">제작 신청</a></div>
+  </div>
+</header>
+
+<main id="main">
+  <span id="top"></span>
+
+  <!-- 첫 화면 -->
+  <section class="hero">
+    <div class="wrap hero__in">
+      <div>
+        <p class="eyebrow">{{ site.hero.eyebrow }}</p>
+        <h1>{{ site.hero.title|nl2br }}</h1>
+        <p class="hero__lede">{{ site.hero.lede|nl2br }}</p>
+        <p class="hero__price">
+          <span>{{ site.hero.price['from'] }}</span>
+          <b class="num">{{ site.hero.price.amount }}</b>
+          <span>{{ site.hero.price.suffix }} · 부가세 별도</span>
+        </p>
+        <div class="hero__actions">
+          <a class="btn" href="{{ site.hero.primary.href }}">{{ site.hero.primary.label }}</a>
+          <a class="btn btn--line" href="{{ site.hero.secondary.href }}">{{ site.hero.secondary.label }}</a>
+        </div>
+        <ul class="hero__chips">
+          {% for a in site.hero.assurances %}
+          <li>{{ a }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% if showcase %}
+      <figure class="hero__figure frame">
+        <div class="frame__bar" aria-hidden="true">
+          <span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span>
+          <span class="frame__url">{{ showcase.previewUrl }}</span>
+        </div>
+        <img src="{{ showcase.previewImage }}" width="1200" height="833"
+             alt="{{ showcase.title }} 디자인으로 만든 홈페이지 화면">
+        <figcaption class="frame__foot">
+          <span>{{ showcase.title }} · {{ showcase.subtitle }}</span>
+          <a class="btn btn--line btn--sm" href="{{ showcase.previewUrl }}" target="_blank" rel="noopener">직접 열어 보기</a>
+        </figcaption>
+      </figure>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- 왜 이 가격에 가능한가 -->
+  <section class="sec sec--tint" id="why">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 class="h2">{{ site.reasons.heading }}</h2>
+        <p class="lede">{{ site.reasons.lede }}</p>
+      </div>
+      <ul class="reasons">
+        {% for r in site.reasons['items'] %}
+        <li class="reason">
+          <h3>{{ r.title }}</h3>
+          <p>{{ r.body }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 디자인 샘플 -->
+  <section class="sec" id="samples">
+    <div class="wrap">
+      <div class="sec__head">
+        <p class="eyebrow">디자인</p>
+        <h2 class="h2">{{ site.samples.heading }}</h2>
+        <p class="lede">{{ site.samples.lede }}</p>
+      </div>
+      <ul class="cards">
+        {% for s in site.samples['items'] %}
+        <li class="card{% if s.status == 'available' %} card--live{% endif %}">
+          <div class="card__shot">
+            {% if s.status == 'available' %}
+            <a href="{{ s.previewUrl }}" target="_blank" rel="noopener" aria-label="{{ s.title }} 홈페이지 새 창에서 열기">
+              <img src="{{ s.previewImage }}" width="1200" height="833" loading="lazy"
+                   alt="{{ s.title }} — {{ s.subtitle }} 홈페이지 화면">
+            </a>
+            {% else %}
+            <p class="card__soon">준비 중</p>
+            {% endif %}
+          </div>
+          <div class="card__body">
+            <p class="card__cat">{{ s.category }}</p>
+            <h3 class="h3">{{ s.title }}</h3>
+            <p class="muted">{{ s.subtitle }}</p>
+            <ul class="card__tags">
+              {% for t in s.styleTags %}
+              <li>{{ t }}</li>
+              {% endfor %}
+            </ul>
+            {% if s.get('note') %}
+            <p class="card__note">{{ s.note }}</p>
+            {% endif %}
+            <div class="card__actions">
+              {% if s.status == 'available' %}
+              <a class="btn btn--sm" href="{{ s.previewUrl }}" target="_blank" rel="noopener">홈페이지 열어 보기</a>
+              <a class="btn btn--line btn--sm" href="#order">이 디자인으로 신청</a>
+              {% else %}
+              <span class="chip chip--soon">아직 고르실 수 없습니다</span>
+              {% endif %}
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      <p class="lede" style="margin-top:22px">
+        업종은 하나씩 늘려 갑니다 — {{ site.samples.categories[1:]|join(' · ') }}.
+        찾는 업종이 없으면 <a href="#advice" style="text-decoration:underline">어울리는 디자인을 안내</a>해 드립니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- 가격 -->
+  <section class="sec sec--tint" id="pricing">
+    <div class="wrap">
+      <div class="sec__head sec__head--center">
+        <p class="eyebrow">가격</p>
+        <h2 class="h2">{{ site.products.heading }}</h2>
+        <p class="lede">{{ site.products.lede }}</p>
+      </div>
+      <div class="plans">
+        {% for p in site.products['items'] %}
+        <article class="plan{% if p.get('featured') %} plan--featured{% endif %}">
+          {% if p.get('badge') %}
+          <p class="plan__badge">{{ p.badge }}</p>
+          {% endif %}
+          <p class="plan__name">{{ p.name }}</p>
+          <p class="plan__price"><b class="num">{{ p.price }}</b><span>{{ p.unit }}</span></p>
+          <p class="plan__summary">{{ p.summary }}</p>
+          <p class="plan__audience">{{ p.audience }}</p>
+          <dl class="plan__specs">
+            {% for sp in p.specs %}
+            <div><dt>{{ sp.label }}</dt><dd>{{ sp.value }}</dd></div>
+            {% endfor %}
+          </dl>
+          <ul class="plan__list">
+            {% for inc in p.includes %}
+            <li>{{ inc }}</li>
+            {% endfor %}
+          </ul>
+          <p class="plan__cta">
+            <a class="btn btn--block{% if not p.get('featured') %} btn--line{% endif %}" href="{{ p.cta.href }}"
+               data-plan="{{ p.name }}">{{ p.cta.label }}</a>
+          </p>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- 포함 범위 -->
+  <section class="sec" id="scope">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 class="h2">{{ site.scope.heading }}</h2>
+        <p class="lede">{{ site.scope.body }}</p>
+      </div>
+      <div class="scope">
+        <div class="scope__box scope__box--in">
+          <h3>제작에 포함됩니다</h3>
+          <ul>
+            {% for i in site.scope.included %}
+            <li>{{ i }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="scope__box scope__box--out">
+          <h3>START·BUSINESS에는 포함되지 않습니다</h3>
+          <ul>
+            {% for i in site.scope.excluded %}
+            <li>{{ i }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <p class="scope__note">{{ site.scope.note }}</p>
+    </div>
+  </section>
+
+  <!-- 제작 과정 -->
+  <section class="sec sec--tint" id="process">
+    <div class="wrap">
+      <div class="sec__head">
+        <p class="eyebrow">진행</p>
+        <h2 class="h2">{{ site.process.heading }}</h2>
+        <p class="lede">{{ site.process.lede }}</p>
+      </div>
+      <ol class="steps">
+        {% for st in site.process.steps %}
+        <li class="step">
+          <p class="step__no num">STEP {{ "%02d"|format(loop.index) }}</p>
+          <h3>{{ st.title }}</h3>
+          <p>{{ st.body }}</p>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 믿을 근거 -->
+  <section class="sec" id="trust">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 class="h2">{{ site.trust.heading }}</h2>
+        <p class="lede">{{ site.trust.lede }}</p>
+      </div>
+      <ul class="trusts">
+        {% for t in site.trust['items'] %}
+        <li class="trust">
+          <h3>{{ t.title }}</h3>
+          <p>{{ t.body }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 자주 묻는 질문 -->
+  <section class="sec sec--tint" id="faq">
+    <div class="wrap">
+      <div class="sec__head sec__head--center">
+        <h2 class="h2">{{ site.faq.heading }}</h2>
+      </div>
+      <div class="faq">
+        {% for f in site.faq['items'] %}
+        <details class="faq__row"{% if loop.first %} open{% endif %}>
+          <summary>{{ f.q }}</summary>
+          <p>{{ f.a }}</p>
+        </details>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- 문의 -->
+  <section class="sec" id="order">
+    <div class="wrap">
+      <div class="sec__head">
+        <p class="eyebrow">문의</p>
+        <h2 class="h2">제작 신청과 맞춤 견적</h2>
+        <p class="lede">필요한 쪽을 골라 작성해 주십시오. 어느 쪽이든 먼저 확인하고 연락드립니다.</p>
+      </div>
+      <div class="forms">
+        <div>
+          <span id="quote"></span>
+          <div class="tabs" role="tablist" aria-label="문의 종류">
+            <button class="tab" type="button" role="tab" id="tab-order" aria-controls="panel-order" aria-selected="true">{{ site.order.heading }}</button>
+            <button class="tab" type="button" role="tab" id="tab-quote" aria-controls="panel-quote" aria-selected="false">{{ site.quote.heading }}</button>
+          </div>
+
+          <div class="panel" id="panel-order" role="tabpanel" aria-labelledby="tab-order">
+            <form class="form js-form" id="form-order" data-title="제작 신청" novalidate>
+              <h3>{{ site.order.heading }}</h3>
+              <p class="form__lede">{{ site.order.lede }}</p>
+              {% for f in site.order.fields %}
+              {{ field(f, 'order') }}
+              {% endfor %}
+              <p class="form__agree">
+                <input type="checkbox" id="order-agree" required>
+                <label for="order-agree">문의 확인과 회신을 위해 작성하신 내용을 확인하는 데 동의합니다.</label>
+              </p>
+              <button class="btn btn--block" type="submit">{{ site.order.submit }}</button>
+              {{ result('order') }}
+            </form>
+          </div>
+
+          <div class="panel" id="panel-quote" role="tabpanel" aria-labelledby="tab-quote" hidden>
+            <form class="form js-form" id="form-quote" data-title="맞춤 견적 요청" novalidate>
+              <h3>{{ site.quote.heading }}</h3>
+              <p class="form__lede">{{ site.quote.lede }}</p>
+              {% for f in site.quote.fields %}
+              {{ field(f, 'quote') }}
+              {% endfor %}
+              <p class="form__agree">
+                <input type="checkbox" id="quote-agree" required>
+                <label for="quote-agree">문의 확인과 회신을 위해 작성하신 내용을 확인하는 데 동의합니다.</label>
+              </p>
+              <button class="btn btn--block" type="submit">{{ site.quote.submit }}</button>
+              {{ result('quote') }}
+            </form>
+          </div>
+        </div>
+
+        <aside class="aside">
+          <div class="aside__box" id="advice">
+            <h3>{{ site.advice.heading }}</h3>
+            <p>{{ site.advice.body }}</p>
+            <form class="js-form" id="form-advice" data-title="디자인 추천 요청" novalidate style="margin-top:18px">
+              {% for f in site.advice.fields %}
+              {{ field(f, 'advice') }}
+              {% endfor %}
+              <button class="btn btn--line btn--block" type="submit">{{ site.advice.submit }}</button>
+              {{ result('advice') }}
+            </form>
+          </div>
+          <div class="aside__box">
+            <h3>보내신 뒤에는</h3>
+            <ul class="aside__list">
+              <li>업종과 자료를 보고 어울리는 구성을 먼저 말씀드립니다.</li>
+              <li>필요한 사진과 문구를 목록으로 정리해 드립니다.</li>
+              <li>자료가 도착한 뒤에 제작을 시작합니다.</li>
+            </ul>
+            {% if channels %}
+            <ul class="aside__list" style="margin-top:14px">
+              {% for ch in channels %}
+              <li>{{ ch[0] }} · {{ ch[1] }}</li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <p>공개 연락처와 온라인 접수 창구는 준비하는 중입니다. 지금은 작성하신 내용을 복사해 두는 것까지 됩니다.</p>
+            {% endif %}
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- 마감 -->
+  <section class="closing">
+    <div class="wrap closing__in">
+      <div>
+        <h2>{{ site.closing.heading }}</h2>
+        <p>{{ site.closing.body }}</p>
+      </div>
+      <div class="closing__actions">
+        <a class="btn" href="{{ site.closing.primary.href }}">{{ site.closing.primary.label }}</a>
+        <a class="btn btn--line" href="{{ site.closing.secondary.href }}">{{ site.closing.secondary.label }}</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="ft">
+  <div class="wrap ft__in">
+    <div>
+      <p class="ft__brand">{{ brand.name }}</p>
+      <p style="margin:0">{{ brand.tagline }}</p>
+    </div>
+    <ul class="ft__links">
+      {% for n in site.nav %}
+      <li><a href="{{ n.href }}">{{ n.label }}</a></li>
+      {% endfor %}
+    </ul>
+    {% if brand.legal.business or brand.legal.owner or brand.legal.address %}
+    <p style="width:100%;margin:18px 0 0">
+      {% if brand.legal.owner %}대표 {{ brand.legal.owner }}{% endif %}
+      {% if brand.legal.business %} · 사업자등록번호 {{ brand.legal.business }}{% endif %}
+      {% if brand.legal.address %} · {{ brand.legal.address }}{% endif %}
+    </p>
+    {% endif %}
+    <p class="ft__note">
+      샘플 홈페이지는 가상 업체 자료로 만든 견본입니다. 실제 업체의 이름·연락처·사진·문구를 사용하지 않았습니다.
+      가격은 모두 부가세 별도이며, 검색 상위 노출은 약속드리지 않습니다.
+      {% if seo.noindex %}이 페이지는 검수용 임시 주소로 검색 노출을 막아 두었습니다(noindex).{% endif %}
+      © {{ year }} {{ brand.name }}
+    </p>
+  </div>
+</footer>
+
+<nav class="bar" aria-label="빠른 이동">
+  <a href="#samples">디자인 보기</a>
+  <a href="#order">제작 신청</a>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+
+  /* 메뉴 */
+  var hd = document.getElementById('hd');
+  var toggle = hd.querySelector('.hd__toggle');
+  toggle.addEventListener('click', function () {
+    var open = hd.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
+  });
+  hd.querySelectorAll('.hd__list a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      hd.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* 문의 탭 */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function select(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () { select(t); });
+  });
+  function fromHash() {
+    if (location.hash === '#quote') { select(document.getElementById('tab-quote')); }
+    if (location.hash === '#order') { select(document.getElementById('tab-order')); }
+  }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+
+  /* 가격표에서 누르면 해당 문의로 */
+  document.querySelectorAll('[data-plan]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var quote = a.getAttribute('href') === '#quote';
+      select(document.getElementById(quote ? 'tab-quote' : 'tab-order'));
+      var sel = document.getElementById('order-product');
+      if (!quote && sel) {
+        Array.prototype.slice.call(sel.options).forEach(function (o) {
+          if (o.text.indexOf(a.getAttribute('data-plan')) === 0) { sel.value = o.value; }
+        });
+      }
+    });
+  });
+
+  /* 샘플에서 "이 디자인으로 신청" 을 누르면 고른 디자인을 채운다 */
+  document.querySelectorAll('.card--live a[href="#order"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var title = a.closest('.card').querySelector('.h3');
+      var sel = document.getElementById('order-design');
+      if (!title || !sel) { return; }
+      Array.prototype.slice.call(sel.options).forEach(function (o) {
+        if (o.text === title.textContent.trim()) { sel.value = o.value; }
+      });
+      select(document.getElementById('tab-order'));
+    });
+  });
+
+  /* 문의 폼 — 받는 창구가 아직 없으므로 보낸 척하지 않는다.
+     작성한 내용을 사람이 쓸 수 있는 글로 만들어 복사해 둔다. */
+  function summarize(form) {
+    var lines = ['[' + form.getAttribute('data-title') + ']'];
+    Array.prototype.slice.call(form.querySelectorAll('[data-label]')).forEach(function (el) {
+      var v = (el.value || '').trim();
+      if (v) { lines.push(el.getAttribute('data-label') + ': ' + v); }
+    });
+    return lines.join('\n');
+  }
+
+  function show(form, text, copied) {
+    var box = form.querySelector('.result');
+    box.querySelector('[data-role="text"]').textContent = text;
+    box.querySelector('[data-role="title"]').textContent =
+      copied ? '작성하신 내용을 복사했습니다' : '아래 내용을 복사해 주십시오';
+    var mail = box.querySelector('[data-act="mail"]');
+    if (mail) {
+      mail.href = 'mailto:' + mail.getAttribute('data-mail')
+        + '?subject=' + encodeURIComponent(form.getAttribute('data-title'))
+        + '&body=' + encodeURIComponent(text);
+    }
+    box.hidden = false;
+    box.scrollIntoView({ block: 'nearest' });
+  }
+
+  function copy(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).then(function () { return true; },
+                                                      function () { return false; });
+    }
+    return Promise.resolve(false);
+  }
+
+  document.querySelectorAll('.js-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      var text = summarize(form);
+      copy(text).then(function (ok) { show(form, text, ok); });
+    });
+    var again = form.querySelector('[data-act="copy"]');
+    if (again) {
+      again.addEventListener('click', function () {
+        var text = summarize(form);
+        copy(text).then(function (ok) { show(form, text, ok); });
+      });
+    }
+  });
+})();
+</script>
+</body>
+</html>
