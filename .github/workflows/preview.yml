@@ -49,7 +49,10 @@ jobs:
       - name: 미리보기 짓기
         run: python tools/build_previews.py _site
 
+      # Pages 가 아직 안 켜져 있으면 여기서 켠다 (첫 배포에 필요)
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
