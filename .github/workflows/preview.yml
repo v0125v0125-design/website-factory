@@ -1,8 +1,9 @@
-# 미리보기 발행 — 고객 사이트를 GitHub Pages 에 올린다.
+# 미리보기 발행 — 고객 사이트를 GitHub Pages(gh-pages 브랜치) 로 올린다.
 #
-#   https://<계정>.github.io/website-factory/<고객 slug>/
+#   https://v0125v0125-design.github.io/website-factory/<고객 slug>/
 #
-# 고객 도메인은 연결하지 않는다. 검수용 임시 주소이고, robots 로 검색을 막는다.
+# 고객 도메인은 연결하지 않는다. 검수용 임시 주소이고, noindex 와 robots 로 검색을 막는다.
+# main 에 주문서나 템플릿이 올라오면 자동으로 다시 올라간다.
 name: preview
 
 on:
@@ -17,16 +18,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: preview-pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -49,21 +48,25 @@ jobs:
       - name: 미리보기 짓기
         run: python tools/build_previews.py _site
 
-      # Pages 가 아직 안 켜져 있으면 여기서 켠다 (첫 배포에 필요)
-      - uses: actions/configure-pages@v5
-        with:
-          enablement: true
+      - name: gh-pages 로 올리기
+        run: |
+          cd _site
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "preview: ${GITHUB_SHA::7} 기준 미리보기"
+          git push -q --force \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
+            gh-pages
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: 주소 알리기
+        run: |
+          base="https://${GITHUB_REPOSITORY%%/*}.github.io/${GITHUB_REPOSITORY#*/}"
+          echo "### 미리보기 발행됨" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- 목록: $base/" >> $GITHUB_STEP_SUMMARY
+          for dir in _site/*/; do
+            slug=$(basename "$dir")
+            echo "- $slug: $base/$slug/" >> $GITHUB_STEP_SUMMARY
+          done
