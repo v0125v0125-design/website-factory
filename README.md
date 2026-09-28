@@ -13,8 +13,30 @@
                       색·서체·모서리·여백    쪽수·업종·기능    주문서에 있는 사실만
 ```
 
-독립 저장소입니다. 파이썬 3.11 과 Jinja2 말고는 필요한 것이 없고,
+독립 저장소입니다. 파이썬 3.11 과 Jinja2·PyYAML·Pillow 말고는 필요한 것이 없고,
 산출물은 빌드 과정이 없는 정적 파일 한 벌입니다.
+
+---
+
+## 새 컴퓨터에서 시작하기
+
+```bash
+git clone https://github.com/v0125v0125-design/website-factory.git
+cd website-factory
+
+python -m pip install -r requirements-dev.txt   # 공장 + 시험 + 브라우저 검사
+python -m playwright install chromium           # 브라우저 검사·썸네일 촬영용 (선택)
+
+python tools/doctor.py                          # 무엇이 없는지 한 화면에 알려 줍니다
+python -m pytest -q                             # 304개
+```
+
+`tools/doctor.py` 는 아무것도 고치지 않고 봅니다 — 파이썬 판, 꾸러미, 크로미움,
+템플릿 다섯 벌, 판매 홈페이지 샘플 셋, 주문서 여섯 장이 제대로 있는지.
+`--build` 를 붙이면 주문서를 전부 실제로 지어 봅니다.
+
+무엇을 왜 그렇게 정했는지는 **`문서/작업기록.md`** 에 있습니다. 대화는 컴퓨터를
+옮기면 따라오지 않지만 그 파일은 따라옵니다.
 
 ---
 
@@ -28,17 +50,18 @@ python -m factory.cli plan  examples/cafe-onepage.json           # 무엇을 지
 python -m factory.cli build examples/cafe-onepage.json -o out/bloom
 python -m factory.cli serve out/bloom                            # http://127.0.0.1:8765
 
-# 인테리어 마스터 (양산형) — 가상 고객 3곳을 한 번에
+# 판매용 마스터 (양산형) — 가상 고객 여섯 곳을 한 번에
 python -m factory.cli validate examples/customers/a-gonggan.json   # 규격 검사
 python -m factory.cli batch    examples/customers -o out --offline
+
+# 미리보기 묶음 — 고객 견본 + 판매 홈페이지를 한 폴더에
+python tools/build_previews.py _site
+tools/publish_preview.sh                       # gh-pages 로 올린다
 ```
 
 `out/bloom` 이 그대로 상품입니다. 빌드 과정도, 서버도 필요 없습니다.
 
 ---
-
-다른 컴퓨터에서 이어서 하실 때와, 무엇을 왜 그렇게 정했는지는
-**`문서/작업기록.md`** 를 보십시오.
 
 ## 명령
 
@@ -116,17 +139,40 @@ python -m factory.cli batch    examples/customers -o out --offline
 | --- | --- | --- |
 | `onepage-classic` | 1 | 동네 가게·1인 사업자 |
 | `five-pages-corp` | 5 | 설명할 것이 많은 병원·법무·학원 |
-| `master-interior-01` | 1 | **인테리어·리모델링·시공 업체 양산형 마스터** — [설계 문서](문서/MASTER_INTERIOR_01.md) |
+| `master-interior-01` | 1 | **인테리어·리모델링·시공** — [설계 문서](문서/MASTER_INTERIOR_01.md) |
+| `master-cleaning-01` | 1 | **입주·이사·거주·상가청소, 홈케어** — [설계 문서](문서/MASTER_CLEANING_01.md) |
+| `master-company-01` | 1 | **제조·기계·부품·설비·엔지니어링 법인** — [설계 문서](문서/MASTER_COMPANY_01.md) |
 
-`master-interior-01` 은 고객 데이터만 갈아 끼워 반복 판매하도록 만든 마스터입니다.
-강점 숫자 띠 · 시공 사례 격자(크게 보기) · 진행 절차 · 모바일 하단 문의 바 ·
-데스크톱 오른쪽 상담 레일을 갖췄고, 색 버전을 `theme` 한 줄로,
-배치 갈래를 `layout` 한 줄로 바꿉니다.
+`master-*` 셋은 고객 데이터만 갈아 끼워 반복 판매하도록 만든 마스터입니다.
+**색만 다른 같은 틀이 아닙니다** — 업종마다 사는 이유가 달라 화면 구조가 다릅니다.
 
-- 색: `charcoal` · `beige` · `black` · `green`
+| | 파는 것 | 핵심 칸 | 빠른 문의 |
+| --- | --- | --- | --- |
+| INTERIOR 01 | 결과 이미지 | 강점 숫자 띠 · 시공 사례 모자이크(크게 보기) | 모바일 바 + 데스크톱 레일 |
+| CLEANING 01 | 불안 해소 | **작업 전·후 비교 손잡이** · 서비스 지역 띠 | 모바일 바 |
+| COMPANY 01 | 회사 신뢰 | **자동 계산 개요 띠** · 수행 사례 표 | 없음 (머리의 대표번호) |
+
+- 색: `charcoal` · `beige` · `black` · `green` · `sky` · `mist` · `steel` · `graphite`
 - 배치: 히어로 `left`/`center`, 사례 `mosaic`/`grid`
 - 규격: [SITE_CONFIG_SCHEMA_V1](문서/SITE_CONFIG_SCHEMA_V1.md) — 관리자 웹 전까지의 호환 기준
 - 사진: 역할별로 줄이고 WebP 로 바꿉니다 (히어로 1920 · 사례 1600 · 카드 900 …)
+
+견본 사진은 남의 것을 쓰지 않고 직접 그립니다 —
+`tools/make_placeholders.py` · `make_cleaning_photos.py` · `make_company_photos.py`
+
+---
+
+## 판매 홈페이지 (storefront/)
+
+우리 상품을 파는 원페이지입니다. 고객에게 납품할 홈페이지를 찍는 `factory/` 와는
+다른 물건이고, 글·값·가격·샘플·FAQ 가 `storefront/storefront.json` 한 장에 있습니다.
+
+```bash
+python storefront/build.py _site/store        # 혼자 짓기
+python tools/shoot_sample_thumbs.py           # 샘플 썸네일 다시 찍기 (playwright 필요)
+```
+
+자세한 것과 **광고 전에 채워야 할 목록**은 [문서/판매홈페이지.md](문서/판매홈페이지.md) 에 있습니다.
 
 ## 스타일은 이 순서로 정해집니다
 
@@ -214,7 +260,7 @@ templates/my-template/
 그다음이 업종(18), 기능 수용률(22), 분위기(최대 18), 목표(최대 12) 순입니다.
 
 섹션 종류는 `hero · about · services · menu · pricing · gallery ·
-testimonials · faq · process · contact · cta` 입니다.
+testimonials · faq · process · contact · cta · beforeafter · area · overview` 입니다.
 새 종류를 만들려면 `templates/_shared/partials/` 에 조각을 넣고
 `factory/render.py` 의 `SECTION_PARTIALS` 와
 `factory/content.py` 의 `CopyEngine.build_section` 에 등록합니다.
@@ -236,6 +282,11 @@ testimonials · faq · process · contact · cta` 입니다.
 | `factory/package.py` | 호스팅 설정과 zip |
 | `factory/pipeline.py` | 위 순서를 엮고 보고서를 쓴다 |
 | `factory/cli.py` | 명령줄 |
+| `factory/images.py` | 사진을 역할별 크기로 줄이고 WebP 로 (Pillow) |
+| `factory/schema.py` | SITE_CONFIG_SCHEMA_V1 검사 — 사람이 읽는 오류 글 |
+| `storefront/build.py` | 판매 홈페이지 한 장을 정적 사이트로 |
+| `tools/build_previews.py` | 견본 + 판매 홈페이지를 한 폴더에 · gh-pages 로 발행 |
+| `tools/doctor.py` | 이 컴퓨터에서 공장이 도는지 확인 |
 
 ---
 
@@ -243,7 +294,7 @@ testimonials · faq · process · contact · cta` 입니다.
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q          # 175개 (브라우저 검사 16개 포함)
+python -m pytest -q          # 304개 (브라우저 검사 포함 — playwright 가 없으면 건너뜁니다)
 ```
 
 지어진 결과물을 실제로 뜯어봅니다 — 템플릿 문법이 새어 나왔는지,
@@ -252,10 +303,29 @@ python -m pytest -q          # 175개 (브라우저 검사 16개 포함)
 
 ---
 
+## 미리보기 (검수용 임시 주소)
+
+전부 **가상 업체 견본**이고 검색 노출을 막아 두었습니다(noindex).
+
+| | |
+| --- | --- |
+| 목록 | <https://v0125v0125-design.github.io/website-factory/> |
+| 판매 홈페이지 | <https://v0125v0125-design.github.io/website-factory/store/> |
+| INTERIOR 01 | <https://v0125v0125-design.github.io/website-factory/gonggan-interior/> |
+| CLEANING 01 | <https://v0125v0125-design.github.io/website-factory/cleaning-01/> |
+| COMPANY 01 | <https://v0125v0125-design.github.io/website-factory/company-01/> |
+
+`main` 에 올리면 GitHub Actions 가 다시 발행합니다 (`.github/workflows/preview.yml`).
+
+---
+
 ## 앞으로
 
+- **문의 폼을 실제로 받는 곳** — 지금은 받는 서버가 없어 손님에게 전화·카톡으로
+  안내합니다. `--form-action` 으로 Formspree 같은 주소를 꽂으면 그때부터 접수됩니다.
+- **판매 홈페이지의 공개 연락처** — `storefront/storefront.json` 의 `brand.contact`.
+  비어 있으면 광고를 태워도 손님이 닿을 길이 없습니다. 가장 급합니다.
 - 관리자 웹 — 폼으로 주문서를 채우고 미리보기를 띄우는 곳 (구조는 이미 맞춰 두었습니다)
-- 템플릿 늘리기 (요식업 사진 중심형, 전문직 문서 중심형)
-- 문의폼 수신함 (Formspree 연동은 `--form-action` 으로 이미 가능)
+- 마스터 늘리기 (요식업 사진 중심형, 전문직 문서 중심형)
 - 레퍼런스 분석에 스크린샷 기반 판단 더하기 (지금은 CSS 만 읽는다)
 - 원고를 사람이 고쳐 넣는 자리를 `content.py` 의 `CopyEngine` 에 열어 두었음

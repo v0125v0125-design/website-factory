@@ -438,3 +438,28 @@ def test_preview_pages_point_at_the_preview_address(tmp_path, monkeypatch):
     assert 'href="https://preview.example.test/factory/gonggan-interior/"' in html
     assert "gonggan-interior.example" not in html      # 없는 도메인을 가리키지 않는다
     assert not _dev_words_in(html)
+
+
+# ── 새 컴퓨터에서 도는가 ──────────────────────────────────────────
+# 저장소를 그대로 받아 온 사람이 무엇을 깔아야 하는지 알 수 있어야 합니다.
+
+def test_the_doctor_runs_and_finds_the_factory():
+    done = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "doctor.py")],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    assert done.returncode == 0, done.stdout + done.stderr
+    for must in ("파이썬", "Jinja2", "Pillow", "master-interior-01",
+                 "master-cleaning-01", "master-company-01"):
+        assert must in done.stdout, must
+
+
+def test_requirements_name_everything_the_factory_imports():
+    """Pillow 가 목록에 없으면 새 컴퓨터에서 사진이 조용히 커집니다."""
+    runtime = (ROOT / "requirements.txt").read_text(encoding="utf-8")
+    for package in ("Jinja2", "PyYAML", "Pillow"):
+        assert package in runtime, package
+    dev = (ROOT / "requirements-dev.txt").read_text(encoding="utf-8")
+    assert "-r requirements.txt" in dev
+    for package in ("pytest", "playwright"):
+        assert package in dev, package

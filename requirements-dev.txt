@@ -1,2 +1,7 @@
 -r requirements.txt
 pytest>=8.0
+# 브라우저로 직접 보는 검사(가로 스크롤·콘솔 오류·깨진 사진·비교 손잡이)와
+# 판매 페이지 샘플 썸네일 촬영에 씁니다. 없으면 그 시험만 건너뜁니다.
+#
+#   pip install playwright && playwright install chromium
+playwright>=1.40

@@ -11,6 +11,9 @@
   · 바탕색을 "가장 많이 쓰인 배경색"으로 고르지 마십시오.
   · JSON-LD 를 Jinja 자동 이스케이프에 태우지 마십시오.
   · 밝은 사진 위 히어로의 덮개를 옅게 하지 마십시오.
+  · 마스터를 복사해 색만 바꾸지 마십시오 — 업종마다 사는 이유가 다릅니다.
+  · 확인할 수 없는 숫자(누적 고객·만족도·업력)를 화면에 세우지 마십시오.
+  · 받는 곳이 없는 문의 폼이 "접수되었습니다" 라고 말하게 하지 마십시오.
 
 원페이지·5페이지 홈페이지를 템플릿으로 찍어 파는 공장입니다.
 구조와 쓰는 법은 `README.md` 에 있습니다. 아래에는 **지켜야 할 것**만 적습니다.
@@ -30,9 +33,22 @@
 ## 손대기 전에
 
 ```bash
-python -m pytest -q                       # 175개
+python tools/doctor.py                    # 이 컴퓨터에 무엇이 없는지
+python -m pytest -q                       # 304개
 python -m factory.cli build examples/customers/a-gonggan.json -o out/a --offline --clean
 python -m factory.cli serve out/a
+```
+
+## 자주 쓰는 도구
+
+```
+python tools/doctor.py [--build]        이 컴퓨터에서 공장이 도는지 본다
+python tools/build_previews.py _site    견본 + 판매 홈페이지를 한 폴더에
+tools/publish_preview.sh                gh-pages 로 손수 발행
+python storefront/build.py _site/store  판매 홈페이지만 짓는다
+python tools/shoot_sample_thumbs.py     판매 페이지 샘플 썸네일 다시 찍기
+python tools/make_cleaning_photos.py    청소 견본 그림 다시 그리기
+python tools/make_company_photos.py     기업 견본 그림 다시 그리기
 ```
 
 `tests/test_theming.py::test_every_preset_produces_readable_tokens` 와
