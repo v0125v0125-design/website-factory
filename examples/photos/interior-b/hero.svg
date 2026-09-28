@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" role="img" aria-label="예시 이미지 · 대표 사진 자리"><defs>
+  <linearGradient id="wall0" x1="0" y1="0" x2="0.35" y2="1">
+    <stop offset="0" stop-color="#EFE9E1"/><stop offset="1" stop-color="#96806A" stop-opacity=".45"/>
+  </linearGradient>
+  <linearGradient id="floor0" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#D9C8B4"/><stop offset="1" stop-color="#3B332B" stop-opacity=".55"/>
+  </linearGradient>
+  <linearGradient id="light0" x1="0" y1="0" x2="1" y2="0.8">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".55"/><stop offset=".55" stop-color="#ffffff" stop-opacity=".06"/>
+    <stop offset="1" stop-color="#3B332B" stop-opacity=".22"/>
+  </linearGradient>
+  <linearGradient id="glass0" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".92"/><stop offset="1" stop-color="#EFE9E1" stop-opacity=".6"/>
+  </linearGradient>
+  <radialGradient id="lamp0" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#ffe9c4" stop-opacity=".95"/><stop offset="1" stop-color="#ffe9c4" stop-opacity="0"/>
+  </radialGradient>
+</defs><rect width="1920" height="1080" fill="url(#wall0)"/><rect y="756" width="1920" height="324" fill="url(#floor0)"/><rect x="96" y="108" width="614" height="540" rx="3" fill="url(#glass0)"/><rect x="96" y="108" width="614" height="540" rx="3" fill="none" stroke="#3B332B" stroke-opacity=".35" stroke-width="4"/><line x1="403" y1="108" x2="403" y2="648" stroke="#3B332B" stroke-opacity=".28" stroke-width="3"/><polygon points="96,756 710,756 1385,1080 57,1080" fill="#fff" opacity=".13"/><ellipse cx="1266" cy="723" rx="571" ry="15" fill="#3B332B" opacity=".22"/><rect x="806" y="507" width="921" height="216" rx="23" fill="#96806A"/><rect x="861" y="432" width="368" height="97" rx="19" fill="#96806A" opacity=".78"/><rect x="1284" y="443" width="313" height="86" rx="17" fill="#EFE9E1" opacity=".7"/><ellipse cx="864" cy="799" rx="211" ry="37" fill="#3B332B" opacity=".30"/><line x1="1536" y1="0" x2="1536" y2="226" stroke="#3B332B" stroke-opacity=".45" stroke-width="3"/><circle cx="1536" cy="226" r="194" fill="url(#lamp0)"/><circle cx="1536" cy="226" r="81" fill="#3B332B" opacity=".55"/><rect width="1920" height="1080" fill="url(#light0)"/><text x="960" y="1032" text-anchor="middle" font-family="sans-serif" font-size="41" fill="#3B332B" opacity=".45">예시 이미지 · 대표 사진 자리</text></svg>

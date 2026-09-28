@@ -101,6 +101,35 @@ def _print_plan(plan, warnings: list[str]) -> None:
         _print_block("경고", warnings)
 
 
+def cmd_validate(args: argparse.Namespace) -> int:
+    """주문서가 SITE_CONFIG_SCHEMA_V1 에 맞는지만 본다. 파일은 쓰지 않는다."""
+    import json as _json
+
+    from .schema import SCHEMA_VERSION, validate
+
+    path = Path(args.brief)
+    if not path.exists():
+        print(f"주문서 파일이 없습니다: {path}", file=sys.stderr)
+        return 2
+    text = path.read_text(encoding="utf-8")
+    if path.suffix.lower() in (".yaml", ".yml"):
+        import yaml
+
+        data = yaml.safe_load(text)
+    else:
+        try:
+            data = _json.loads(text)
+        except _json.JSONDecodeError as exc:
+            print(f"\nJSON 을 읽을 수 없습니다 ({path.name} {exc.lineno}행): {exc.msg}", file=sys.stderr)
+            return 2
+    result = validate(data)
+    print(f"\n{path.name}")
+    print(_line())
+    print(result.report())
+    print(f"\n오류 {len(result.errors)}개 · 확인할 것 {len(result.warnings)}개 · 규격 {SCHEMA_VERSION}")
+    return 0 if result.ok else 1
+
+
 def cmd_plan(args: argparse.Namespace) -> int:
     brief, warnings = load_brief(args.brief)
     plan, findings = make_plan(
@@ -130,6 +159,7 @@ def _build_one(args: argparse.Namespace, brief_path: Path, out_dir: Path) -> int
         offline=args.offline,
         form_action=args.form_action,
         clean=args.clean,
+        optimize=not args.no_optimize,
         extra_warnings=warnings,
     )
     if not args.no_deploy_config:
@@ -215,6 +245,10 @@ def build_parser() -> argparse.ArgumentParser:
     common.add_argument("--template", default="", help="템플릿을 직접 고른다 (id)")
     common.add_argument("--offline", action="store_true", help="레퍼런스를 가져오지 않는다")
 
+    p = sub.add_parser("validate", help="주문서가 규격에 맞는지 본다")
+    p.add_argument("brief", help="주문서 파일")
+    p.set_defaults(func=cmd_validate)
+
     p = sub.add_parser("plan", parents=[common], help="짓기 전에 계획만 본다")
     p.add_argument("brief", help="주문서 파일 (.json/.yaml)")
     p.add_argument("--all", action="store_true", help="모든 템플릿 점수도 함께")
@@ -226,6 +260,8 @@ def build_parser() -> argparse.ArgumentParser:
     build_common.add_argument("--zip", action="store_true", help="다 지으면 zip 으로 묶는다")
     build_common.add_argument("--no-deploy-config", action="store_true", help="호스팅 설정 파일을 넣지 않는다")
     build_common.add_argument("--quiet", action="store_true", help="한 줄만 출력")
+    build_common.add_argument("--no-optimize", action="store_true",
+                              help="사진을 줄이지 않고 원본 그대로 쓴다")
 
     p = sub.add_parser("build", parents=[common, build_common], help="사이트를 짓는다")
     p.add_argument("brief", help="주문서 파일")

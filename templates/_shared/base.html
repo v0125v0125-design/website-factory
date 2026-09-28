@@ -27,6 +27,9 @@
 <link rel="stylesheet" href="{{ style.fonts.google_href() }}">
 {%- endif %}
 <link rel="stylesheet" href="assets/styles.css">
+{%- if hero_preload %}
+<link rel="preload" as="image" href="{{ hero_preload }}" fetchpriority="high">
+{%- endif %}
 <link rel="icon" href="{{ favicon_href }}">
 <script type="application/ld+json">{{ jsonld }}</script>
 </head>

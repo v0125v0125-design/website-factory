@@ -30,9 +30,9 @@
 ## 손대기 전에
 
 ```bash
-python -m pytest -q                       # 95개, 1초 안에 끝납니다
-python -m factory.cli build examples/cafe-onepage.json -o out/bloom --offline --clean
-python -m factory.cli serve out/bloom
+python -m pytest -q                       # 175개
+python -m factory.cli build examples/customers/a-gonggan.json -o out/a --offline --clean
+python -m factory.cli serve out/a
 ```
 
 `tests/test_theming.py::test_every_preset_produces_readable_tokens` 와

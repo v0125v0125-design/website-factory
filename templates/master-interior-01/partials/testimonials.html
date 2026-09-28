@@ -15,9 +15,13 @@
         <blockquote class="review__quote">{{ item.quote }}</blockquote>
         {%- if item.name or item.project or item.role %}
         <p class="review__by">
-          <span class="review__who">{{ item.name }}</span>
-          {%- if item.project %} · {{ item.project }}{% endif %}
-          {%- if item.role %} · {{ item.role }}{% endif %}
+          <span class="review__face" aria-hidden="true">{{ item.name[:1] if item.name else '·' }}</span>
+          <span>
+            {%- if item.name %}<span class="review__who">{{ item.name }}</span>{% endif -%}
+            {%- if item.project or item.role %}
+            <span class="review__what">{{ item.project }}{% if item.project and item.role %} · {% endif %}{{ item.role }}</span>
+            {%- endif %}
+          </span>
         </p>
         {%- endif %}
       </li>

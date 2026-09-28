@@ -25,6 +25,7 @@ from .models import (
     GalleryImage,
     HeroSpec,
     Item,
+    Layout,
     ProcessStep,
     Project,
     ReferenceSpec,
@@ -58,6 +59,8 @@ _ALIASES: dict[str, tuple[str, ...]] = {
     "process": ("절차", "진행과정", "시공절차", "과정", "공정", "steps"),
     "seo": ("검색", "메타", "seo설정"),
     "theme": ("테마", "색상", "컬러", "색"),
+    "layout": ("배치", "구성", "레이아웃"),
+    "hero_align": ("히어로정렬", "정렬", "hero", "align"),
     "headline": ("대표문구", "메인문구", "제목", "핵심메시지", "title"),
     "subline": ("서브문구", "보조문구", "부제", "설명문구"),
     "badges": ("뱃지", "배지", "신뢰문구", "태그", "라벨"),
@@ -202,6 +205,15 @@ def _pick(data: dict[str, Any], key: str, default: Any = None) -> Any:
         if alias in data:
             return data[alias]
     return default
+
+
+def pick(data: dict[str, Any], key: str, default: Any = None) -> Any:
+    """정식 키 또는 별칭으로 값을 꺼낸다 (검증기도 같은 눈으로 봐야 한다)."""
+    return _pick(data, key, default)
+
+
+def aliases_for(key: str) -> tuple[str, ...]:
+    return (key,) + _ALIASES.get(key, ())
 
 
 def _as_dict(value: Any, where: str, problems: list[str]) -> dict[str, Any]:
@@ -491,6 +503,34 @@ def _parse_about(raw: Any, problems: list[str]) -> AboutSpec:
     )
 
 
+HERO_ALIGNS = ("left", "center")
+PROJECT_LAYOUTS = ("mosaic", "grid")
+_LAYOUT_WORDS = {
+    "왼쪽": "left", "좌": "left", "left": "left",
+    "가운데": "center", "중앙": "center", "center": "center",
+    "모자이크": "mosaic", "큰칸": "mosaic", "mosaic": "mosaic",
+    "격자": "grid", "고른격자": "grid", "grid": "grid",
+}
+
+
+def _parse_layout(raw: Any, warnings: list[str]) -> Layout:
+    """배치 옵션. 모르는 말이 오면 기본값으로 두고 경고만 남긴다."""
+    if not isinstance(raw, dict):
+        return Layout()
+    hero = _LAYOUT_WORDS.get(_text(_pick(raw, "hero_align")).lower(), "")
+    projects = _LAYOUT_WORDS.get(_text(_pick(raw, "projects")).lower(), "")
+    layout = Layout()
+    if hero in HERO_ALIGNS:
+        layout.hero_align = hero
+    elif _pick(raw, "hero_align"):
+        warnings.append(f"layout.hero 를 알 수 없어 {layout.hero_align} 로 둡니다: {_pick(raw, 'hero_align')!r}")
+    if projects in PROJECT_LAYOUTS:
+        layout.projects = projects
+    elif _pick(raw, "projects"):
+        warnings.append(f"layout.projects 를 알 수 없어 {layout.projects} 로 둡니다: {_pick(raw, 'projects')!r}")
+    return layout
+
+
 def _parse_seo(raw: Any, problems: list[str]) -> Seo:
     data = _as_dict(raw, "seo", problems)
     return Seo(
@@ -655,6 +695,7 @@ def parse_brief(data: dict[str, Any], source_path: str = "") -> tuple[Brief, lis
         process=_parse_process(_pick(data, "process")),
         seo=_parse_seo(_pick(data, "seo"), problems),
         theme=theme,
+        layout=_parse_layout(_pick(data, "layout"), warnings),
         slug=slugify(slug, fallback_seed=name),
         source_path=source_path,
     )
@@ -679,4 +720,11 @@ def load_brief(path: str | Path) -> tuple[Brief, list[str]]:
             data = json.loads(text)
         except json.JSONDecodeError as exc:
             raise BriefError([f"JSON 을 읽을 수 없습니다 ({p.name} {exc.lineno}행): {exc.msg}"]) from exc
-    return parse_brief(data or {}, source_path=str(p))
+    # 규격 검사는 파일에서 읽는 이 자리에서 한다 — 사람이 손으로 쓴 주문서가 들어오는 문이다.
+    from .schema import validate  # 순환 수입을 피해 여기서 부른다
+
+    result = validate(data or {})
+    if not result.ok:
+        raise BriefError([f"[{p.name}] " + line for line in result.error_lines()])
+    brief, warnings = parse_brief(data or {}, source_path=str(p))
+    return brief, warnings + result.warning_lines()

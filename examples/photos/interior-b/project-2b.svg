@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" width="900" height="1200" role="img" aria-label="예시 이미지 · 시공 사례"><defs>
+  <linearGradient id="wall9" x1="0" y1="0" x2="0.35" y2="1">
+    <stop offset="0" stop-color="#E9E6E2"/><stop offset="1" stop-color="#8A8076" stop-opacity=".45"/>
+  </linearGradient>
+  <linearGradient id="floor9" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#CFC6BA"/><stop offset="1" stop-color="#312C27" stop-opacity=".55"/>
+  </linearGradient>
+  <linearGradient id="light9" x1="0" y1="0" x2="1" y2="0.8">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".55"/><stop offset=".55" stop-color="#ffffff" stop-opacity=".06"/>
+    <stop offset="1" stop-color="#312C27" stop-opacity=".22"/>
+  </linearGradient>
+  <linearGradient id="glass9" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".92"/><stop offset="1" stop-color="#E9E6E2" stop-opacity=".6"/>
+  </linearGradient>
+  <radialGradient id="lamp9" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#ffe9c4" stop-opacity=".95"/><stop offset="1" stop-color="#ffe9c4" stop-opacity="0"/>
+  </radialGradient>
+</defs><rect width="900" height="1200" fill="url(#wall9)"/><rect y="840" width="900" height="360" fill="url(#floor9)"/><polygon points="0,0 495,0 270,1200 0,1200" fill="#fff" opacity=".10"/><ellipse cx="450" cy="741" rx="234" ry="26" fill="#312C27" opacity=".20"/><circle cx="450" cy="552" r="189" fill="#8A8076"/><circle cx="383" cy="485" r="103" fill="#fff" opacity=".18"/><rect x="90" y="888" width="720" height="21" rx="3" fill="#312C27" opacity=".40"/><rect x="144" y="216" width="144" height="240" rx="3" fill="#E9E6E2" opacity=".75"/><rect x="144" y="216" width="144" height="240" rx="3" fill="none" stroke="#312C27" stroke-opacity=".30" stroke-width="2"/><rect width="900" height="1200" fill="url(#light9)"/><text x="450" y="1146" text-anchor="middle" font-family="sans-serif" font-size="34" fill="#312C27" opacity=".45">예시 이미지 · 시공 사례</text></svg>

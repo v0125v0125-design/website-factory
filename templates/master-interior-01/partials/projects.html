@@ -16,7 +16,7 @@
       {%- endif %}
     </div>
 
-    <ul class="pj__grid" id="pj-grid">
+    <ul class="pj__grid pj__grid--{{ brief.layout.projects }}" id="pj-grid">
       {%- for item in section.data['items'] %}
       <li class="pj__cell" data-category="{{ item.category }}">
         {%- if item.image %}
@@ -27,6 +27,11 @@
                loading="{{ 'eager' if loop.first else 'lazy' }}" decoding="async">
           <span class="pj__veil"></span>
           {%- if item.count > 1 %}<span class="pj__count">사진 {{ item.count }}장</span>{%- endif %}
+          <span class="pj__zoom" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg>
+            크게 보기
+          </span>
           <span class="pj__cap">
             <span class="pj__name h3">{{ item.title }}</span>
             {%- if item.meta %}<span class="pj__meta">{{ item.meta }}</span>{%- endif %}

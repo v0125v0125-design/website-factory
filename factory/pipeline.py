@@ -14,7 +14,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import matching, reference, theming
+from . import images, matching, reference, theming
 from .catalog import TEMPLATES_DIR, get_template, load_catalog
 from .content import build_content
 from .intake import load_brief
@@ -24,55 +24,57 @@ from .render import render_site
 IMAGE_DIR = "assets/img"
 
 
-def _stage_assets(brief: Brief, out_dir: Path) -> tuple[list[str], list[str]]:
+def _stage_assets(
+    brief: Brief, out_dir: Path, optimize: bool = True
+) -> tuple[list[str], list[str], images.ImageReport]:
     """주문서가 가리키는 로컬 파일을 산출물 안으로 옮기고 경로를 고친다.
 
-    사진이 들어갈 수 있는 칸이 여러 곳(히어로·소개·서비스·시공사례·공유이미지·
-    파비콘)이므로 한 군데서 전부 훑는다. 고객 파일을 바꿔 넣는 것만으로
-    홈페이지 이미지가 통째로 바뀌는 구조를 여기가 떠받친다.
+    사진이 들어갈 수 있는 칸이 여러 곳(로고·히어로·소개·서비스·시공사례·
+    공유이미지·파비콘)이므로 한 군데서 전부 훑는다. 옮기면서 역할에 맞는
+    크기로 줄이고 WebP 로 바꾼다 — 원본 파일은 건드리지 않는다.
     """
     copied: list[str] = []
     warnings: list[str] = []
+    report = images.ImageReport()
     base = Path(brief.source_path).parent if brief.source_path else Path.cwd()
     target = out_dir / IMAGE_DIR
-    seen: dict[str, str] = {}
+    seen: dict[str, tuple[str, int]] = {}   # 원본 경로 → (산출물 이름, 쓰인 최대폭)
 
-    def move(src: str) -> str:
+    def move(src: str, role: str = "default") -> str:
         if not src or src.startswith(("http://", "https://", "data:", IMAGE_DIR + "/")):
             return src
+        want = images.max_width_for(role)
         if src in seen:
-            return seen[src]
+            name, had = seen[src]
+            if want <= had:
+                return f"{IMAGE_DIR}/{name}"
+            # 같은 사진을 더 큰 자리에서도 쓴다면 큰 쪽에 맞춰 다시 만든다
         found = next((c for c in (Path(src), base / src) if c.is_file()), None)
         if found is None:
             warnings.append(f"파일을 못 찾았습니다: {src} (주소를 그대로 둡니다)")
-            seen[src] = src
+            seen[src] = (Path(src).name, 10 ** 6)
             return src
-        target.mkdir(parents=True, exist_ok=True)
-        name = found.name
-        destination = target / name
-        if destination.exists() and destination.stat().st_size != found.stat().st_size:
-            # 다른 폴더의 같은 이름. 덮어쓰지 않고 이름을 벌린다.
-            name = f"{found.parent.name}-{found.name}"
-            destination = target / name
-        shutil.copy2(found, destination)
+        name = images.optimize(found, target, role=role, enabled=optimize, report=report)
         moved = f"{IMAGE_DIR}/{name}"
-        seen[src] = moved
-        copied.append(moved)
+        seen[src] = (name, want)
+        if moved not in copied:
+            copied.append(moved)
         return moved
 
     for image in brief.gallery:
-        image.src = move(image.src)
-    brief.brand.logo = move(brief.brand.logo)
-    brief.hero.image = move(brief.hero.image)
-    brief.about.image = move(brief.about.image)
+        image.src = move(image.src, "gallery")
+    brief.brand.logo = move(brief.brand.logo, "logo")
+    brief.hero.image = move(brief.hero.image, "hero")
+    brief.about.image = move(brief.about.image, "about")
     for item in brief.items:
-        item.image = move(item.image)
+        item.image = move(item.image, "service")
     for project in brief.projects:
-        project.image = move(project.image)
-        project.images = [move(i) for i in project.images]
-    brief.seo.og_image = move(brief.seo.og_image)
-    brief.seo.favicon = move(brief.seo.favicon)
-    return copied, warnings
+        project.image = move(project.image, "project")
+        project.images = [move(i, "project") for i in project.images]
+    brief.seo.og_image = move(brief.seo.og_image, "og")
+    brief.seo.favicon = move(brief.seo.favicon, "logo")
+    warnings.extend(report.warnings)
+    return copied, warnings, report
 
 
 def make_plan(
@@ -173,6 +175,7 @@ def _report(
             }
             for page in plan.content.pages
         ],
+        "weight_bytes": None,   # build() 가 다 쓴 뒤 채운다
         "todo": plan.content.meta.get("todo", []),
         "skipped": plan.content.meta.get("skipped", []),
         "warnings": warnings,
@@ -238,6 +241,22 @@ def _handoff(report: dict) -> str:
         lines.append(f"| {label} | {value} | {mark} |")
     lines.append("")
 
+    pictures = report.get("images") or {}
+    if pictures.get("files"):
+        saved = pictures["saved_bytes"] / 1024
+        lines.append("## 사진")
+        lines.append("")
+        lines.append(
+            f"- {pictures['files']}장 중 {pictures['converted']}장을 WebP 로 바꿔 "
+            f"{pictures['bytes_before'] / 1024:.0f}KB → {pictures['bytes_after'] / 1024:.0f}KB "
+            f"({saved:.0f}KB 절약)"
+        )
+        for row in pictures.get("largest", [])[:3]:
+            lines.append(f"- 가장 무거운 것: `{row['file']}` {row['bytes'] / 1024:.0f}KB {row['px'] or ''}")
+        for note in pictures.get("warnings", []):
+            lines.append(f"- ⚠ {note}")
+        lines.append("")
+
     lines.append("## 파일")
     for name in report["files"]:
         lines.append(f"- `{name}`")
@@ -261,6 +280,7 @@ def build(
     offline: bool = False,
     form_action: str = "",
     clean: bool = False,
+    optimize: bool = True,
     extra_warnings: list[str] | None = None,
 ) -> BuildResult:
     """주문서 하나를 사이트 한 벌로."""
@@ -270,7 +290,7 @@ def build(
     out.mkdir(parents=True, exist_ok=True)
 
     warnings = list(extra_warnings or [])
-    copied, image_warnings = _stage_assets(brief, out)
+    copied, image_warnings, image_report = _stage_assets(brief, out, optimize=optimize)
     warnings.extend(image_warnings)
 
     plan, findings = make_plan(
@@ -289,6 +309,11 @@ def build(
     files.extend(copied)
 
     report = _report(plan, findings, sorted(files), warnings)
+    report["images"] = image_report.summary()
+    (out / "build_report.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    report["weight_bytes"] = sum(f.stat().st_size for f in out.rglob("*") if f.is_file())
     (out / "build_report.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
     )

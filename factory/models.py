@@ -174,6 +174,18 @@ class AboutSpec:
 
 
 @dataclass
+class Layout:
+    """같은 마스터 안에서 고를 수 있는 배치 옵션.
+
+    템플릿을 복제하지 않고 여기서 갈래를 낸다 — 고객 셋이 나란히 놓였을 때
+    "같은 사이트"로 보이지 않게 하는 최소한의 장치다.
+    """
+
+    hero_align: str = "left"    # left | center
+    projects: str = "mosaic"    # mosaic(첫 칸을 크게) | grid(고른 격자)
+
+
+@dataclass
 class Seo:
     """검색·공유에 나가는 글자. 지역명이 여기 들어간다."""
 
@@ -228,6 +240,7 @@ class Brief:
     process: list[ProcessStep] = field(default_factory=list)
     seo: Seo = field(default_factory=Seo)
     theme: Theme = field(default_factory=Theme)
+    layout: Layout = field(default_factory=Layout)
     slug: str = ""
     source_path: str = ""
 

@@ -164,6 +164,15 @@ def og_image(plan: BuildPlan) -> str:
     return absolute(plan, src)
 
 
+def hero_image_path(plan: BuildPlan) -> str:
+    """첫 화면에 깔리는 사진. 미리 받아 두면 첫인상이 빨라진다."""
+    for page in plan.content.pages:
+        for section in page.sections:
+            if section.kind == "hero":
+                return str(section.data.get("image") or "")
+    return ""
+
+
 def base_context(plan: BuildPlan, form_action: str = "") -> dict[str, object]:
     return {
         "brief": plan.brief,
@@ -176,6 +185,7 @@ def base_context(plan: BuildPlan, form_action: str = "") -> dict[str, object]:
         "year": date.today().year,
         "jsonld": build_jsonld(plan),
         "og_image": og_image(plan),
+        "hero_preload": hero_image_path(plan),
         "favicon_href": "assets/favicon.svg",
         "form_action": form_action,
         "radius_px": int(plan.style.radius.rstrip("px") or 0),

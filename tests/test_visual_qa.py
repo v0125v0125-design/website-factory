@@ -152,3 +152,65 @@ def test_category_chips_narrow_the_grid(browser, page_url):
     page.wait_for_timeout(200)
     assert shown() == total
     page.close()
+
+
+# ── 양산한 세 고객도 같은 눈으로 본다 ─────────────────────────────
+
+CUSTOMERS = EXAMPLES / "customers"
+
+
+@pytest.fixture(scope="module")
+def customer_urls(tmp_path_factory):
+    root = tmp_path_factory.mktemp("visual-customers")
+    urls = {}
+    for path in sorted(CUSTOMERS.glob("*.json")):
+        result = build_from_file(path, root / path.stem, offline=True, clean=True)
+        urls[path.stem] = (result.out_dir / "index.html").as_uri()
+    return urls
+
+
+@pytest.mark.parametrize("width,height", [(1440, 900), (768, 1024), (375, 812)])
+def test_each_customer_site_holds_at_every_width(browser, customer_urls, width, height):
+    for name, url in customer_urls.items():
+        page, problems = _open(browser, url, width, height)
+        doc_width = page.evaluate("() => document.documentElement.scrollWidth")
+        assert doc_width <= width + 1, f"{name} @{width}: 가로 스크롤 ({doc_width})"
+        assert not problems, f"{name} @{width}: {problems}"
+        # 아래쪽 사진은 지연 로딩이므로 끝까지 내려가 본 다음에 센다
+        page.evaluate("() => window.scrollTo(0, document.body.scrollHeight)")
+        page.wait_for_timeout(700)
+        broken = page.evaluate(
+            "() => [...document.images].filter(i => i.offsetParent !== null || i.closest('.hero'))"
+            ".filter(i => !i.complete || i.naturalWidth === 0).length"
+        )
+        assert broken == 0, f"{name} @{width}: 깨진 사진 {broken}장"
+        page.close()
+
+
+def test_the_quick_contact_rail_never_covers_the_content(browser, customer_urls):
+    for name, url in customer_urls.items():
+        page, _ = _open(browser, url, 1440, 900)
+        gap = page.evaluate("""() => {
+          const rail = document.querySelector('.rail');
+          const card = document.querySelector('.strip__card') || document.querySelector('.wrap');
+          if (!rail || getComputedStyle(rail).display === 'none') return 999;
+          return Math.round(rail.getBoundingClientRect().left - card.getBoundingClientRect().right);
+        }""")
+        assert gap >= 0, f"{name}: 상담 레일이 본문을 덮습니다 ({gap}px)"
+        page.close()
+
+
+def test_layout_variations_render_differently(browser, customer_urls):
+    seen = set()
+    for name, url in customer_urls.items():
+        page, _ = _open(browser, url, 1440, 900)
+        shape = page.evaluate("""() => {
+          const hero = document.querySelector('.hero');
+          const first = document.querySelector('#pj-grid .pj__cell');
+          const r = first ? first.getBoundingClientRect() : {width:0, height:0};
+          return {align: getComputedStyle(hero).textAlign,
+                  cell: Math.round(r.width) + 'x' + Math.round(r.height)};
+        }""")
+        seen.add((shape["align"], shape["cell"]))
+        page.close()
+    assert len(seen) >= 2, f"세 고객의 화면 모양이 사실상 같습니다: {seen}"

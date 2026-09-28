@@ -1,1 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" width="900" height="1200" role="img" aria-label="예시 이미지 · 업체 사진 자리"><rect width="900" height="1200" fill="#E6E4E1"/><rect y="816" width="900" height="384" fill="#C9C4BC"/><circle cx="450" cy="528" r="198" fill="#7E7A73"/><rect x="108" y="840" width="684" height="72" rx="3" fill="#332F2B" opacity=".35"/><line x1="0" y1="360" x2="900" y2="360" stroke="#332F2B" stroke-width="2" opacity=".18"/><text x="450" y="1140" text-anchor="middle" font-family="sans-serif" font-size="40" fill="#332F2B" opacity=".62">예시 이미지 · 업체 사진 자리</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" width="900" height="1200" role="img" aria-label="예시 이미지 · 업체 사진 자리"><defs>
+  <linearGradient id="wall1" x1="0" y1="0" x2="0.35" y2="1">
+    <stop offset="0" stop-color="#E6E4E1"/><stop offset="1" stop-color="#7E7A73" stop-opacity=".45"/>
+  </linearGradient>
+  <linearGradient id="floor1" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#C9C4BC"/><stop offset="1" stop-color="#332F2B" stop-opacity=".55"/>
+  </linearGradient>
+  <linearGradient id="light1" x1="0" y1="0" x2="1" y2="0.8">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".55"/><stop offset=".55" stop-color="#ffffff" stop-opacity=".06"/>
+    <stop offset="1" stop-color="#332F2B" stop-opacity=".22"/>
+  </linearGradient>
+  <linearGradient id="glass1" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".92"/><stop offset="1" stop-color="#E6E4E1" stop-opacity=".6"/>
+  </linearGradient>
+  <radialGradient id="lamp1" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#ffe9c4" stop-opacity=".95"/><stop offset="1" stop-color="#ffe9c4" stop-opacity="0"/>
+  </radialGradient>
+</defs><rect width="900" height="1200" fill="url(#wall1)"/><rect y="840" width="900" height="360" fill="url(#floor1)"/><polygon points="0,0 495,0 270,1200 0,1200" fill="#fff" opacity=".10"/><ellipse cx="450" cy="741" rx="234" ry="26" fill="#332F2B" opacity=".20"/><circle cx="450" cy="552" r="189" fill="#7E7A73"/><circle cx="383" cy="485" r="103" fill="#fff" opacity=".18"/><rect x="90" y="888" width="720" height="21" rx="3" fill="#332F2B" opacity=".40"/><rect x="144" y="216" width="144" height="240" rx="3" fill="#E6E4E1" opacity=".75"/><rect x="144" y="216" width="144" height="240" rx="3" fill="none" stroke="#332F2B" stroke-opacity=".30" stroke-width="2"/><rect width="900" height="1200" fill="url(#light1)"/><text x="450" y="1146" text-anchor="middle" font-family="sans-serif" font-size="34" fill="#332F2B" opacity=".45">예시 이미지 · 업체 사진 자리</text></svg>

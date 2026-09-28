@@ -28,8 +28,9 @@ python -m factory.cli plan  examples/cafe-onepage.json           # 무엇을 지
 python -m factory.cli build examples/cafe-onepage.json -o out/bloom
 python -m factory.cli serve out/bloom                            # http://127.0.0.1:8765
 
-# 인테리어 마스터 (양산형)
-python -m factory.cli build examples/master-interior-01.json -o out/gonggan --offline
+# 인테리어 마스터 (양산형) — 가상 고객 3곳을 한 번에
+python -m factory.cli validate examples/customers/a-gonggan.json   # 규격 검사
+python -m factory.cli batch    examples/customers -o out --offline
 ```
 
 `out/bloom` 이 그대로 상품입니다. 빌드 과정도, 서버도 필요 없습니다.
@@ -45,6 +46,7 @@ python -m factory.cli build examples/master-interior-01.json -o out/gonggan --of
 | --- | --- |
 | `templates` | 템플릿 목록과 각 장의 섹션 구성 |
 | `probe <주소\|파일>` | 레퍼런스에서 무엇이 읽히는지만 본다 |
+| `validate <주문서>` | SITE_CONFIG_SCHEMA_V1 에 맞는지 본다 (파일을 쓰지 않음) |
 | `plan <주문서>` | 고른 템플릿·스타일·근거를 보여 주고 끝 (파일을 쓰지 않음) |
 | `build <주문서> -o <폴더>` | 실제로 짓는다 |
 | `batch <주문서폴더> -o <폴더>` | 여러 건을 한 번에 — 공장 모드 |
@@ -58,6 +60,7 @@ python -m factory.cli build examples/master-interior-01.json -o out/gonggan --of
 --form-action <주소> 문의폼을 받을 주소 (Formspree 등)
 --zip                다 지으면 zip 으로 묶는다
 --clean              산출물 폴더를 먼저 비운다
+--no-optimize        사진을 줄이지 않고 원본 그대로 쓴다
 ```
 
 ---
@@ -116,8 +119,14 @@ python -m factory.cli build examples/master-interior-01.json -o out/gonggan --of
 | `master-interior-01` | 1 | **인테리어·리모델링·시공 업체 양산형 마스터** — [설계 문서](문서/MASTER_INTERIOR_01.md) |
 
 `master-interior-01` 은 고객 데이터만 갈아 끼워 반복 판매하도록 만든 마스터입니다.
-강점 숫자 띠 · 시공 사례 격자(크게 보기) · 진행 절차 · 모바일 하단 문의 바를 갖췄고,
-색 버전을 `theme` 한 줄로 바꿉니다 (charcoal · beige · black · green).
+강점 숫자 띠 · 시공 사례 격자(크게 보기) · 진행 절차 · 모바일 하단 문의 바 ·
+데스크톱 오른쪽 상담 레일을 갖췄고, 색 버전을 `theme` 한 줄로,
+배치 갈래를 `layout` 한 줄로 바꿉니다.
+
+- 색: `charcoal` · `beige` · `black` · `green`
+- 배치: 히어로 `left`/`center`, 사례 `mosaic`/`grid`
+- 규격: [SITE_CONFIG_SCHEMA_V1](문서/SITE_CONFIG_SCHEMA_V1.md) — 관리자 웹 전까지의 호환 기준
+- 사진: 역할별로 줄이고 WebP 로 바꿉니다 (히어로 1920 · 사례 1600 · 카드 900 …)
 
 ## 스타일은 이 순서로 정해집니다
 
@@ -234,7 +243,7 @@ testimonials · faq · process · contact · cta` 입니다.
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q          # 133개 (브라우저 검사 11개 포함)
+python -m pytest -q          # 175개 (브라우저 검사 16개 포함)
 ```
 
 지어진 결과물을 실제로 뜯어봅니다 — 템플릿 문법이 새어 나왔는지,
