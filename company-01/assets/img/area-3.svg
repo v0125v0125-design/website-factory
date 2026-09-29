@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="예시 이미지 · 사업 영역"><defs>
+  <linearGradient id="b4" x1="0" y1="0" x2=".2" y2="1">
+    <stop offset="0" stop-color="#E9ECEF"/><stop offset="1" stop-color="#9AA6B2" stop-opacity=".55"/>
+  </linearGradient>
+  <linearGradient id="l4" x1="0" y1="0" x2=".9" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".46"/>
+    <stop offset=".62" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#1B2836" stop-opacity=".2"/>
+  </linearGradient>
+</defs><rect width="1600" height="900" fill="url(#b4)"/><rect x="0" y="666" width="1600" height="234" fill="#CFD6DD" opacity="1"/><rect x="96" y="504" width="1408" height="54" fill="#9AA6B2" opacity="1" stroke="#1B2836" stroke-opacity=".35" stroke-width="3"/><rect x="480" y="414" width="256" height="90" fill="#E9ECEF" opacity="1" stroke="#1B2836" stroke-opacity=".35" stroke-width="3"/><rect x="544" y="72" width="128" height="234" fill="#9AA6B2" opacity="1" stroke="#1B2836" stroke-opacity=".35" stroke-width="3"/><rect x="480" y="270" width="256" height="81" fill="#1B2836" opacity=".62"/><polygon points="512,351 704,351 768,414 448,414" fill="#E2622A" opacity=".26"/><rect x="927" y="108" width="544" height="306" fill="#E9ECEF" opacity=".95" stroke="#1B2836" stroke-opacity=".35" stroke-width="3"/><line x1="976" y1="153" x2="1056" y2="153" stroke="#1B2836" stroke-opacity=".3" stroke-width="3"/><line x1="976" y1="202" x2="1184" y2="202" stroke="#1B2836" stroke-opacity=".3" stroke-width="3"/><line x1="976" y1="252" x2="1312" y2="252" stroke="#1B2836" stroke-opacity=".3" stroke-width="3"/><line x1="976" y1="301" x2="1056" y2="301" stroke="#1B2836" stroke-opacity=".3" stroke-width="3"/><line x1="976" y1="351" x2="1184" y2="351" stroke="#1B2836" stroke-opacity=".3" stroke-width="3"/><rect x="976" y="342" width="160" height="14" fill="#E2622A"/><rect width="1600" height="900" fill="url(#l4)"/><text x="800" y="864" text-anchor="middle" font-family="sans-serif" font-size="32" fill="#1B2836" opacity=".40">예시 이미지 · 사업 영역</text></svg>

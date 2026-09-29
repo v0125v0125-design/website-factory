@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1000" width="1500" height="1000" role="img" aria-label="예시 이미지 · 작업 사례"><defs>
+  <linearGradient id="w14" x1="0" y1="0" x2=".3" y2="1">
+    <stop offset="0" stop-color="#F1F4F7"/><stop offset="1" stop-color="#B2BFCB" stop-opacity=".4"/>
+  </linearGradient>
+  <linearGradient id="f14" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#D8DFE6"/><stop offset="1" stop-color="#1F2A35" stop-opacity=".42"/>
+  </linearGradient>
+  <linearGradient id="l14" x1="0" y1="0" x2="1" y2=".9">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+    <stop offset=".6" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#1F2A35" stop-opacity=".16"/>
+  </linearGradient>
+  <linearGradient id="g14" x1="0" y1="0" x2=".5" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+    <stop offset="1" stop-color="#F1F4F7" stop-opacity=".6"/>
+  </linearGradient>
+</defs><rect width="1500" height="1000" fill="url(#w14)"/><rect y="680" width="1500" height="320" fill="url(#f14)"/><rect x="90" y="100" width="690" height="500" rx="2" fill="url(#g14)"/><rect x="90" y="100" width="690" height="500" rx="2" fill="none" stroke="#1F2A35" stroke-opacity=".3" stroke-width="3"/><line x1="435" y1="100" x2="435" y2="600" stroke="#1F2A35" stroke-opacity=".24" stroke-width="2"/><polygon points="90,680 780,680 1470,1000 60,1000" fill="#fff" opacity=".17"/><rect x="960" y="60" width="390" height="620" fill="#B2BFCB" opacity=".30"/><rect x="960" y="60" width="390" height="620" fill="none" stroke="#1F2A35" stroke-opacity=".28" stroke-width="3"/><circle cx="1303" cy="420" r="12" fill="#1F2A35" opacity=".45"/><rect x="0" y="658" width="1500" height="22" fill="#F1F4F7" opacity=".85"/><rect x="0" y="680" width="1500" height="2" fill="#1F2A35" opacity=".30"/><line x1="0" y1="733" x2="1500" y2="733" stroke="#1F2A35" stroke-opacity=".08" stroke-width="2"/><line x1="0" y1="786" x2="1500" y2="786" stroke="#1F2A35" stroke-opacity=".08" stroke-width="2"/><line x1="0" y1="840" x2="1500" y2="840" stroke="#1F2A35" stroke-opacity=".08" stroke-width="2"/><line x1="0" y1="893" x2="1500" y2="893" stroke="#1F2A35" stroke-opacity=".08" stroke-width="2"/><line x1="0" y1="946" x2="1500" y2="946" stroke="#1F2A35" stroke-opacity=".08" stroke-width="2"/><rect width="1500" height="1000" fill="url(#l14)"/><text x="750" y="960" text-anchor="middle" font-family="sans-serif" font-size="36" fill="#1F2A35" opacity=".42">예시 이미지 · 작업 사례</text></svg>

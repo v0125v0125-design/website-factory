@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="예시 이미지 · 시공 사례"><defs>
+  <linearGradient id="wall17" x1="0" y1="0" x2="0.35" y2="1">
+    <stop offset="0" stop-color="#E9E6E2"/><stop offset="1" stop-color="#8A8076" stop-opacity=".45"/>
+  </linearGradient>
+  <linearGradient id="floor17" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#CFC6BA"/><stop offset="1" stop-color="#312C27" stop-opacity=".55"/>
+  </linearGradient>
+  <linearGradient id="light17" x1="0" y1="0" x2="1" y2="0.8">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".55"/><stop offset=".55" stop-color="#ffffff" stop-opacity=".06"/>
+    <stop offset="1" stop-color="#312C27" stop-opacity=".22"/>
+  </linearGradient>
+  <linearGradient id="glass17" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".92"/><stop offset="1" stop-color="#E9E6E2" stop-opacity=".6"/>
+  </linearGradient>
+  <radialGradient id="lamp17" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#ffe9c4" stop-opacity=".95"/><stop offset="1" stop-color="#ffe9c4" stop-opacity="0"/>
+  </radialGradient>
+</defs><rect width="1200" height="900" fill="url(#wall17)"/><rect y="630" width="1200" height="270" fill="url(#floor17)"/><polygon points="0,0 660,0 360,900 0,900" fill="#fff" opacity=".10"/><ellipse cx="600" cy="603" rx="234" ry="26" fill="#312C27" opacity=".20"/><circle cx="600" cy="414" r="189" fill="#8A8076"/><circle cx="533" cy="347" r="103" fill="#fff" opacity=".18"/><rect x="120" y="666" width="960" height="16" rx="3" fill="#312C27" opacity=".40"/><rect x="192" y="162" width="192" height="180" rx="3" fill="#E9E6E2" opacity=".75"/><rect x="192" y="162" width="192" height="180" rx="3" fill="none" stroke="#312C27" stroke-opacity=".30" stroke-width="2"/><rect width="1200" height="900" fill="url(#light17)"/><text x="600" y="860" text-anchor="middle" font-family="sans-serif" font-size="34" fill="#312C27" opacity=".45">예시 이미지 · 시공 사례</text></svg>

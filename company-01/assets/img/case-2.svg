@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="예시 이미지"><defs>
+  <linearGradient id="b13" x1="0" y1="0" x2=".2" y2="1">
+    <stop offset="0" stop-color="#EDEFF1"/><stop offset="1" stop-color="#A3ABB4" stop-opacity=".55"/>
+  </linearGradient>
+  <linearGradient id="l13" x1="0" y1="0" x2=".9" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".46"/>
+    <stop offset=".62" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#20262C" stop-opacity=".2"/>
+  </linearGradient>
+</defs><rect width="800" height="600" fill="url(#b13)"/><rect x="0" y="468" width="800" height="132" fill="#D5D9DD" opacity="1"/><rect x="80" y="72" width="640" height="396" fill="#A3ABB4" opacity=".95" stroke="#20262C" stroke-opacity=".35" stroke-width="2"/><rect x="128" y="120" width="384" height="228" fill="#EDEFF1" opacity=".92" stroke="#20262C" stroke-opacity=".35" stroke-width="2"/><rect x="192" y="204" width="144" height="72" fill="#A3ABB4" opacity="1" stroke="#20262C" stroke-opacity=".35" stroke-width="2"/><rect x="264" y="132" width="8" height="72" fill="#E2622A"/><rect x="544" y="120" width="128" height="96" fill="#EDEFF1" opacity=".85" stroke="#20262C" stroke-opacity=".35" stroke-width="2"/><line x1="560" y1="138" x2="656" y2="138" stroke="#20262C" stroke-opacity=".28" stroke-width="2"/><line x1="560" y1="156" x2="656" y2="156" stroke="#20262C" stroke-opacity=".28" stroke-width="2"/><line x1="560" y1="174" x2="656" y2="174" stroke="#20262C" stroke-opacity=".28" stroke-width="2"/><line x1="560" y1="192" x2="656" y2="192" stroke="#20262C" stroke-opacity=".28" stroke-width="2"/><rect x="544" y="240" width="128" height="108" fill="#A3ABB4" opacity=".8" stroke="#20262C" stroke-opacity=".35" stroke-width="2"/><rect width="800" height="600" fill="url(#l13)"/></svg>

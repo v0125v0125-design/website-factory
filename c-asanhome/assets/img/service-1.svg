@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="예시 이미지 · 서비스"><defs>
+  <linearGradient id="wall2" x1="0" y1="0" x2="0.35" y2="1">
+    <stop offset="0" stop-color="#EDE7DE"/><stop offset="1" stop-color="#8C7A66" stop-opacity=".45"/>
+  </linearGradient>
+  <linearGradient id="floor2" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#D6C9B8"/><stop offset="1" stop-color="#3A342D" stop-opacity=".55"/>
+  </linearGradient>
+  <linearGradient id="light2" x1="0" y1="0" x2="1" y2="0.8">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".55"/><stop offset=".55" stop-color="#ffffff" stop-opacity=".06"/>
+    <stop offset="1" stop-color="#3A342D" stop-opacity=".22"/>
+  </linearGradient>
+  <linearGradient id="glass2" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".92"/><stop offset="1" stop-color="#EDE7DE" stop-opacity=".6"/>
+  </linearGradient>
+  <radialGradient id="lamp2" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#ffe9c4" stop-opacity=".95"/><stop offset="1" stop-color="#ffe9c4" stop-opacity="0"/>
+  </radialGradient>
+</defs><rect width="1200" height="900" fill="url(#wall2)"/><rect y="630" width="1200" height="270" fill="url(#floor2)"/><rect x="60" y="90" width="384" height="450" rx="3" fill="url(#glass2)"/><rect x="60" y="90" width="384" height="450" rx="3" fill="none" stroke="#3A342D" stroke-opacity=".35" stroke-width="2"/><line x1="252" y1="90" x2="252" y2="540" stroke="#3A342D" stroke-opacity=".28" stroke-width="2"/><polygon points="60,630 444,630 866,900 36,900" fill="#fff" opacity=".13"/><ellipse cx="792" cy="603" rx="357" ry="12" fill="#3A342D" opacity=".22"/><rect x="504" y="423" width="576" height="180" rx="19" fill="#8C7A66"/><rect x="538" y="360" width="230" height="81" rx="16" fill="#8C7A66" opacity=".78"/><rect x="803" y="369" width="195" height="72" rx="14" fill="#EDE7DE" opacity=".7"/><ellipse cx="540" cy="666" rx="132" ry="31" fill="#3A342D" opacity=".30"/><line x1="960" y1="0" x2="960" y2="189" stroke="#3A342D" stroke-opacity=".45" stroke-width="2"/><circle cx="960" cy="189" r="160" fill="url(#lamp2)"/><circle cx="960" cy="189" r="67" fill="#3A342D" opacity=".55"/><rect width="1200" height="900" fill="url(#light2)"/><text x="600" y="860" text-anchor="middle" font-family="sans-serif" font-size="34" fill="#3A342D" opacity=".45">예시 이미지 · 서비스</text></svg>

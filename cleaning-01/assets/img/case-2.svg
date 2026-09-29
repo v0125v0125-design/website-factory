@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="예시 이미지 · 작업 사례"><defs>
+  <linearGradient id="w15" x1="0" y1="0" x2=".3" y2="1">
+    <stop offset="0" stop-color="#F5F4F1"/><stop offset="1" stop-color="#C3C0B6" stop-opacity=".4"/>
+  </linearGradient>
+  <linearGradient id="f15" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#E2E0DA"/><stop offset="1" stop-color="#2B2A26" stop-opacity=".42"/>
+  </linearGradient>
+  <linearGradient id="l15" x1="0" y1="0" x2="1" y2=".9">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+    <stop offset=".6" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#2B2A26" stop-opacity=".16"/>
+  </linearGradient>
+  <linearGradient id="g15" x1="0" y1="0" x2=".5" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+    <stop offset="1" stop-color="#F5F4F1" stop-opacity=".6"/>
+  </linearGradient>
+</defs><rect width="1200" height="900" fill="url(#w15)"/><rect y="612" width="1200" height="288" fill="url(#f15)"/><rect x="48" y="90" width="504" height="198" rx="3" fill="#C3C0B6" opacity=".85"/><rect x="600" y="90" width="552" height="198" rx="3" fill="#C3C0B6" opacity=".5"/><rect x="48" y="396" width="1104" height="40" rx="2" fill="#2B2A26" opacity=".5"/><rect x="48" y="436" width="1104" height="180" fill="#F5F4F1" opacity=".9"/><rect x="672" y="306" width="216" height="81" rx="2" fill="#2B2A26" opacity=".28"/><line x1="120" y1="436" x2="120" y2="616" stroke="#2B2A26" stroke-opacity=".16" stroke-width="2"/><line x1="384" y1="436" x2="384" y2="616" stroke="#2B2A26" stroke-opacity=".16" stroke-width="2"/><line x1="648" y1="436" x2="648" y2="616" stroke="#2B2A26" stroke-opacity=".16" stroke-width="2"/><line x1="912" y1="436" x2="912" y2="616" stroke="#2B2A26" stroke-opacity=".16" stroke-width="2"/><rect width="1200" height="900" fill="url(#l15)"/><text x="600" y="864" text-anchor="middle" font-family="sans-serif" font-size="32" fill="#2B2A26" opacity=".42">예시 이미지 · 작업 사례</text></svg>

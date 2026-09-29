@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>제작 상담 신청 | WEBSITE FACTORY</title>
+<meta name="description" content="먼저 짧게 남겨 주십시오. 확인 후 연락드리고, 진행하기로 하면 그때 제작에 필요한 자료를 따로 받습니다.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://v0125v0125-design.github.io/website-factory/store/order/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="WEBSITE FACTORY">
+<meta property="og:title" content="소상공인 홈페이지 제작 169,000원부터 | WEBSITE FACTORY">
+<meta property="og:url" content="https://v0125v0125-design.github.io/website-factory/store/order/">
+<meta property="og:locale" content="ko_KR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body class="page">
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header class="hd">
+  <div class="wrap hd__in">
+    <a class="hd__brand" href="../"><span class="hd__mark">WF</span>WEBSITE FACTORY</a>
+    <nav class="hd__nav" aria-label="주요 메뉴">
+      <ul class="hd__list">
+        <li><a href="../#samples">디자인 보기</a></li>
+        <li><a href="../#pricing">가격</a></li>
+        <li><a href="../#faq">자주 묻는 질문</a></li>
+      </ul>
+    </nav>
+    <div class="hd__cta"><a class="btn btn--sm btn--line" href="../#samples">디자인 보기</a></div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="sec order">
+    <div class="wrap order__in">
+      <div class="order__form">
+        <p class="eyebrow" data-role="eyebrow">ORDER</p>
+        <h1 class="h2" data-role="heading">제작 상담 신청</h1>
+        <p class="lede" data-role="lede">먼저 짧게 남겨 주십시오. 확인 후 연락드리고, 진행하기로 하면 그때 제작에 필요한 자료를 따로 받습니다.</p>
+
+        <ol class="order__steps" aria-label="진행 단계">
+          <li class="is-now"><b>1</b> 상담 신청<span>지금 이 화면</span></li>
+          <li><b>2</b> 확인 후 연락<span>가능 여부와 일정</span></li>
+          <li><b>3</b> 제작 자료 입력<span>진행이 정해지면</span></li>
+        </ol>
+
+        <!-- 제작 상담 신청 -->
+        <form class="form" id="form-order" novalidate>
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="gotcha">
+
+
+          <p class="field">
+          <label for="o-product">선택 상품 <b class="req">*</b></label>
+          <select id="o-product" name="product" required>
+            <option value="START">START — 원페이지 홈페이지 169,000원</option>
+            <option value="BUSINESS">BUSINESS — 3~5페이지 홈페이지 349,000원</option>
+            <option value="PREMIUM">PREMIUM — 맞춤 제작 790,000원</option>
+          </select>
+        </p>
+
+          <p class="field">
+          <label for="o-sample">선택 디자인 <b class="req">*</b></label>
+          <select id="o-sample" name="sample" required>
+            <option value="INTERIOR 01">INTERIOR 01 — 인테리어 · 리모델링 · 시공 업체</option>
+            <option value="CLEANING 01">CLEANING 01 — 입주 · 이사 · 거주 · 상가청소 업체</option>
+            <option value="COMPANY 01">COMPANY 01 — 제조 · 기계 · 부품 · 설비 · 엔지니어링</option>
+            <option value="미정">아직 고르지 못했습니다</option>
+          </select>
+        </p>
+
+          <p class="field">
+          <label for="o-company">업체명 <b class="req">*</b></label>
+          <input type="text" id="o-company" name="company" required>
+        </p>
+
+          <p class="field">
+          <label for="o-industry">업종 <b class="req">*</b></label>
+          <input type="text" id="o-industry" name="industry" placeholder="예: 인테리어 · 청소 · 제조 · 학원 · 컨설팅" required>
+        </p>
+
+          <p class="field">
+          <label for="o-name">담당자명 <b class="req">*</b></label>
+          <input type="text" id="o-name" name="name" required>
+        </p>
+
+          <p class="field">
+          <label for="o-contact">연락처 <b class="req">*</b></label>
+          <input type="tel" id="o-contact" name="contact" placeholder="010-0000-0000" required inputmode="tel"><span class="field__hint">연락 가능한 번호를 적어 주십시오.</span>
+        </p>
+
+          <p class="field">
+          <label for="o-email">이메일</label>
+          <input type="email" id="o-email" name="email" placeholder="선택">
+        </p>
+
+          <p class="field">
+          <label for="o-domain">도메인 보유 여부</label>
+          <select id="o-domain" name="domain">
+            <option>없습니다</option>
+            <option>있습니다</option>
+            <option>잘 모르겠습니다</option>
+          </select>
+        </p>
+
+          <p class="field">
+          <label for="o-site">기존 홈페이지</label>
+          <input type="url" id="o-site" name="site" placeholder="있으시면 주소를 적어 주십시오 (선택)">
+        </p>
+
+          <p class="field field--wide">
+          <label for="o-message">간단 요청사항</label>
+          <textarea id="o-message" name="message" rows="4" placeholder="예: 천안 지역 입주청소 업체입니다. 전화 문의가 잘 보였으면 좋겠습니다."></textarea>
+        </p>
+
+
+          <div class="prem" id="premium" hidden>
+            <p class="prem__h">맞춤 제작 추가 정보</p>
+            <p class="prem__lede">PREMIUM 은 상담 후 구성을 정합니다. 아는 만큼만 적어 주셔도 됩니다.</p>
+
+            <p class="field">
+          <label for="p-pages">예상 페이지 수</label>
+          <input type="text" id="p-pages" name="pages" placeholder="예: 5~7페이지 · 아직 모르겠습니다">
+        </p>
+
+            <p class="field">
+          <label for="p-features">필요한 기능</label>
+          <span class="checks">
+            <label class="check"><input type="checkbox" name="features[]" value="예약">예약</label>
+            <label class="check"><input type="checkbox" name="features[]" value="게시판">게시판</label>
+            <label class="check"><input type="checkbox" name="features[]" value="관리자">관리자</label>
+            <label class="check"><input type="checkbox" name="features[]" value="결제">결제</label>
+            <label class="check"><input type="checkbox" name="features[]" value="다국어">다국어</label>
+            <label class="check"><input type="checkbox" name="features[]" value="회원기능">회원기능</label>
+            <label class="check"><input type="checkbox" name="features[]" value="기타">기타</label>
+          </span>
+        </p>
+
+            <p class="field">
+          <label for="p-reference">참고 사이트</label>
+          <input type="url" id="p-reference" name="reference" placeholder="비슷하게 만들고 싶은 주소가 있으면">
+        </p>
+
+            <p class="field">
+          <label for="p-budget">예상 예산</label>
+          <input type="text" id="p-budget" name="budget" placeholder="예: 100만원 안팎 · 미정">
+        </p>
+
+            <p class="field field--wide">
+          <label for="p-direction">원하는 디자인 방향</label>
+          <textarea id="p-direction" name="direction" rows="4" placeholder="예: 단정하고 신뢰감 있게. 사진보다 글이 많았으면 합니다."></textarea>
+        </p>
+
+          </div>
+
+          <div class="agree">
+          <p class="field--check">
+            <input type="checkbox" id="o-agree" name="agree" value="동의" required>
+            <label for="o-agree">개인정보 수집 및 이용에 동의합니다. (필수)</label>
+          </p>
+          <details class="agree__more">
+            <summary>어떤 정보를 왜 받는지 보기</summary>
+            <dl class="agree__table">
+              <div><dt>수집 항목</dt><dd>업체명 · 업종 · 담당자명 · 연락처 · 이메일(선택) · 기존 홈페이지 주소(선택) · 요청사항</dd></div>
+              <div><dt>이용 목적</dt><dd>홈페이지 제작 상담과 회신, 제작 진행</dd></div>
+              <div><dt>보유 기간</dt><dd>상담 종료 후 6개월</dd></div>
+              <div><dt>동의 거부</dt><dd>동의하지 않으셔도 됩니다. 다만 연락처가 없으면 회신을 드릴 수 없어 상담 신청이 진행되지 않습니다.</dd></div>
+            </dl>
+            <p><a href="../privacy/">개인정보 수집·이용 안내 전문</a></p>
+          </details>
+        </div>
+
+          <p class="form__note" data-role="too-fast" hidden>조금만 더 확인하신 뒤 다시 눌러 주십시오.</p>
+
+          <p><button class="btn btn--block btn--lg" type="submit" data-sending="보내는 중…">제작 상담 신청하기</button></p>
+
+          <div class="panel panel--closed" data-role="closed" hidden>
+            <h2 class="panel__title">지금은 온라인 접수를 준비하는 중입니다</h2>
+            <p>아래 연락처로 말씀해 주시면 같은 내용으로 상담해 드립니다.</p>
+            
+          <p class="muted">공개 연락처는 준비하는 중입니다.</p>
+          </div>
+
+          <div class="panel panel--fail" data-role="failure" hidden>
+            <h2 class="panel__title">신청을 보내지 못했습니다</h2>
+            <p data-role="failnote">잠시 후 다시 시도해 주시거나, 아래 연락처로 바로 말씀해 주십시오. 작성하신 내용은 화면에 그대로 남아 있습니다.</p>
+            
+          <p class="muted">공개 연락처는 준비하는 중입니다.</p>
+          </div>
+        </form>
+
+        <!-- 접수 완료 — 서버가 받았다고 답했을 때만 보입니다 -->
+        <div class="panel panel--done" id="done" hidden>
+          <h2 class="panel__title">제작 상담 신청이 접수되었습니다</h2>
+          <p>확인 후 연락드리겠습니다.</p>
+          <p class="ticket" id="done-id" hidden>접수번호 <b></b></p>
+          <dl class="panel__sum" id="done-sum"></dl>
+          <p class="muted">이 화면이 보이면 신청이 저희에게 도착한 것입니다. 창을 닫으셔도 됩니다.</p>
+          <p class="panel__actions">
+            <a class="btn btn--line" href="../">판매 홈페이지로</a>
+          </p>
+        </div>
+      </div>
+
+      <aside class="order__side">
+        <div class="side__box" id="pick">
+          <p class="side__h">고르신 구성</p>
+          <dl class="side__pick">
+            <div><dt>상품</dt><dd id="pick-product">—</dd></div>
+            <div><dt>디자인</dt><dd id="pick-sample">—</dd></div>
+          </dl>
+          <p class="side__note">이 화면에서 바로 바꾸실 수 있습니다.</p>
+        </div>
+        <div class="side__box">
+          <p class="side__h">신청 뒤에는</p>
+          <ul class="side__list">
+            <li>가능 여부와 일정을 먼저 말씀드립니다.</li>
+            <li>진행하기로 하면 제작 자료 입력 링크를 보내 드립니다.</li>
+            <li>자료가 도착한 뒤에 제작을 시작합니다.</li>
+          </ul>
+        </div>
+        <div class="side__box">
+          <p class="side__h">지금은 결제하지 않습니다</p>
+          <p class="side__note">이 화면은 상담 신청까지입니다. 금액과 일정은 확인 후 안내드립니다.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ft">
+  <div class="wrap ft__in">
+    <div>
+      <p class="ft__brand">WEBSITE FACTORY</p>
+      <p style="margin:0">사업자 홈페이지 제작</p>
+    </div>
+    <ul class="ft__links">
+      <li><a href="../">홈</a></li>
+      <li><a href="../order/">제작 상담 신청</a></li>
+      <li><a href="../privacy/">개인정보 안내</a></li>
+    </ul>
+
+    <p class="ft__note">
+      샘플 홈페이지는 가상 업체 자료로 만든 견본입니다. 실제 업체의 이름·연락처·사진·문구를 사용하지 않았습니다.
+      가격은 모두 부가세 별도이며, 검색 상위 노출은 약속드리지 않습니다.
+이 페이지는 검수용 임시 주소로 검색 노출을 막아 두었습니다(noindex).
+      © 2026 WEBSITE FACTORY
+    </p>
+  </div>
+</footer>
+
+<script src="../assets/submit.js"></script>
+
+<script>
+(function () {
+  "use strict";
+  var params = new URLSearchParams(location.search);
+  var form = document.getElementById("form-order");
+  var product = form.elements.product;
+  var sample = form.elements.sample;
+  var premium = document.getElementById("premium");
+  var mode = (params.get("mode") || "").toLowerCase();
+
+  /* 1. 판매 페이지에서 눌러 온 상품·디자인을 그대로 채운다 */
+  function preset(select, wanted) {
+    if (!select || !wanted) { return; }
+    var want = wanted.replace(/_/g, " ").trim().toUpperCase();
+    Array.prototype.forEach.call(select.options, function (option) {
+      if (option.value.toUpperCase() === want) { select.value = option.value; }
+    });
+  }
+  preset(product, params.get("product"));
+  preset(sample, params.get("sample"));
+
+  /* 2. PREMIUM 이면 추가 칸을 연다 */
+  function syncPremium() {
+    var on = product && /PREMIUM/i.test(product.value);
+    premium.hidden = !on;
+    Array.prototype.forEach.call(premium.querySelectorAll("input,select,textarea"), function (el) {
+      el.disabled = !on;
+    });
+  }
+  if (product) { product.addEventListener("change", syncPremium); }
+  syncPremium();
+
+  /* 3. 고른 구성을 옆에 비춘다 */
+  var pickProduct = document.getElementById("pick-product");
+  var pickSample = document.getElementById("pick-sample");
+  function syncPick() {
+    if (pickProduct && product) { pickProduct.textContent = product.value || "—"; }
+    if (pickSample && sample) { pickSample.textContent = sample.value || "—"; }
+  }
+  [product, sample].forEach(function (el) { if (el) { el.addEventListener("change", syncPick); } });
+  syncPick();
+
+  /* 4. 디자인 추천 모드 — 같은 폼에서 묻는 것만 남긴다 */
+  var RECOMMEND_KEEP = ["company", "industry", "contact", "site", "message"];
+  if (mode === "recommend") {
+    document.querySelector('[data-role=eyebrow]').textContent = "RECOMMEND";
+    document.querySelector('[data-role=heading]').textContent = "\ub514\uc790\uc778 \ucd94\ucc9c \uc694\uccad";
+    document.querySelector('[data-role=lede]').textContent = "\uc2e0\uccad\uc774 \uc544\ub2c8\ub77c \ubb3c\uc5b4\ubcf4\ub294 \uac83\uc785\ub2c8\ub2e4. \uc5c5\uc885\ub9cc \uc54c\ub824 \uc8fc\uc2dc\uba74 \uc5b4\uc6b8\ub9ac\ub294 \ud648\ud398\uc774\uc9c0 \ubc29\ud5a5\uc744 \uc548\ub0b4\ud574 \ub4dc\ub9bd\ub2c8\ub2e4.";
+    form.querySelector("[type=submit]").textContent = "\ub514\uc790\uc778 \ucd94\ucc9c\ubc1b\uae30";
+    document.getElementById("pick").hidden = true;
+    Array.prototype.forEach.call(form.querySelectorAll(".field"), function (row) {
+      var el = row.querySelector("[name]");
+      if (!el) { return; }
+      var name = el.name.replace("[]", "");
+      if (RECOMMEND_KEEP.indexOf(name) === -1) {
+        row.hidden = true;
+        Array.prototype.forEach.call(row.querySelectorAll("input,select,textarea"), function (one) {
+          one.disabled = true;
+          one.required = false;
+        });
+      }
+    });
+    premium.hidden = true;
+    var moodRow = document.createElement("p");
+    moodRow.className = "field";
+    moodRow.innerHTML = '<label for="r-mood">원하는 분위기</label>'
+      + '<input type="text" id="r-mood" name="mood" placeholder="예: 깔끔하고 신뢰감 있게 (선택)">';
+    form.querySelector(".agree").before(moodRow);
+  }
+
+  /* 5. 보낸다 — 실제로 도착했을 때만 성공 화면을 띄운다 */
+  var done = document.getElementById("done");
+  var failure = form.querySelector("[data-role=failure]");
+
+  function kind() { return mode === "recommend" ? "recommend" : "order"; }
+
+  function build() {
+    var data = WF.collect(form);
+    var payload = {
+      kind: kind(),
+      version: WF.config.version,
+      submittedAt: new Date().toISOString(),
+      source: {
+        page: location.href,
+        referrer: document.referrer || "",
+        product: mode === "recommend" ? "" : (product ? product.value : ""),
+        sample: mode === "recommend" ? "undecided" : (sample ? sample.value : "")
+      },
+      lead: {
+        company: data.company || "",
+        industry: data.industry || "",
+        name: data.name || "",
+        contact: data.contact || "",
+        email: data.email || "",
+        domain: data.domain || "",
+        site: data.site || "",
+        mood: data.mood || "",
+        message: data.message || ""
+      },
+      premium: premium.hidden ? null : {
+        pages: data.pages || "",
+        features: data.features || [],
+        reference: data.reference || "",
+        budget: data.budget || "",
+        direction: data.direction || ""
+      },
+      consent: { privacy: true, at: new Date().toISOString() }
+    };
+    var head = kind() === "recommend" ? "디자인 추천 요청" : "제작 상담 신청";
+    var flat = {
+      종류: head,
+      업체명: payload.lead.company,
+      업종: payload.lead.industry,
+      담당자: payload.lead.name,
+      연락처: payload.lead.contact
+    };
+    if (payload.lead.email) { flat["이메일"] = payload.lead.email; }
+    if (payload.source.product) { flat["선택 상품"] = payload.source.product; }
+    if (payload.source.sample) { flat["선택 디자인"] = payload.source.sample; }
+    if (payload.lead.domain) { flat["도메인"] = payload.lead.domain; }
+    if (payload.lead.site) { flat["기존 홈페이지"] = payload.lead.site; }
+    if (payload.lead.mood) { flat["원하는 분위기"] = payload.lead.mood; }
+    if (payload.lead.message) { flat["요청사항"] = payload.lead.message; }
+    if (payload.premium) {
+      if (payload.premium.pages) { flat["예상 페이지 수"] = payload.premium.pages; }
+      if (payload.premium.features.length) { flat["필요한 기능"] = payload.premium.features.join(", "); }
+      if (payload.premium.reference) { flat["참고 사이트"] = payload.premium.reference; }
+      if (payload.premium.budget) { flat["예상 예산"] = payload.premium.budget; }
+      if (payload.premium.direction) { flat["디자인 방향"] = payload.premium.direction; }
+    }
+    return {
+      data: payload,
+      flat: flat,
+      subject: "[" + head + "] " + (payload.lead.company || "업체명 없음")
+    };
+  }
+
+  WF.attach({
+    form: form,
+    build: build,
+    onSuccess: function (payload, result) {
+      var ticket = document.getElementById("done-id");
+      if (result && result.id) {
+        ticket.querySelector("b").textContent = result.id;
+        ticket.hidden = false;
+      }
+      var list = document.getElementById("done-sum");
+      list.innerHTML = "";
+      Object.keys(payload.flat).forEach(function (label) {
+        var row = document.createElement("div");
+        row.innerHTML = "<dt></dt><dd></dd>";
+        row.querySelector("dt").textContent = label;
+        row.querySelector("dd").textContent = payload.flat[label];
+        list.appendChild(row);
+      });
+      form.hidden = true;
+      done.hidden = false;
+      done.scrollIntoView({ block: "start" });
+      done.setAttribute("tabindex", "-1");
+      done.focus();
+    },
+    onFailure: function (error) {
+      var note = failure.querySelector("[data-role=failnote]");
+      if (error.kind === "rejected" && error.notice) {
+        note.textContent = error.notice;
+      } else if (error.kind === "network") {
+        note.textContent = "연결이 끊겼습니다. 인터넷 상태를 확인하신 뒤 다시 눌러 주십시오. "
+          + "작성하신 내용은 그대로 남아 있습니다.";
+      } else {
+        note.textContent = "\uc7a0\uc2dc \ud6c4 \ub2e4\uc2dc \uc2dc\ub3c4\ud574 \uc8fc\uc2dc\uac70\ub098, \uc544\ub798 \uc5f0\ub77d\ucc98\ub85c \ubc14\ub85c \ub9d0\uc500\ud574 \uc8fc\uc2ed\uc2dc\uc624. \uc791\uc131\ud558\uc2e0 \ub0b4\uc6a9\uc740 \ud654\uba74\uc5d0 \uadf8\ub300\ub85c \ub0a8\uc544 \uc788\uc2b5\ub2c8\ub2e4.";
+      }
+      failure.hidden = false;
+      failure.scrollIntoView({ block: "nearest" });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

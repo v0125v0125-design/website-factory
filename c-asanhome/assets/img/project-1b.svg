@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200" role="img" aria-label="예시 이미지 · 시공 사례"><defs>
+  <linearGradient id="wall7" x1="0" y1="0" x2="0.35" y2="1">
+    <stop offset="0" stop-color="#E9E6E2"/><stop offset="1" stop-color="#8A8076" stop-opacity=".45"/>
+  </linearGradient>
+  <linearGradient id="floor7" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#CFC6BA"/><stop offset="1" stop-color="#312C27" stop-opacity=".55"/>
+  </linearGradient>
+  <linearGradient id="light7" x1="0" y1="0" x2="1" y2="0.8">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".55"/><stop offset=".55" stop-color="#ffffff" stop-opacity=".06"/>
+    <stop offset="1" stop-color="#312C27" stop-opacity=".22"/>
+  </linearGradient>
+  <linearGradient id="glass7" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".92"/><stop offset="1" stop-color="#E9E6E2" stop-opacity=".6"/>
+  </linearGradient>
+  <radialGradient id="lamp7" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#ffe9c4" stop-opacity=".95"/><stop offset="1" stop-color="#ffe9c4" stop-opacity="0"/>
+  </radialGradient>
+</defs><rect width="1200" height="1200" fill="url(#wall7)"/><rect y="840" width="1200" height="360" fill="url(#floor7)"/><rect x="48" y="144" width="480" height="264" rx="4" fill="#8A8076" opacity=".85"/><rect x="576" y="144" width="576" height="264" rx="4" fill="#8A8076" opacity=".55"/><line x1="288" y1="144" x2="288" y2="408" stroke="#312C27" stroke-opacity=".22" stroke-width="2"/><rect x="48" y="528" width="1104" height="60" rx="2" fill="#312C27" opacity=".62"/><rect x="48" y="588" width="1104" height="252" fill="#E9E6E2" opacity=".92"/><line x1="120" y1="588" x2="120" y2="840" stroke="#312C27" stroke-opacity=".18" stroke-width="2"/><circle cx="144" cy="696" r="9" fill="#312C27" opacity=".45"/><line x1="384" y1="588" x2="384" y2="840" stroke="#312C27" stroke-opacity=".18" stroke-width="2"/><circle cx="408" cy="696" r="9" fill="#312C27" opacity=".45"/><line x1="648" y1="588" x2="648" y2="840" stroke="#312C27" stroke-opacity=".18" stroke-width="2"/><circle cx="672" cy="696" r="9" fill="#312C27" opacity=".45"/><line x1="912" y1="588" x2="912" y2="840" stroke="#312C27" stroke-opacity=".18" stroke-width="2"/><circle cx="936" cy="696" r="9" fill="#312C27" opacity=".45"/><rect x="744" y="432" width="192" height="96" rx="3" fill="#312C27" opacity=".30"/><polygon points="0,60 600,24 420,840 0,900" fill="#fff" opacity=".10"/><rect width="1200" height="1200" fill="url(#light7)"/><text x="600" y="1146" text-anchor="middle" font-family="sans-serif" font-size="45" fill="#312C27" opacity=".45">예시 이미지 · 시공 사례</text></svg>

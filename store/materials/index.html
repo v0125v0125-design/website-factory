@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>제작 자료 입력 | WEBSITE FACTORY</title>
+<meta name="description" content="제작을 진행하기로 한 뒤 홈페이지에 들어갈 자료를 보내 주시는 화면입니다.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://v0125v0125-design.github.io/website-factory/store/materials/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="WEBSITE FACTORY">
+<meta property="og:title" content="소상공인 홈페이지 제작 169,000원부터 | WEBSITE FACTORY">
+<meta property="og:url" content="https://v0125v0125-design.github.io/website-factory/store/materials/">
+<meta property="og:locale" content="ko_KR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body class="page">
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header class="hd">
+  <div class="wrap hd__in">
+    <a class="hd__brand" href="../"><span class="hd__mark">WF</span>WEBSITE FACTORY</a>
+    <nav class="hd__nav" aria-label="주요 메뉴">
+      <ul class="hd__list">
+        <li><a href="../#samples">디자인 보기</a></li>
+        <li><a href="../#pricing">가격</a></li>
+        <li><a href="../#faq">자주 묻는 질문</a></li>
+      </ul>
+    </nav>
+    <div class="hd__cta"><a class="btn btn--sm btn--line" href="../">판매 홈페이지</a></div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="sec mat">
+    <div class="wrap">
+      <p class="eyebrow">MATERIALS</p>
+      <h1 class="h2">제작 자료 입력</h1>
+      <p class="lede">상담을 마치고 제작을 진행하기로 한 뒤에 작성하는 화면입니다. 광고를 보고 바로 오셨다면 먼저 제작 상담 신청을 남겨 주십시오.</p>
+      <p class="mat__draft">작성 중인 내용은 이 브라우저에만 자동으로 저장됩니다. 창을 닫았다 다시 열어도 이어서 쓰실 수 있고, 보내고 나면 지워집니다.
+        <button type="button" class="linkbtn" id="clear-draft">저장된 내용 지우기</button>
+        <span class="mat__saved" id="saved" hidden>저장됨</span>
+      </p>
+    </div>
+
+    <div class="wrap mat__in">
+      <nav class="mat__nav" aria-label="작성 단계">
+        <ol>
+
+          <li><a href="#s-who" data-jump="who">접수 확인</a></li>
+
+          <li><a href="#s-company" data-jump="company">회사 정보</a></li>
+
+          <li><a href="#s-brand" data-jump="brand">브랜드</a></li>
+
+          <li><a href="#s-copy" data-jump="copy">대표 문구</a></li>
+
+          <li><a href="#s-services" data-jump="services">서비스 · 강점</a></li>
+
+          <li><a href="#s-industry" data-jump="industry">업종 자료</a></li>
+
+          <li><a href="#s-photos" data-jump="photos">사진</a></li>
+
+          <li><a href="#s-extra" data-jump="extra">후기 · 질문 · 검색</a></li>
+
+          <li><a href="#s-send" data-jump="send">보내기</a></li>
+
+        </ol>
+      </nav>
+
+      <form class="form mat__form" id="form-material" novalidate>
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="gotcha">
+
+        <!-- 1 접수 확인 -->
+        <fieldset class="blk" id="s-who">
+          <legend>1. 접수 확인</legend>
+          <p class="blk__lede">상담 때 알려 주신 것과 같게 적어 주시면 신청 건을 찾기 쉽습니다.</p>
+          <div class="grid2">
+            <p class="field">
+          <label for="m-who-company">업체명 *</label>
+          <input type="text" id="m-who-company" name="who.company">
+        </p>
+            <p class="field">
+          <label for="m-who-name">담당자명 *</label>
+          <input type="text" id="m-who-name" name="who.name">
+        </p>
+            <p class="field">
+          <label for="m-who-contact">연락처 *</label>
+          <input type="tel" id="m-who-contact" name="who.contact" placeholder="010-0000-0000">
+        </p>
+            <p class="field">
+          <label for="m-who-orderId">접수번호</label>
+          <input type="text" id="m-who-orderId" name="who.orderId" placeholder="받으셨으면 적어 주십시오 (선택)">
+        </p>
+          </div>
+          <p class="field">
+            <label for="m-design">제작할 디자인</label>
+            <select id="m-design" name="who.design">
+
+              <option value="INTERIOR 01">INTERIOR 01 — 인테리어 · 리모델링 · 시공 업체</option>
+
+              <option value="CLEANING 01">CLEANING 01 — 입주 · 이사 · 거주 · 상가청소 업체</option>
+
+              <option value="COMPANY 01">COMPANY 01 — 제조 · 기계 · 부품 · 설비 · 엔지니어링</option>
+
+              <option value="미정">아직 정하지 않았습니다</option>
+            </select>
+            <span class="field__hint">고르시면 그 업종에 필요한 칸이 아래에 나타납니다.</span>
+          </p>
+        </fieldset>
+
+        <!-- 2 회사 정보 -->
+        <fieldset class="blk" id="s-company">
+          <legend>2. 회사 기본 정보</legend>
+          <p class="blk__lede">아는 것만 적으셔도 됩니다. 빈 칸은 홈페이지에 나오지 않습니다.</p>
+          <div class="grid2">
+            <p class="field">
+          <label for="m-company-name">업체명</label>
+          <input type="text" id="m-company-name" name="company.name">
+        </p>
+            <p class="field">
+          <label for="m-company-nameEn">영문명</label>
+          <input type="text" id="m-company-nameEn" name="company.nameEn" placeholder="예: BRICKON TECH Co., Ltd.">
+        </p>
+            <p class="field">
+          <label for="m-company-owner">대표자명</label>
+          <input type="text" id="m-company-owner" name="company.owner">
+        </p>
+            <p class="field">
+          <label for="m-company-phone">대표번호</label>
+          <input type="tel" id="m-company-phone" name="company.phone">
+        </p>
+            <p class="field">
+          <label for="m-company-phone2">추가 연락처</label>
+          <input type="tel" id="m-company-phone2" name="company.phone2" placeholder="선택">
+        </p>
+            <p class="field">
+          <label for="m-company-email">이메일</label>
+          <input type="email" id="m-company-email" name="company.email" placeholder="선택">
+        </p>
+            <p class="field">
+          <label for="m-company-hours">영업시간</label>
+          <input type="text" id="m-company-hours" name="company.hours" placeholder="예: 평일 09:00 - 18:00">
+        </p>
+            <p class="field">
+          <label for="m-company-address">주소</label>
+          <input type="text" id="m-company-address" name="company.address" placeholder="예: 충남 천안시 서북구 불당동">
+        </p>
+            <p class="field">
+          <label for="m-company-kakao">카카오톡 채널</label>
+          <input type="url" id="m-company-kakao" name="company.kakao" placeholder="선택">
+        </p>
+            <p class="field">
+          <label for="m-company-instagram">인스타그램</label>
+          <input type="url" id="m-company-instagram" name="company.instagram" placeholder="선택">
+        </p>
+            <p class="field">
+          <label for="m-company-blog">블로그</label>
+          <input type="url" id="m-company-blog" name="company.blog" placeholder="선택">
+        </p>
+            <p class="field">
+          <label for="m-company-sns">기타 SNS</label>
+          <input type="url" id="m-company-sns" name="company.sns" placeholder="선택">
+        </p>
+          </div>
+        </fieldset>
+
+        <!-- 3 브랜드 -->
+        <fieldset class="blk" id="s-brand">
+          <legend>3. 브랜드 자료</legend>
+          <p class="field">
+            <label for="m-logo">로고</label>
+            <select id="m-logo" name="brand.logo">
+              <option>로고 파일이 있습니다</option>
+              <option>로고가 없습니다 — 상호를 글자로 써 주세요</option>
+              <option>로고를 새로 만들고 싶습니다</option>
+            </select>
+          </p>
+          <div class="grid2">
+            <p class="field">
+          <label for="m-brand-color">대표 색상</label>
+          <input type="text" id="m-brand-color" name="brand.color" placeholder="예: 짙은 초록 · #2C463C · 잘 모르겠습니다">
+        </p>
+            <p class="field">
+          <label for="m-brand-reference">참고 사이트</label>
+          <input type="url" id="m-brand-reference" name="brand.reference" placeholder="비슷하게 만들고 싶은 주소가 있으면">
+        </p>
+          </div>
+          <p class="field field--wide">
+            <label>원하는 분위기</label>
+            <span class="checks">
+
+              <label class="check"><input type="checkbox" name="brand.moods[]" value="깔끔한">깔끔한</label>
+
+              <label class="check"><input type="checkbox" name="brand.moods[]" value="고급스러운">고급스러운</label>
+
+              <label class="check"><input type="checkbox" name="brand.moods[]" value="따뜻한">따뜻한</label>
+
+              <label class="check"><input type="checkbox" name="brand.moods[]" value="신뢰감 있는">신뢰감 있는</label>
+
+              <label class="check"><input type="checkbox" name="brand.moods[]" value="젊은">젊은</label>
+
+              <label class="check"><input type="checkbox" name="brand.moods[]" value="차분한">차분한</label>
+
+              <label class="check"><input type="checkbox" name="brand.moods[]" value="전문적인">전문적인</label>
+
+            </span>
+          </p>
+        </fieldset>
+
+        <!-- 4 대표 문구 -->
+        <fieldset class="blk" id="s-copy">
+          <legend>4. 대표 문구</legend>
+          <p class="field--check">
+            <input type="checkbox" id="m-copy-help" name="copy.help" value="작성 요청">
+            <label for="m-copy-help">잘 모르겠습니다. 보내드린 자료를 바탕으로 작성해 주세요.</label>
+          </p>
+          <div id="copy-fields">
+            <p class="field">
+          <label for="m-copy-headline">메인 제목</label>
+          <input type="text" id="m-copy-headline" name="copy.headline" placeholder="예: 공간의 가치를 높이는 인테리어">
+        </p>
+            <p class="field">
+          <label for="m-copy-subline">서브 문구</label>
+          <input type="text" id="m-copy-subline" name="copy.subline" placeholder="예: 천안·아산 아파트 전체 리모델링">
+        </p>
+            <p class="field field--wide">
+          <label for="m-copy-about">업체 소개</label>
+          <textarea id="m-copy-about" name="copy.about" rows="3" placeholder="어떤 곳인지, 무엇을 잘하는지 편하게 적어 주십시오. 문장을 다듬는 것은 저희가 합니다."></textarea>
+        </p>
+          </div>
+        </fieldset>
+
+        <!-- 5 서비스 · 강점 -->
+        <fieldset class="blk" id="s-services">
+          <legend>5. 서비스 · 강점</legend>
+          <p class="blk__lede">서비스는 최소 하나만 있으면 됩니다. 강점은 3~5개를 권해 드립니다.</p>
+
+          <div class="rows" data-rows="services" data-min="1">
+            <p class="rows__h">서비스</p>
+            <div class="rows__body"></div>
+            <button type="button" class="btn btn--line btn--sm" data-add="services">+ 서비스 추가</button>
+          </div>
+
+          <div class="rows" data-rows="strengths" data-min="1">
+            <p class="rows__h">강점</p>
+            <div class="rows__body"></div>
+            <button type="button" class="btn btn--line btn--sm" data-add="strengths">+ 강점 추가</button>
+          </div>
+        </fieldset>
+
+        <!-- 6 업종 자료 -->
+        <fieldset class="blk" id="s-industry">
+          <legend>6. 업종 자료</legend>
+          <p class="blk__lede" id="industry-lede">위에서 디자인을 고르시면 그 업종에 필요한 칸이 나타납니다.</p>
+
+          <div class="ind" data-for="INTERIOR 01" hidden>
+            <p class="ind__h">인테리어 · 시공</p>
+            <div class="grid2">
+
+              <p class="field">
+          <label for="m-industry-areas">시공 분야</label>
+          <input type="text" id="m-industry-areas" name="industry.areas" placeholder="예: 아파트 전체, 주방·욕실, 상가">
+        </p>
+
+              <p class="field">
+          <label for="m-industry-region">시공 지역</label>
+          <input type="text" id="m-industry-region" name="industry.region" placeholder="예: 천안 · 아산 · 세종">
+        </p>
+
+            </div>
+            <div class="rows" data-rows="projects" data-min="0">
+              <p class="rows__h">시공 사례</p>
+              <div class="rows__body"></div>
+              <button type="button" class="btn btn--line btn--sm" data-add="projects">+ 시공 사례 추가</button>
+            </div>
+          </div>
+
+          <div class="ind" data-for="CLEANING 01" hidden>
+            <p class="ind__h">청소 · 홈케어</p>
+            <div class="grid2">
+
+              <p class="field">
+          <label for="m-industry-areas">서비스 지역</label>
+          <input type="text" id="m-industry-areas" name="industry.areas" placeholder="예: 천안 전 지역 · 아산 전 지역">
+        </p>
+
+              <p class="field">
+          <label for="m-industry-kinds">청소 종류</label>
+          <input type="text" id="m-industry-kinds" name="industry.kinds" placeholder="예: 입주 · 이사 · 거주 · 상가">
+        </p>
+
+            </div>
+            <div class="rows" data-rows="projects" data-min="0">
+              <p class="rows__h">작업 사례 (전·후)</p>
+              <div class="rows__body"></div>
+              <button type="button" class="btn btn--line btn--sm" data-add="projects">+ 작업 사례 추가</button>
+            </div>
+          </div>
+
+          <div class="ind" data-for="COMPANY 01" hidden>
+            <p class="ind__h">기업 · B2B</p>
+            <div class="grid2">
+
+              <p class="field">
+          <label for="m-industry-areas">사업 영역</label>
+          <input type="text" id="m-industry-areas" name="industry.areas" placeholder="예: 자동화 설비 · 정밀 가공 · 검사 시스템">
+        </p>
+
+              <p class="field">
+          <label for="m-industry-region">대응 지역</label>
+          <input type="text" id="m-industry-region" name="industry.region" placeholder="예: 충청 · 수도권 남부">
+        </p>
+
+              <p class="field field--wide">
+          <label for="m-industry-history">회사 연혁</label>
+          <textarea id="m-industry-history" name="industry.history" rows="3" placeholder="한 줄에 하나씩 · 예: 2018 법인 설립"></textarea>
+        </p>
+
+              <p class="field field--wide">
+          <label for="m-industry-credentials">인증 · 보유 장비</label>
+          <textarea id="m-industry-credentials" name="industry.credentials" rows="3" placeholder="한 줄에 하나씩 · 예: ISO 9001 (2021.03)"></textarea>
+        </p>
+
+            </div>
+            <div class="rows" data-rows="projects" data-min="0">
+              <p class="rows__h">수행 사례</p>
+              <div class="rows__body"></div>
+              <button type="button" class="btn btn--line btn--sm" data-add="projects">+ 수행 사례 추가</button>
+            </div>
+          </div>
+
+        </fieldset>
+
+        <!-- 7 사진 -->
+        <fieldset class="blk" id="s-photos">
+          <legend>7. 사진</legend>
+          <div class="guide" id="photo-guide">
+            <p class="guide__h">필요한 사진</p>
+            <ul class="guide__list" id="guide-list"></ul>
+            <p class="guide__note" id="guide-note"></p>
+          </div>
+
+
+          <p class="field field--wide">
+            <label for="m-photolink">사진 공유 링크</label>
+            <input type="url" id="m-photolink" name="photos.link" placeholder="구글 드라이브 · 네이버 MYBOX 등 공유 주소">
+            <span class="field__hint">사진은 파일이 커서 링크로 받는 편이 확실합니다. 폴더를 하나 만들어 올리시고 '링크를 아는 모든 사람'으로 공유해 주십시오.</span>
+          </p>
+
+
+          <p class="field">
+            <label for="m-photostate">사진 상황</label>
+            <select id="m-photostate" name="photos.state">
+              <option>사진이 준비되어 있습니다</option>
+              <option>일부만 있습니다</option>
+              <option>아직 없습니다 — 어떤 사진이 필요한지 알려 주세요</option>
+            </select>
+          </p>
+          <p class="field field--wide">
+          <label for="m-photos-note">사진 관련 요청</label>
+          <textarea id="m-photos-note" name="photos.note" rows="3" placeholder="예: 세 번째 사진은 쓰지 말아 주세요"></textarea>
+        </p>
+        </fieldset>
+
+        <!-- 8 후기 · 질문 · 검색 -->
+        <fieldset class="blk" id="s-extra">
+          <legend>8. 후기 · 자주 묻는 질문 · 검색</legend>
+
+          <p class="field--check">
+            <input type="checkbox" id="m-no-review" name="reviews.none" value="후기 없음">
+            <label for="m-no-review">후기가 없습니다. 후기 칸을 빼 주세요.</label>
+          </p>
+          <div class="rows" data-rows="reviews" data-min="0">
+            <p class="rows__h">받은 후기</p>
+            <div class="rows__body"></div>
+            <button type="button" class="btn btn--line btn--sm" data-add="reviews">+ 후기 추가</button>
+            <p class="rows__note">실제로 받으신 후기만 적어 주십시오. 없으면 비워 두셔도 됩니다.</p>
+          </div>
+
+          <p class="field--check">
+            <input type="checkbox" id="m-faq-help" name="faq.help" value="작성 요청">
+            <label for="m-faq-help">자주 묻는 질문을 대신 정리해 주세요.</label>
+          </p>
+          <div class="rows" data-rows="faq" data-min="0">
+            <p class="rows__h">자주 받는 질문</p>
+            <div class="rows__body"></div>
+            <button type="button" class="btn btn--line btn--sm" data-add="faq">+ 질문 추가</button>
+          </div>
+
+          <div class="grid2">
+            <p class="field">
+          <label for="m-seo-region">주요 지역</label>
+          <input type="text" id="m-seo-region" name="seo.region" placeholder="예: 천안 · 아산">
+        </p>
+            <p class="field">
+          <label for="m-seo-service">주요 서비스</label>
+          <input type="text" id="m-seo-service" name="seo.service" placeholder="예: 입주청소 · 이사청소">
+        </p>
+          </div>
+          <p class="field field--wide">
+          <label for="m-seo-keywords">검색되고 싶은 말</label>
+          <textarea id="m-seo-keywords" name="seo.keywords" rows="3" placeholder="한 줄에 하나씩 · 예: 천안 입주청소"></textarea>
+        </p>
+        </fieldset>
+
+        <!-- 9 보내기 -->
+        <fieldset class="blk" id="s-send">
+          <legend>9. 마지막으로</legend>
+          <p class="field field--wide">
+          <label for="m-notes">추가 요청사항</label>
+          <textarea id="m-notes" name="notes" rows="3" placeholder="강조하고 싶은 것 · 넣지 말았으면 하는 것 · 그 밖에 알려 주실 것"></textarea>
+        </p>
+
+          <div class="agree">
+            <p class="field--check">
+              <input type="checkbox" id="m-agree" name="agree" value="동의" required>
+              <label for="m-agree">제출한 자료를 홈페이지 제작 목적으로 사용하는 데 동의합니다. (필수)</label>
+            </p>
+            <details class="agree__more">
+              <summary>받은 자료를 어떻게 쓰는지 보기</summary>
+              <dl class="agree__table">
+
+                <div><dt>수집 항목</dt><dd>회사 정보 · 연락처 · 로고와 사진 · 소개 문구 · 서비스와 사례 자료</dd></div>
+
+                <div><dt>이용 목적</dt><dd>신청하신 홈페이지 제작에만 사용합니다</dd></div>
+
+                <div><dt>보유 기간</dt><dd>상담 종료 후 6개월</dd></div>
+
+                <div><dt>제3자 제공</dt><dd>제공하지 않습니다. 홍보나 마케팅 용도로 쓰지 않습니다.</dd></div>
+
+              </dl>
+              <p><a href="../privacy/">개인정보 수집·이용 안내 전문</a></p>
+            </details>
+          </div>
+
+          <p class="form__note" data-role="too-fast" hidden>조금만 더 확인하신 뒤 다시 눌러 주십시오.</p>
+          <p><button class="btn btn--block btn--lg" type="submit" data-sending="보내는 중…">제작 자료 보내기</button></p>
+
+          <div class="panel panel--closed" data-role="closed" hidden>
+            <h2 class="panel__title">지금은 온라인 접수를 준비하는 중입니다</h2>
+            <p>작성하신 내용은 이 브라우저에 저장되어 있습니다. 접수가 열리면 그대로 보내실 수 있습니다.</p>
+          </div>
+          <div class="panel panel--fail" data-role="failure" hidden>
+            <h2 class="panel__title">자료를 보내지 못했습니다</h2>
+            <p data-role="failnote">잠시 후 다시 시도해 주십시오. 작성하신 내용은 그대로 남아 있습니다.</p>
+          </div>
+        </fieldset>
+      </form>
+
+      <div class="panel panel--done" id="done" hidden>
+        <h2 class="panel__title">제작 자료가 접수되었습니다</h2>
+        <p>받은 자료로 제작을 시작하고, 완성되면 미리보기 주소를 보내 드립니다.</p>
+        <p class="ticket" id="done-id" hidden>접수번호 <b></b></p>
+        <p class="muted">빠진 자료가 있으면 따로 연락드립니다.</p>
+        <p class="panel__actions"><a class="btn btn--line" href="../">판매 홈페이지로</a></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ft">
+  <div class="wrap ft__in">
+    <div>
+      <p class="ft__brand">WEBSITE FACTORY</p>
+      <p style="margin:0">사업자 홈페이지 제작</p>
+    </div>
+    <ul class="ft__links">
+      <li><a href="../">홈</a></li>
+      <li><a href="../order/">제작 상담 신청</a></li>
+      <li><a href="../privacy/">개인정보 안내</a></li>
+    </ul>
+
+    <p class="ft__note">
+      샘플 홈페이지는 가상 업체 자료로 만든 견본입니다. 실제 업체의 이름·연락처·사진·문구를 사용하지 않았습니다.
+      가격은 모두 부가세 별도이며, 검색 상위 노출은 약속드리지 않습니다.
+이 페이지는 검수용 임시 주소로 검색 노출을 막아 두었습니다(noindex).
+      © 2026 WEBSITE FACTORY
+    </p>
+  </div>
+</footer>
+
+<script src="../assets/submit.js"></script>
+
+<script>
+(function () {
+  "use strict";
+  var form = document.getElementById("form-material");
+  var DRAFT = "wf-material-draft-v1";
+  var GUIDES = {"CLEANING 01": {"items": [{"key": "hero", "label": "\ub300\ud45c \uc0ac\uc9c4", "want": "1\uc7a5"}, {"key": "service", "label": "\uc11c\ube44\uc2a4\ubcc4 \uc0ac\uc9c4", "want": "4\uc7a5 \uc548\ud30e"}, {"key": "beforeafter", "label": "\uc791\uc5c5 \uc804\u00b7\ud6c4 \uc138\ud2b8", "want": "3~5\uc138\ud2b8 (6~10\uc7a5)"}, {"key": "project", "label": "\uc791\uc5c5 \uc0ac\ub840 \uc0ac\uc9c4", "want": "6~10\uc7a5"}], "note": "\uc791\uc5c5 \uc804\u00b7\ud6c4\ub294 \uac19\uc740 \uc790\ub9ac\uc5d0\uc11c \uac19\uc740 \uac01\ub3c4\ub85c \ucc0d\uc5b4 \uc8fc\uc2ed\uc2dc\uc624. \uadf8\uac83\uc774 \uc548 \ub9de\uc73c\uba74 \ube44\uad50\uac00 \ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."}, "COMPANY 01": {"items": [{"key": "hero", "label": "\ud68c\uc0ac \u00b7 \uacf5\uc7a5 \uc0ac\uc9c4", "want": "1\uc7a5"}, {"key": "service", "label": "\uc0ac\uc5c5 \uc601\uc5ed \uc0ac\uc9c4", "want": "3~5\uc7a5"}, {"key": "product", "label": "\uc81c\ud488 \u00b7 \uc124\ube44 \uc0ac\uc9c4", "want": "4~6\uc7a5"}, {"key": "project", "label": "\ub0a9\ud488 \u00b7 \uc218\ud589 \uc0ac\ub840 \uc0ac\uc9c4", "want": "6\uc7a5 \uc774\uc0c1 \uad8c\uc7a5"}], "note": "\ubc1c\uc8fc\ucc98\uac00 \ub4dc\ub7ec\ub098\ub294 \ub85c\uace0\u00b7\uba85\ud310\u00b7\uac01\uc778\uc740 \uac00\ub824\uc11c \ucc0d\uc5b4 \uc8fc\uc2ed\uc2dc\uc624."}, "INTERIOR 01": {"items": [{"key": "hero", "label": "\ub300\ud45c \uc0ac\uc9c4", "want": "1\uc7a5"}, {"key": "service", "label": "\uc2dc\uacf5 \ubd84\uc57c \uc0ac\uc9c4", "want": "4\uc7a5 \uc548\ud30e"}, {"key": "project", "label": "\uc2dc\uacf5 \uc0ac\ub840 \uc0ac\uc9c4", "want": "10\uc7a5 \uc774\uc0c1 \uad8c\uc7a5"}, {"key": "about", "label": "\uc5c5\uccb4 \u00b7 \ud300 \uc0ac\uc9c4", "want": "1~2\uc7a5 (\uc120\ud0dd)"}], "note": "\uac00\ub85c\ub85c \ucc0d\uc740 \uc0ac\uc9c4\uc774 \uac00\uc7a5 \uc798 \ub9de\uc2b5\ub2c8\ub2e4."}, "\uae30\ubcf8": {"items": [{"key": "hero", "label": "\ub300\ud45c \uc0ac\uc9c4", "want": "1\uc7a5"}, {"key": "service", "label": "\uc11c\ube44\uc2a4 \uc0ac\uc9c4", "want": "4\uc7a5 \uc548\ud30e"}, {"key": "project", "label": "\uc791\uc5c5 \uc0ac\ub840 \uc0ac\uc9c4", "want": "6\uc7a5 \uc774\uc0c1 \uad8c\uc7a5"}], "note": "\ud734\ub300\ud3f0\uc73c\ub85c \ucc0d\uc740 \uc0ac\uc9c4\ub3c4 \uad1c\ucc2e\uc2b5\ub2c8\ub2e4. \ubcf4\uc815\uacfc \ud06c\uae30 \uc870\uc815\uc740 \uc800\ud76c\uac00 \ud569\ub2c8\ub2e4."}};
+  var ROW_SHAPES = {
+    services: [["name", "서비스 이름"], ["note", "설명 (한 줄)"]],
+    strengths: [["name", "강점 제목"], ["note", "설명 (한 줄)"]],
+    reviews: [["name", "고객명 또는 표시명"], ["note", "후기 내용"]],
+    faq: [["name", "질문"], ["note", "답변"]],
+    projects: ["title", "place", "size", "note"]
+  };
+  var PROJECT_FIELDS = {
+    "INTERIOR 01": [{"label": "\ud504\ub85c\uc81d\ud2b8\uba85", "name": "title", "placeholder": "\uc608: \ubd88\ub2f9\ub3d9 32\ud3c9 \uc544\ud30c\ud2b8"}, {"label": "\uc9c0\uc5ed", "name": "place", "placeholder": "\uc608: \ucc9c\uc548 \ubd88\ub2f9\ub3d9"}, {"label": "\ud3c9\ud615 \u00b7 \uaddc\ubaa8", "name": "size", "placeholder": "\uc608: 32\ud3c9"}, {"label": "\uc124\uba85", "name": "note", "placeholder": "\ud55c \uc904\uc774\uba74 \ucda9\ubd84\ud569\ub2c8\ub2e4"}],
+    "CLEANING 01": [{"label": "\uc791\uc5c5\uba85", "name": "title", "placeholder": "\uc608: \uc8fc\ubc29 \uc0c1\u00b7\ud558\ubd80\uc7a5 \uae30\ub984\ub54c"}, {"label": "\uc9c0\uc5ed", "name": "place", "placeholder": "\uc608: \ucc9c\uc548 \ubd88\ub2f9\ub3d9"}, {"label": "\ud3c9\ud615 \u00b7 \uaddc\ubaa8", "name": "size", "placeholder": "\uc608: 32\ud3c9"}, {"label": "\uc124\uba85", "name": "note", "placeholder": "\uc5b4\ub5a4 \uc0c1\ud0dc\uc600\ub294\uc9c0 \ud55c \uc904"}],
+    "COMPANY 01": [{"label": "\ud504\ub85c\uc81d\ud2b8\uba85", "name": "title", "placeholder": "\uc608: \uc870\ub9bd \ub77c\uc778 \uc790\ub3d9 \ud22c\uc785 \uc124\ube44"}, {"label": "\uc801\uc6a9 \uc0b0\uc5c5", "name": "place", "placeholder": "\uc608: \uc790\ub3d9\ucc28 \ubd80\ud488"}, {"label": "\uc218\ud589 \ubc94\uc704", "name": "size", "placeholder": "\uc608: \uc124\uacc4 \u00b7 \uc81c\uc791 \u00b7 \uc124\uce58"}, {"label": "\uc124\uba85", "name": "note", "placeholder": "\ud55c \uc904\uc774\uba74 \ucda9\ubd84\ud569\ub2c8\ub2e4"}]
+  };
+
+  /* ── 반복 줄 ─────────────────────────────────────────── */
+  function makeRow(kind, index) {
+    var wrap = document.createElement("div");
+    wrap.className = "row";
+    wrap.setAttribute("data-row", kind);
+    var head = document.createElement("p");
+    head.className = "row__n";
+    head.textContent = index + 1;
+    wrap.appendChild(head);
+    var body = document.createElement("div");
+    body.className = "row__body";
+
+    var fields = kind === "projects" ? currentProjectFields() : ROW_SHAPES[kind];
+    fields.forEach(function (pair) {
+      var name = pair.name || pair[0];
+      var label = pair.label || pair[1];
+      var place = pair.placeholder || "";
+      var long = /설명|내용|답변/.test(label);
+      var box = document.createElement("label");
+      box.className = "row__field" + (long ? " row__field--wide" : "");
+      var text = document.createElement("span");
+      text.textContent = label;
+      var input = document.createElement(long ? "textarea" : "input");
+      if (long) { input.rows = 2; } else { input.type = "text"; }
+      if (place) { input.placeholder = place; }
+      input.setAttribute("data-field", name);
+      box.appendChild(text);
+      box.appendChild(input);
+      body.appendChild(box);
+    });
+
+    var kill = document.createElement("button");
+    kill.type = "button";
+    kill.className = "row__x";
+    kill.setAttribute("aria-label", "이 줄 지우기");
+    kill.textContent = "✕";
+    kill.addEventListener("click", function () {
+      var holder = wrap.parentNode;
+      wrap.remove();
+      renumber(holder);
+      save();
+    });
+
+    wrap.appendChild(body);
+    wrap.appendChild(kill);
+    return wrap;
+  }
+
+  function currentProjectFields() {
+    var design = form.elements["who.design"];
+    return PROJECT_FIELDS[design ? design.value : ""] || PROJECT_FIELDS["INTERIOR 01"];
+  }
+
+  function renumber(holder) {
+    Array.prototype.forEach.call(holder.querySelectorAll(".row__n"), function (n, i) {
+      n.textContent = i + 1;
+    });
+  }
+
+  function addRow(kind, values) {
+    var group = form.querySelector('[data-rows="' + kind + '"]');
+    if (!group) { return null; }
+    var holder = group.querySelector(".rows__body");
+    var node = makeRow(kind, holder.children.length);
+    holder.appendChild(node);
+    if (values) {
+      Object.keys(values).forEach(function (key) {
+        var el = node.querySelector('[data-field="' + key + '"]');
+        if (el) { el.value = values[key]; }
+      });
+    }
+    return node;
+  }
+
+  Array.prototype.forEach.call(form.querySelectorAll("[data-add]"), function (button) {
+    button.addEventListener("click", function () {
+      var node = addRow(button.getAttribute("data-add"));
+      if (node) { var first = node.querySelector("input,textarea"); if (first) { first.focus(); } }
+      save();
+    });
+  });
+
+  /* ── 업종별 칸과 사진 안내 ───────────────────────────── */
+  var design = form.elements["who.design"];
+  function syncDesign() {
+    var picked = design ? design.value : "";
+    Array.prototype.forEach.call(form.querySelectorAll(".ind"), function (box) {
+      var on = box.getAttribute("data-for") === picked;
+      box.hidden = !on;
+      Array.prototype.forEach.call(box.querySelectorAll("input,select,textarea"), function (el) {
+        el.disabled = !on;
+      });
+    });
+    var lede = document.getElementById("industry-lede");
+    var known = !!GUIDES[picked];
+    lede.hidden = known;
+
+    var guide = GUIDES[picked] || GUIDES["기본"];
+    var list = document.getElementById("guide-list");
+    list.innerHTML = "";
+    guide.items.forEach(function (item) {
+      var li = document.createElement("li");
+      li.innerHTML = "<b></b><span></span>";
+      li.querySelector("b").textContent = item.label;
+      li.querySelector("span").textContent = item.want;
+      list.appendChild(li);
+    });
+    document.getElementById("guide-note").textContent = guide.note;
+  }
+  if (design) { design.addEventListener("change", function () { syncDesign(); save(); }); }
+
+  /* ── 대표 문구를 맡기면 칸을 접는다 ──────────────────── */
+  var copyHelp = document.getElementById("m-copy-help");
+  var copyFields = document.getElementById("copy-fields");
+  function syncCopy() { copyFields.hidden = copyHelp.checked; }
+  copyHelp.addEventListener("change", function () { syncCopy(); save(); });
+
+  /* ── 임시 저장 ───────────────────────────────────────── */
+  var savedTag = document.getElementById("saved");
+  var saveTimer = null;
+
+  function snapshot() {
+    var data = WF.collect(form);
+    return {
+      fields: data,
+      checks: Array.prototype.filter.call(form.querySelectorAll("input[type=checkbox]"),
+        function (el) { return el.checked && el.name && el.name.charAt(0) !== "_"; })
+        .map(function (el) { return [el.name, el.value]; }),
+      rows: ["services", "strengths", "reviews", "faq", "projects"].reduce(function (all, kind) {
+        all[kind] = WF.rows(form, '[data-rows="' + kind + '"] [data-row]');
+        return all;
+      }, {})
+    };
+  }
+
+  function save() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      try {
+        localStorage.setItem(DRAFT, JSON.stringify(snapshot()));
+        savedTag.hidden = false;
+        setTimeout(function () { savedTag.hidden = true; }, 1600);
+      } catch (e) { /* 저장 공간이 막혀 있어도 작성은 계속됩니다 */ }
+    }, 400);
+  }
+
+  function restore() {
+    var raw = null;
+    try { raw = localStorage.getItem(DRAFT); } catch (e) { return; }
+    if (!raw) { return; }
+    var draft;
+    try { draft = JSON.parse(raw); } catch (e) { return; }
+
+    Object.keys(draft.fields || {}).forEach(function (key) { setDeep(key, draft.fields[key]); });
+    (draft.checks || []).forEach(function (pair) {
+      Array.prototype.forEach.call(form.querySelectorAll('[name="' + pair[0] + '"]'), function (el) {
+        if (el.value === pair[1]) { el.checked = true; }
+      });
+    });
+    syncDesign();
+    Object.keys(draft.rows || {}).forEach(function (kind) {
+      (draft.rows[kind] || []).forEach(function (values) { addRow(kind, values); });
+    });
+    syncCopy();
+  }
+
+  function setDeep(key, value, prefix) {
+    prefix = prefix || "";
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      Object.keys(value).forEach(function (inner) { setDeep(inner, value[inner], prefix + key + "."); });
+      return;
+    }
+    var name = prefix + key;
+    var el = form.elements[name] || form.elements[name + "[]"];
+    if (!el) { return; }
+    if (Array.isArray(value)) { return; }   // 체크박스는 checks 로 되살립니다
+    if (el.type === "checkbox" || el.length !== undefined && !el.tagName) { return; }
+    el.value = value;
+  }
+
+  form.addEventListener("input", save);
+  form.addEventListener("change", save);
+  document.getElementById("clear-draft").addEventListener("click", function () {
+    try { localStorage.removeItem(DRAFT); } catch (e) { /* 지울 것이 없어도 됩니다 */ }
+    location.reload();
+  });
+
+  /* ── 단계 이동 ───────────────────────────────────────── */
+  var links = Array.prototype.slice.call(document.querySelectorAll("[data-jump]"));
+  var blocks = links.map(function (a) { return document.getElementById("s-" + a.getAttribute("data-jump")); });
+  if ("IntersectionObserver" in window) {
+    var watcher = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        links.forEach(function (a) {
+          a.classList.toggle("is-now", a.getAttribute("data-jump") === entry.target.id.slice(2));
+        });
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    blocks.forEach(function (block) { if (block) { watcher.observe(block); } });
+  }
+
+  /* ── 보낸다 ──────────────────────────────────────────── */
+  var done = document.getElementById("done");
+  var failure = form.querySelector("[data-role=failure]");
+
+  function build() {
+    var data = WF.collect(form);
+    var payload = {
+      kind: "material",
+      version: WF.config.version,
+      submittedAt: new Date().toISOString(),
+      source: { page: location.href, design: (data.who && data.who.design) || "" },
+      lead: data.who || {},
+      company: data.company || {},
+      brand: data.brand || {},
+      copy: data.copy || {},
+      services: WF.rows(form, '[data-rows="services"] [data-row]'),
+      strengths: WF.rows(form, '[data-rows="strengths"] [data-row]'),
+      projects: WF.rows(form, '[data-rows="projects"] [data-row]'),
+      reviews: WF.rows(form, '[data-rows="reviews"] [data-row]'),
+      faq: WF.rows(form, '[data-rows="faq"] [data-row]'),
+      industry: data.industry || {},
+      photos: data.photos || {},
+      seo: data.seo || {},
+      notes: data.notes || "",
+      consent: { material: true, at: new Date().toISOString() }
+    };
+    var flat = {
+      종류: "제작 자료",
+      업체명: payload.lead.company || "",
+      담당자: payload.lead.name || "",
+      연락처: payload.lead.contact || "",
+      "제작 디자인": payload.source.design
+    };
+    if (payload.lead.orderId) { flat["접수번호"] = payload.lead.orderId; }
+    if (payload.photos.link) { flat["사진 링크"] = payload.photos.link; }
+    flat["서비스"] = payload.services.length + "개";
+    flat["사례"] = payload.projects.length + "건";
+    return {
+      data: payload,
+      flat: flat,
+      subject: "[제작 자료] " + (payload.lead.company || "업체명 없음")
+    };
+  }
+
+  WF.attach({
+    form: form,
+    build: build,
+    files: function () {
+      var picker = form.querySelector('input[type=file]');
+      if (!picker || !picker.files) { return []; }
+      return Array.prototype.map.call(picker.files, function (file, i) {
+        return { name: "photo" + (i + 1), blob: file, filename: file.name };
+      });
+    },
+    onSuccess: function (payload, result) {
+      var ticket = document.getElementById("done-id");
+      if (result && result.id) {
+        ticket.querySelector("b").textContent = result.id;
+        ticket.hidden = false;
+      }
+      try { localStorage.removeItem(DRAFT); } catch (e) { /* 이미 지워졌어도 됩니다 */ }
+      form.hidden = true;
+      document.querySelector(".mat__nav").hidden = true;
+      done.hidden = false;
+      done.scrollIntoView({ block: "start" });
+    },
+    onFailure: function (error) {
+      var note = failure.querySelector("[data-role=failnote]");
+      if (error.kind === "rejected" && error.notice) {
+        note.textContent = error.notice;
+      } else if (error.kind === "network") {
+        note.textContent = "연결이 끊겼습니다. 인터넷 상태를 확인하신 뒤 다시 눌러 주십시오. "
+          + "작성하신 내용은 그대로 남아 있습니다.";
+      }
+      failure.hidden = false;
+      failure.scrollIntoView({ block: "nearest" });
+    }
+  });
+
+  /* 첫 화면 */
+  restore();
+  syncDesign();
+  syncCopy();
+  ["services", "strengths"].forEach(function (kind) {
+    var holder = form.querySelector('[data-rows="' + kind + '"] .rows__body');
+    if (holder && !holder.children.length) { addRow(kind); }
+  });
+})();
+</script>
+
+</body>
+</html>

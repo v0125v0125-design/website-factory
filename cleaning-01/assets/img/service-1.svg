@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="예시 이미지 · 입주청소"><defs>
+  <linearGradient id="w2" x1="0" y1="0" x2=".3" y2="1">
+    <stop offset="0" stop-color="#F1F4F7"/><stop offset="1" stop-color="#B2BFCB" stop-opacity=".4"/>
+  </linearGradient>
+  <linearGradient id="f2" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#D8DFE6"/><stop offset="1" stop-color="#1F2A35" stop-opacity=".42"/>
+  </linearGradient>
+  <linearGradient id="l2" x1="0" y1="0" x2="1" y2=".9">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+    <stop offset=".6" stop-color="#ffffff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#1F2A35" stop-opacity=".16"/>
+  </linearGradient>
+  <linearGradient id="g2" x1="0" y1="0" x2=".5" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+    <stop offset="1" stop-color="#F1F4F7" stop-opacity=".6"/>
+  </linearGradient>
+</defs><rect width="1200" height="900" fill="url(#w2)"/><rect y="612" width="1200" height="288" fill="url(#f2)"/><rect x="72" y="90" width="552" height="450" rx="2" fill="url(#g2)"/><rect x="72" y="90" width="552" height="450" rx="2" fill="none" stroke="#1F2A35" stroke-opacity=".3" stroke-width="2"/><line x1="348" y1="90" x2="348" y2="540" stroke="#1F2A35" stroke-opacity=".24" stroke-width="2"/><polygon points="72,612 624,612 1176,900 48,900" fill="#fff" opacity=".17"/><rect x="768" y="54" width="312" height="558" fill="#B2BFCB" opacity=".30"/><rect x="768" y="54" width="312" height="558" fill="none" stroke="#1F2A35" stroke-opacity=".28" stroke-width="2"/><circle cx="1042" cy="378" r="10" fill="#1F2A35" opacity=".45"/><rect x="0" y="593" width="1200" height="19" fill="#F1F4F7" opacity=".85"/><rect x="0" y="612" width="1200" height="2" fill="#1F2A35" opacity=".30"/><line x1="0" y1="660" x2="1200" y2="660" stroke="#1F2A35" stroke-opacity=".08" stroke-width="2"/><line x1="0" y1="708" x2="1200" y2="708" stroke="#1F2A35" stroke-opacity=".08" stroke-width="2"/><line x1="0" y1="756" x2="1200" y2="756" stroke="#1F2A35" stroke-opacity=".08" stroke-width="2"/><line x1="0" y1="804" x2="1200" y2="804" stroke="#1F2A35" stroke-opacity=".08" stroke-width="2"/><line x1="0" y1="852" x2="1200" y2="852" stroke="#1F2A35" stroke-opacity=".08" stroke-width="2"/><rect width="1200" height="900" fill="url(#l2)"/><text x="600" y="864" text-anchor="middle" font-family="sans-serif" font-size="32" fill="#1F2A35" opacity=".42">예시 이미지 · 입주청소</text></svg>
