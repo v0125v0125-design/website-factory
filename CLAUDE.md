@@ -16,6 +16,8 @@
   · 받는 곳이 없는 문의 폼이 "접수되었습니다" 라고 말하게 하지 마십시오.
     받는 곳(storefront.json 의 submission)이 비면 버튼을 잠그고 다른 길을 안내합니다.
   · 첫 신청 화면에서 제작 자료를 다 받으려 하지 마십시오 — 두 단계로 나눠 두었습니다.
+  · 서버 로그에 전화번호·상호·payload 를 찍지 마십시오 (backend/src/index.js 의 note).
+  · 접수 서버 주소를 코드에 박지 마십시오 — storefront.json 의 submission 한 곳뿐입니다.
 
 원페이지·5페이지 홈페이지를 템플릿으로 찍어 파는 공장입니다.
 구조와 쓰는 법은 `README.md` 에 있습니다. 아래에는 **지켜야 할 것**만 적습니다.
@@ -35,8 +37,8 @@
 ## 손대기 전에
 
 ```bash
-python tools/doctor.py                    # 이 컴퓨터에 무엇이 없는지
-python -m pytest -q                       # 357개
+python tools/doctor.py                    # 이 컴퓨터에 · 광고 전에 무엇이 없는지
+python -m pytest -q                       # 395개
 python -m factory.cli build examples/customers/a-gonggan.json -o out/a --offline --clean
 python -m factory.cli serve out/a
 ```
@@ -51,6 +53,10 @@ python storefront/build.py _site/store  판매 홈페이지만 짓는다
 python tools/shoot_sample_thumbs.py     판매 페이지 샘플 썸네일 다시 찍기
 python tools/make_cleaning_photos.py    청소 견본 그림 다시 그리기
 python tools/make_company_photos.py     기업 견본 그림 다시 그리기
+
+cd backend && npm run dev               접수 서버를 로컬에서 띄운다 (계정 불필요)
+cd backend && npx wrangler deploy       접수 서버를 올린다 (로그인 필요)
+cd backend && npx wrangler tail         접수 서버 로그 (개인정보 없음)
 ```
 
 `tests/test_theming.py::test_every_preset_produces_readable_tokens` 와

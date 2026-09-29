@@ -139,18 +139,68 @@ def check_storefront(r: Report) -> None:
             r.soft(f"{sample['title']} 썸네일이 없습니다",
                    "python tools/shoot_sample_thumbs.py  (playwright 필요)")
     submission = data.get("submission", {})
-    if submission.get("provider") and submission.get("endpoint"):
-        r.ok("신청 접수 창구", f"{submission['provider']} → {submission['endpoint'][:48]}")
+    provider, endpoint = submission.get("provider"), submission.get("endpoint")
+    if provider and endpoint:
+        r.ok("신청 접수 창구", f"{provider} → {endpoint[:52]}")
+        _check_api(r, provider, endpoint)
     else:
         r.soft("신청을 받을 곳이 없습니다 — 제작 상담 신청 버튼이 눌리지 않습니다",
-               "storefront.json 의 submission.provider 와 endpoint 를 채우십시오 "
-               "(문서/ORDER_FLOW_V1.md 4장)")
+               "backend 를 배포하고 storefront.json 의 submission.provider 와 endpoint 를 "
+               "채우십시오 (문서/SUBMISSION_BACKEND_V1.md)")
     if not any(data["brand"]["contact"].get(k) for k in ("phone", "kakao", "email")):
         r.soft("판매 홈페이지에 공개 연락처가 없습니다",
                "광고를 태우기 전에 storefront/storefront.json 의 brand.contact 를 채우십시오")
     if not data["brand"]["legal"].get("registration"):
         r.soft("사업자 정보가 비어 있습니다 (통신판매 고지)",
                "사업자등록을 마치면 storefront.json 의 brand.legal 을 채우십시오")
+
+
+def _check_api(r: Report, provider: str, endpoint: str) -> None:
+    """우리 backend 라면 실제로 살아 있는지 물어본다. 다른 업체면 주소만 본다."""
+    if provider != "website_factory":
+        return
+    import json as _json
+    import urllib.error
+    import urllib.request
+
+    url = endpoint.rstrip("/") + "/health"
+    try:
+        with urllib.request.urlopen(url, timeout=8) as response:
+            body = _json.loads(response.read() or b"{}")
+    except Exception as exc:
+        r.miss(f"접수 서버가 응답하지 않습니다 ({str(exc)[:60]})",
+               f"{url} 를 열어 보십시오. 배포는 cd backend && npx wrangler deploy")
+        return
+    if body.get("ok") and body.get("db") == "ok":
+        r.ok("접수 서버", f"{body.get('version', '?')} · DB 연결됨")
+    else:
+        r.miss(f"접수 서버는 떴지만 DB 가 붙지 않았습니다 (db={body.get('db')})",
+               "cd backend && npx wrangler d1 migrations apply website-factory --remote")
+
+
+def check_backend(r: Report) -> None:
+    """접수 backend 가 배포될 준비가 되어 있는지 — 파일과 설정만 본다."""
+    backend = ROOT / "backend"
+    if not backend.is_dir():
+        r.soft("backend 폴더가 없습니다", "저장소를 다시 받으십시오")
+        return
+    missing = [name for name in ("wrangler.toml", "src/index.js", "package.json",
+                                 "migrations/0001_submission_v1.sql")
+               if not (backend / name).is_file()]
+    if missing:
+        r.miss("backend 파일이 모자랍니다: " + ", ".join(missing), "git pull")
+        return
+    config = (backend / "wrangler.toml").read_text(encoding="utf-8")
+    if "PLACEHOLDER" in config:
+        r.soft("D1 데이터베이스가 아직 만들어지지 않았습니다",
+               "cd backend && npx wrangler login && npx wrangler d1 create website-factory "
+               "→ 나온 database_id 를 wrangler.toml 에 적으십시오")
+    else:
+        r.ok("D1 설정", "database_id 채워짐")
+    if not (backend / "node_modules" / "wrangler").is_dir():
+        r.soft("backend 에 wrangler 가 없습니다", "cd backend && npm install")
+    else:
+        r.ok("wrangler", "설치됨")
 
 
 def check_git(r: Report) -> None:
@@ -180,6 +230,7 @@ def main(argv: list[str]) -> int:
     print("\n공장")
     check_templates(r)
     check_storefront(r)
+    check_backend(r)
     check_git(r)
 
     print("\n주문서" + (" (실제로 지어 봅니다)" if build else ""))

@@ -18,6 +18,9 @@
     version: "ORDER_FLOW_V1"
   };
 
+  /* 우리 backend 의 주소 — kind 하나당 한 길. 주소는 CONFIG.endpoint 에서만 옵니다. */
+  var PATHS = { order: "/api/orders", recommend: "/api/orders", material: "/api/materials" };
+
   /* 사람이 3초 안에 다 채우고 보낼 수는 없다. 그보다 빠르면 기계다. */
   var MIN_FILL_MS = 3000;
 
@@ -71,9 +74,18 @@
     }).join("\n");
   }
 
-  /* 실제 전송. 성공하면 true, 아니면 예외. */
+  /* 실제 전송. 서버가 받았다고 답하면 그 답을 돌려주고, 아니면 예외를 던집니다. */
   function send(payload, files) {
-    if (!ready()) { return Promise.reject(new Error("no-endpoint")); }
+    if (!ready()) { return Promise.reject(fail("no-endpoint")); }
+
+    if (CONFIG.provider === "website_factory") {
+      var path = PATHS[payload.data.kind] || PATHS.order;
+      return fetch(CONFIG.endpoint.replace(/\/+$/, "") + path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload.data)
+      }).then(check);
+    }
 
     if (CONFIG.provider === "formspree") {
       var body = new FormData();
@@ -99,12 +111,32 @@
       }).then(check);
     }
 
-    return Promise.reject(new Error("unknown-provider:" + CONFIG.provider));
+    return Promise.reject(fail("unknown-provider"));
+  }
+
+  /* 실패를 세 갈래로 나눕니다 — 손님에게 보일 말이 달라집니다.
+     rejected: 우리가 보낸 내용이 모자람 (서버가 이유를 한국어로 줍니다)
+     server:   서버가 받지 못함
+     network:  아예 닿지 못함 */
+  function fail(kind, message) {
+    var error = new Error(kind);
+    error.kind = kind;
+    if (message) { error.notice = message; }
+    return error;
   }
 
   function check(response) {
-    if (!response.ok) { throw new Error("http-" + response.status); }
-    return response;
+    return response.text().then(function (body) {
+      var data = null;
+      try { data = JSON.parse(body); } catch (e) { data = null; }
+      if (response.ok && (!data || data.ok !== false)) { return data || {}; }
+      if (response.status >= 400 && response.status < 500) {
+        throw fail("rejected", data && data.error);
+      }
+      throw fail("server");
+    }, function () {
+      throw fail("server");
+    });
   }
 
   /* 폼 한 벌에 붙인다.
@@ -142,6 +174,9 @@
       }
 
       var payload = opts.build();
+      // 서버도 다시 봅니다 — 앞단에서 막은 것을 서버가 믿지 않게 하기 위해서입니다.
+      payload.data.elapsedMs = Date.now() - openedAt;
+      payload.data._gotcha = honey ? honey.value : "";
       form.setAttribute("data-busy", "1");
       if (button) {
         button.dataset.idle = button.textContent;
@@ -150,13 +185,14 @@
       }
 
       send(payload, opts.files ? opts.files() : [])
-        .then(function () {
+        .then(function (result) {
           sent = true;
           form.setAttribute("data-sent", "1");
-          if (opts.onSuccess) { opts.onSuccess(payload); }
+          if (opts.onSuccess) { opts.onSuccess(payload, result || {}); }
           if (CONFIG.successUrl) { global.location.href = CONFIG.successUrl; }
         })
         .catch(function (error) {
+          if (!error || !error.kind) { error = fail("network"); }
           if (opts.onFailure) { opts.onFailure(error); }
         })
         .then(function () {
@@ -172,6 +208,7 @@
   global.WF = {
     config: CONFIG,
     ready: ready,
+    fail: fail,
     collect: collect,
     rows: rows,
     summarize: summarize,

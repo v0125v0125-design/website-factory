@@ -254,7 +254,7 @@
           </div>
           <div class="panel panel--fail" data-role="failure" hidden>
             <h2 class="panel__title">자료를 보내지 못했습니다</h2>
-            <p>잠시 후 다시 시도해 주십시오. 작성하신 내용은 그대로 남아 있습니다.</p>
+            <p data-role="failnote">잠시 후 다시 시도해 주십시오. 작성하신 내용은 그대로 남아 있습니다.</p>
           </div>
         </fieldset>
       </form>
@@ -262,6 +262,7 @@
       <div class="panel panel--done" id="done" hidden>
         <h2 class="panel__title">{{ site.material.success.heading }}</h2>
         <p>{{ site.material.success.body }}</p>
+        <p class="ticket" id="done-id" hidden>접수번호 <b></b></p>
         <p class="muted">{{ site.material.success.note }}</p>
         <p class="panel__actions"><a class="btn btn--line" href="{{ base }}">판매 홈페이지로</a></p>
       </div>
@@ -545,14 +546,26 @@
         return { name: "photo" + (i + 1), blob: file, filename: file.name };
       });
     },
-    onSuccess: function () {
+    onSuccess: function (payload, result) {
+      var ticket = document.getElementById("done-id");
+      if (result && result.id) {
+        ticket.querySelector("b").textContent = result.id;
+        ticket.hidden = false;
+      }
       try { localStorage.removeItem(DRAFT); } catch (e) { /* 이미 지워졌어도 됩니다 */ }
       form.hidden = true;
       document.querySelector(".mat__nav").hidden = true;
       done.hidden = false;
       done.scrollIntoView({ block: "start" });
     },
-    onFailure: function () {
+    onFailure: function (error) {
+      var note = failure.querySelector("[data-role=failnote]");
+      if (error.kind === "rejected" && error.notice) {
+        note.textContent = error.notice;
+      } else if (error.kind === "network") {
+        note.textContent = "연결이 끊겼습니다. 인터넷 상태를 확인하신 뒤 다시 눌러 주십시오. "
+          + "작성하신 내용은 그대로 남아 있습니다.";
+      }
       failure.hidden = false;
       failure.scrollIntoView({ block: "nearest" });
     }

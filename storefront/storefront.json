@@ -37,7 +37,7 @@
     "provider": "",
     "endpoint": "",
     "_주의": "이 둘이 비어 있으면 신청 버튼이 눌리지 않습니다. 보낸 척하지 않기 위해서입니다.",
-    "_설정법": "provider 에 formspree 또는 post 를 적고 endpoint 에 받는 주소를 적습니다. formspree = https://formspree.io/f/xxxxxxx · post = 구글 앱스스크립트 등 JSON 을 받는 주소. 자세한 것은 문서/ORDER_FLOW_V1.md",
+    "_설정법": "provider 에 website_factory · formspree · post 중 하나를 적고 endpoint 에 받는 주소를 적습니다. website_factory = 우리 backend (backend/ 를 배포하면 나오는 https://website-factory-api.<계정>.workers.dev) · formspree = https://formspree.io/f/xxxxxxx · post = 구글 앱스스크립트 등 JSON 을 받는 주소. 자세한 것은 문서/SUBMISSION_BACKEND_V1.md",
     "successUrl": ""
   },
 

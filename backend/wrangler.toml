@@ -1,0 +1,26 @@
+# WEBSITE FACTORY 신청 접수 backend
+#
+#   npm run dev            로컬에서 띄운다 (계정 없이 됩니다)
+#   npm run migrate:local  로컬 D1 에 표를 만든다
+#   npm run deploy         실제로 올린다 (Cloudflare 로그인 필요)
+#
+# 판매 홈페이지 주소가 바뀌면 ALLOWED_ORIGINS 만 고칩니다. 코드에는 없습니다.
+
+name = "website-factory-api"
+main = "src/index.js"
+compatibility_date = "2025-07-18"
+
+[vars]
+ALLOWED_ORIGINS = "https://v0125v0125-design.github.io"
+MAX_BODY_BYTES = "131072"
+MIN_FILL_MS = "3000"
+DUPLICATE_WINDOW_MS = "120000"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "website-factory"
+database_id = "PLACEHOLDER_실제_배포_때_wrangler_가_채웁니다"
+migrations_dir = "migrations"
+
+[observability]
+enabled = true

@@ -28,7 +28,7 @@ python -m pip install -r requirements-dev.txt   # 공장 + 시험 + 브라우저
 python -m playwright install chromium           # 브라우저 검사·썸네일 촬영용 (선택)
 
 python tools/doctor.py                          # 무엇이 없는지 한 화면에 알려 줍니다
-python -m pytest -q                             # 357개
+python -m pytest -q                             # 395개
 ```
 
 `tools/doctor.py` 는 아무것도 고치지 않고 봅니다 — 파이썬 판, 꾸러미, 크로미움,
@@ -195,6 +195,20 @@ python tools/shoot_sample_thumbs.py           # 샘플 썸네일 다시 찍기 (
 버튼이 눌리지 않고 다른 연락 방법을 안내합니다. 가짜 "접수 완료" 는 뜨지 않습니다.
 설정법과 데이터 구조는 [문서/ORDER_FLOW_V1.md](문서/ORDER_FLOW_V1.md) 에 있습니다.
 
+### 접수 서버 (backend/)
+
+신청을 받아 저장하는 Cloudflare Worker + D1 입니다. 판매 홈페이지와 분리되어 있습니다.
+
+```bash
+cd backend
+npm install
+npm run migrate:local && npm run dev     # 계정 없이 로컬에서 돕니다
+npx wrangler login && npx wrangler deploy  # 실제 배포 (로그인 필요)
+```
+
+성공하면 고객에게 **접수번호**(`ORD-20260929-K3F7`)를 돌려줍니다. 표·보안·
+배포 단계·데이터 확인법은 [문서/SUBMISSION_BACKEND_V1.md](문서/SUBMISSION_BACKEND_V1.md) 에 있습니다.
+
 ## 스타일은 이 순서로 정해집니다
 
 0. **테마** — `theme: charcoal` 또는 `theme: { preset, primary, accent, ... }`
@@ -307,6 +321,8 @@ testimonials · faq · process · contact · cta · beforeafter · area · overv
 | `factory/schema.py` | SITE_CONFIG_SCHEMA_V1 검사 — 사람이 읽는 오류 글 |
 | `storefront/build.py` | 판매 홈페이지 + 주문·자료·개인정보 화면을 정적 사이트로 |
 | `storefront/templates/submit.js.j2` | 접수 어댑터 — 받는 곳이 없으면 보낸 척하지 않는다 |
+| `backend/src/index.js` | 접수 서버 (Cloudflare Worker) — 검증 · 접수번호 · 저장 |
+| `backend/migrations/` | D1 스키마 (orders · materials · order_list 뷰) |
 | `tools/build_previews.py` | 견본 + 판매 홈페이지를 한 폴더에 · gh-pages 로 발행 |
 | `tools/doctor.py` | 이 컴퓨터에서 공장이 도는지 확인 |
 
@@ -316,7 +332,7 @@ testimonials · faq · process · contact · cta · beforeafter · area · overv
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q          # 357개 (브라우저 검사 포함 — playwright 가 없으면 건너뜁니다)
+python -m pytest -q          # 395개 (브라우저·Worker 검사 포함 — 도구가 없으면 건너뜁니다)
 ```
 
 지어진 결과물을 실제로 뜯어봅니다 — 템플릿 문법이 새어 나왔는지,
@@ -346,9 +362,9 @@ python -m pytest -q          # 357개 (브라우저 검사 포함 — playwright
 
 ## 앞으로
 
-- **신청을 받을 곳** — `storefront.json` 의 `submission.provider`·`endpoint`.
-  비어 있으면 제작 상담 신청 버튼이 눌리지 않습니다. 가장 급합니다.
-  ([설정법](문서/ORDER_FLOW_V1.md))
+- **접수 서버 배포** — `cd backend && npx wrangler login && npx wrangler deploy`.
+  그다음 `storefront.json` 의 `submission` 두 줄을 채웁니다. 가장 급합니다.
+  ([단계](문서/SUBMISSION_BACKEND_V1.md))
 - **판매 홈페이지의 공개 연락처** — `storefront.json` 의 `brand.contact`.
   전송이 실패했을 때 손님이 닿을 길입니다.
 - **사업자 정보** — `storefront.json` 의 `brand.legal`. 통신판매 고지 의무입니다.

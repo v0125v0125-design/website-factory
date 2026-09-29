@@ -119,7 +119,7 @@
 
           <div class="panel panel--fail" data-role="failure" hidden>
             <h2 class="panel__title">{{ site.order.failure.heading }}</h2>
-            <p>{{ site.order.failure.body }}</p>
+            <p data-role="failnote">{{ site.order.failure.body }}</p>
             {{ channels_block('바로 연락하기') }}
           </div>
         </form>
@@ -128,6 +128,7 @@
         <div class="panel panel--done" id="done" hidden>
           <h2 class="panel__title">{{ site.order.success.heading }}</h2>
           <p>{{ site.order.success.body }}</p>
+          <p class="ticket" id="done-id" hidden>접수번호 <b></b></p>
           <dl class="panel__sum" id="done-sum"></dl>
           <p class="muted">{{ site.order.success.note }}</p>
           <p class="panel__actions">
@@ -303,7 +304,12 @@
   WF.attach({
     form: form,
     build: build,
-    onSuccess: function (payload) {
+    onSuccess: function (payload, result) {
+      var ticket = document.getElementById("done-id");
+      if (result && result.id) {
+        ticket.querySelector("b").textContent = result.id;
+        ticket.hidden = false;
+      }
       var list = document.getElementById("done-sum");
       list.innerHTML = "";
       Object.keys(payload.flat).forEach(function (label) {
@@ -319,7 +325,16 @@
       done.setAttribute("tabindex", "-1");
       done.focus();
     },
-    onFailure: function () {
+    onFailure: function (error) {
+      var note = failure.querySelector("[data-role=failnote]");
+      if (error.kind === "rejected" && error.notice) {
+        note.textContent = error.notice;
+      } else if (error.kind === "network") {
+        note.textContent = "연결이 끊겼습니다. 인터넷 상태를 확인하신 뒤 다시 눌러 주십시오. "
+          + "작성하신 내용은 그대로 남아 있습니다.";
+      } else {
+        note.textContent = {{ site.order.failure.body | tojson }};
+      }
       failure.hidden = false;
       failure.scrollIntoView({ block: "nearest" });
     }

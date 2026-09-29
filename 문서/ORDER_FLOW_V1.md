@@ -155,7 +155,8 @@ siteConfig 작성 → 사진 배치 → 미리보기 생성
 
 | provider | 보내는 꼴 | 어울리는 곳 |
 | --- | --- | --- |
-| `formspree` | `multipart/form-data` — 사람이 읽는 평평한 칸 + `payload` 에 JSON 전문 | 이메일로 바로 받고 싶을 때. 파일 첨부는 유료 요금제 |
+| **`website_factory`** | `/api/orders` · `/api/materials` 로 JSON. **접수번호를 돌려받습니다** | **권장.** `backend/` 를 배포하면 씁니다 → [문서/SUBMISSION_BACKEND_V1.md](SUBMISSION_BACKEND_V1.md) |
+| `formspree` | `multipart/form-data` — 사람이 읽는 평평한 칸 + `payload` 에 JSON 전문 | 서버 없이 메일로만 받고 싶을 때 |
 | `post` | `text/plain` 으로 보낸 JSON 한 덩어리 | 구글 앱스스크립트로 시트에 쌓고 싶을 때 |
 | `""` | 보내지 않음 | 아직 정하지 않은 지금 상태 |
 
@@ -276,7 +277,7 @@ siteConfig 작성 → 사진 배치 → 미리보기 생성
 
 | 어디에 | 무엇을 | 없으면 |
 | --- | --- | --- |
-| `submission.provider` · `endpoint` | 신청을 받을 곳 | **신청 버튼이 눌리지 않습니다** |
+| `submission.provider` · `endpoint` | 신청을 받을 곳 (backend 배포 후) | **신청 버튼이 눌리지 않습니다** |
 | `brand.contact.phone` · `kakao` · `email` | 공개 연락처 | 전송이 실패했을 때 손님이 닿을 길이 없습니다 |
 | `brand.legal.businessName` · `owner` · `registration` · `address` · `contact` | 사업자 정보 | 푸터와 개인정보 안내에 표시되지 않습니다 (통신판매 고지 의무) |
 | `brand.legal.retentionPeriod` | 개인정보 보유 기간 | 동의 안내에서 그 줄이 빠집니다 |

@@ -310,6 +310,10 @@ ul,ol,dl,dd{margin:0;padding:0;list-style:none}
 .panel p{margin:.7em 0 0;color:var(--muted)}
 .panel--done{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,var(--bg))}
 .panel--fail{border-color:#B4453A}
+.ticket{display:inline-flex;align-items:baseline;gap:10px;margin:1em 0 0 !important;padding:12px 18px;
+  border:1px solid var(--accent);border-radius:8px;background:var(--bg);font-size:.875rem;color:var(--muted) !important}
+.ticket b{font-size:1.125rem;letter-spacing:.06em;color:var(--ink);font-variant-numeric:tabular-nums}
+.ticket[hidden]{display:none}
 .panel__sum{margin:1.2em 0 0;border-top:1px solid var(--line)}
 .panel__sum div{display:grid;grid-template-columns:7.5em 1fr;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.9375rem}
 .panel__sum dt{color:var(--muted)}

@@ -46,6 +46,16 @@ def wired(tmp_path_factory) -> Path:
     return build(tmp_path_factory.mktemp("flow-wired"), filled)
 
 
+@pytest.fixture(scope="module")
+def backed(tmp_path_factory) -> Path:
+    """우리 backend 를 꽂은 상태 — 접수번호까지 받아 보여 줍니다."""
+    filled = load()
+    filled["submission"] = {"provider": "website_factory",
+                            "endpoint": "https://api.example.invalid", "successUrl": ""}
+    filled["brand"]["contact"] = {"phone": "1544-0000", "kakao": "", "email": ""}
+    return build(tmp_path_factory.mktemp("flow-backed"), filled)
+
+
 def read(site: Path, name: str) -> str:
     return (site / name).read_text(encoding="utf-8")
 
@@ -260,12 +270,20 @@ STUB_OK = """
 window.__sent = [];
 window.fetch = function (url, opts) {
   window.__sent.push({url: url, body: opts.body});
-  return Promise.resolve({ok: true, status: 200});
+  return Promise.resolve({
+    ok: true, status: 200,
+    text: function () { return Promise.resolve('{"ok":true,"id":"ORD-20260929-OKAY"}'); }
+  });
 };
 """
 STUB_FAIL = """
 window.__sent = [];
-window.fetch = function () { return Promise.resolve({ok: false, status: 500}); };
+window.fetch = function () {
+  return Promise.resolve({
+    ok: false, status: 500,
+    text: function () { return Promise.resolve('{"ok":false,"error":"server"}'); }
+  });
+};
 """
 
 
@@ -475,4 +493,105 @@ def test_sending_the_materials_clears_the_draft(browser, wired):
         assert key in payload, key
     assert not page.evaluate("document.getElementById('done').hidden")
     assert not page.evaluate("localStorage.getItem('wf-material-draft-v1')")
+    page.close()
+
+
+# ── 우리 backend 를 꽂았을 때 ─────────────────────────────────────
+
+STUB_TICKET = """
+window.__sent = [];
+window.fetch = function (url, opts) {
+  window.__sent.push({url: url, body: opts.body, type: (opts.headers || {})["Content-Type"]});
+  return Promise.resolve({
+    ok: true, status: 200,
+    text: function () { return Promise.resolve(JSON.stringify(
+      {ok: true, id: "ORD-20260929-TEST", status: "NEW", duplicate: false})); }
+  });
+};
+"""
+STUB_REFUSED = """
+window.__sent = [];
+window.fetch = function () {
+  return Promise.resolve({
+    ok: false, status: 422,
+    text: function () { return Promise.resolve(JSON.stringify(
+      {ok: false, error: "개인정보 수집·이용에 동의해 주십시오.", code: "consent"})); }
+  });
+};
+"""
+STUB_DEAD = """
+window.__sent = [];
+window.fetch = function () { return Promise.reject(new TypeError("Failed to fetch")); };
+"""
+
+
+def test_the_adapter_posts_to_the_right_backend_path(browser, backed):
+    page, _ = _open(browser, backed / "order" / "index.html",
+                    query="?product=START&sample=INTERIOR_01", stub=STUB_TICKET)
+    _fill_order(page)
+    page.wait_for_timeout(3100)
+    page.click("#form-order [type=submit]")
+    page.wait_for_timeout(400)
+    sent = page.evaluate("window.__sent")
+    assert len(sent) == 1
+    assert sent[0]["url"] == "https://api.example.invalid/api/orders"
+    assert sent[0]["type"] == "application/json"
+    body = json.loads(sent[0]["body"])
+    # 서버가 다시 볼 수 있도록 앞단 방어값을 함께 보냅니다
+    assert body["elapsedMs"] >= 3000
+    assert body["_gotcha"] == ""
+    page.close()
+
+
+def test_the_material_form_posts_to_the_material_path(browser, backed):
+    page, _ = _open(browser, backed / "materials" / "index.html", stub=STUB_TICKET)
+    page.fill("#m-who-company", "접수번호시험")
+    page.fill("#m-who-name", "김담당")
+    page.fill("#m-who-contact", "010-1111-2222")
+    page.check("#m-agree")
+    page.wait_for_timeout(3100)
+    page.click("#form-material [type=submit]")
+    page.wait_for_timeout(400)
+    sent = page.evaluate("window.__sent")
+    assert len(sent) == 1
+    assert sent[0]["url"] == "https://api.example.invalid/api/materials"
+    page.close()
+
+
+def test_the_customer_is_shown_the_receipt_number(browser, backed):
+    page, _ = _open(browser, backed / "order" / "index.html", stub=STUB_TICKET)
+    _fill_order(page)
+    page.wait_for_timeout(3100)
+    page.click("#form-order [type=submit]")
+    page.wait_for_selector("#done:not([hidden])", timeout=8000)
+    assert page.inner_text("#done-id b") == "ORD-20260929-TEST"
+    assert "접수번호" in page.inner_text("#done")
+    page.close()
+
+
+def test_a_server_refusal_shows_the_reason_not_a_success(browser, backed):
+    page, _ = _open(browser, backed / "order" / "index.html", stub=STUB_REFUSED)
+    _fill_order(page)
+    page.wait_for_timeout(3100)
+    page.click("#form-order [type=submit]")
+    page.wait_for_timeout(600)
+    assert page.evaluate("document.getElementById('done').hidden")
+    assert "동의" in page.inner_text("[data-role=failnote]")
+    assert page.input_value("#o-company") == "테스트인테리어"
+    page.close()
+
+
+def test_a_dead_network_says_so_without_developer_words(browser, backed):
+    page, _ = _open(browser, backed / "order" / "index.html", stub=STUB_DEAD)
+    _fill_order(page)
+    page.wait_for_timeout(3100)
+    page.click("#form-order [type=submit]")
+    page.wait_for_timeout(600)
+    assert page.evaluate("document.getElementById('done').hidden")
+    note = page.inner_text("[data-role=failnote]")
+    assert "연결" in note
+    for word in ("fetch", "TypeError", "500", "CORS", "undefined"):
+        assert word not in note, word
+    # 실패해도 연락처는 눌러서 바로 걸 수 있어야 합니다
+    assert page.query_selector('[data-role=failure] a[href^="tel:"]')
     page.close()

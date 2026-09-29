@@ -1,0 +1,16 @@
+{
+  "name": "website-factory-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WEBSITE FACTORY 신청 접수 backend — Cloudflare Workers + D1",
+  "scripts": {
+    "dev": "wrangler dev --local --persist-to .wrangler/state",
+    "migrate:local": "wrangler d1 migrations apply website-factory --local --persist-to .wrangler/state",
+    "migrate:remote": "wrangler d1 migrations apply website-factory --remote",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^3.99.0"
+  }
+}
