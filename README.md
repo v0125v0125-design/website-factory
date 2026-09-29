@@ -28,7 +28,7 @@ python -m pip install -r requirements-dev.txt   # 공장 + 시험 + 브라우저
 python -m playwright install chromium           # 브라우저 검사·썸네일 촬영용 (선택)
 
 python tools/doctor.py                          # 무엇이 없는지 한 화면에 알려 줍니다
-python -m pytest -q                             # 304개
+python -m pytest -q                             # 357개
 ```
 
 `tools/doctor.py` 는 아무것도 고치지 않고 봅니다 — 파이썬 판, 꾸러미, 크로미움,
@@ -174,6 +174,27 @@ python tools/shoot_sample_thumbs.py           # 샘플 썸네일 다시 찍기 (
 
 자세한 것과 **광고 전에 채워야 할 목록**은 [문서/판매홈페이지.md](문서/판매홈페이지.md) 에 있습니다.
 
+### 주문 흐름 (ORDER FLOW V1)
+
+고객이 신청을 남기고, 제작이 정해지면 자료를 보내는 두 단계입니다.
+회원가입·로그인·결제·관리자 웹은 없습니다.
+
+```
+/store/            판매 홈페이지 — 샘플을 보고 고른다
+/store/order/      제작 상담 신청 — 업체명·업종·담당자·연락처만 (짧게)
+/store/materials/  제작 자료 입력 — 제작이 정해진 뒤에 보내는 링크
+/store/privacy/    개인정보 수집·이용 안내
+```
+
+샘플 카드의 `이 디자인으로 제작하기` 는 `order/?product=START&sample=INTERIOR_01`
+처럼 고른 구성을 주소에 실어 보냅니다. 새 샘플을 `storefront.json` 에 넣으면
+카드 링크와 주문 화면 선택지가 함께 늘어납니다.
+
+**신청은 실제로 도착합니다 — 받는 곳이 설정되어 있을 때만.**
+`storefront.json` 의 `submission.provider` 와 `endpoint` 가 비어 있으면 제출
+버튼이 눌리지 않고 다른 연락 방법을 안내합니다. 가짜 "접수 완료" 는 뜨지 않습니다.
+설정법과 데이터 구조는 [문서/ORDER_FLOW_V1.md](문서/ORDER_FLOW_V1.md) 에 있습니다.
+
 ## 스타일은 이 순서로 정해집니다
 
 0. **테마** — `theme: charcoal` 또는 `theme: { preset, primary, accent, ... }`
@@ -284,7 +305,8 @@ testimonials · faq · process · contact · cta · beforeafter · area · overv
 | `factory/cli.py` | 명령줄 |
 | `factory/images.py` | 사진을 역할별 크기로 줄이고 WebP 로 (Pillow) |
 | `factory/schema.py` | SITE_CONFIG_SCHEMA_V1 검사 — 사람이 읽는 오류 글 |
-| `storefront/build.py` | 판매 홈페이지 한 장을 정적 사이트로 |
+| `storefront/build.py` | 판매 홈페이지 + 주문·자료·개인정보 화면을 정적 사이트로 |
+| `storefront/templates/submit.js.j2` | 접수 어댑터 — 받는 곳이 없으면 보낸 척하지 않는다 |
 | `tools/build_previews.py` | 견본 + 판매 홈페이지를 한 폴더에 · gh-pages 로 발행 |
 | `tools/doctor.py` | 이 컴퓨터에서 공장이 도는지 확인 |
 
@@ -294,7 +316,7 @@ testimonials · faq · process · contact · cta · beforeafter · area · overv
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q          # 304개 (브라우저 검사 포함 — playwright 가 없으면 건너뜁니다)
+python -m pytest -q          # 357개 (브라우저 검사 포함 — playwright 가 없으면 건너뜁니다)
 ```
 
 지어진 결과물을 실제로 뜯어봅니다 — 템플릿 문법이 새어 나왔는지,
@@ -311,6 +333,9 @@ python -m pytest -q          # 304개 (브라우저 검사 포함 — playwright
 | --- | --- |
 | 목록 | <https://v0125v0125-design.github.io/website-factory/> |
 | 판매 홈페이지 | <https://v0125v0125-design.github.io/website-factory/store/> |
+| 제작 상담 신청 | <https://v0125v0125-design.github.io/website-factory/store/order/> |
+| 제작 자료 입력 | <https://v0125v0125-design.github.io/website-factory/store/materials/> |
+| 개인정보 안내 | <https://v0125v0125-design.github.io/website-factory/store/privacy/> |
 | INTERIOR 01 | <https://v0125v0125-design.github.io/website-factory/gonggan-interior/> |
 | CLEANING 01 | <https://v0125v0125-design.github.io/website-factory/cleaning-01/> |
 | COMPANY 01 | <https://v0125v0125-design.github.io/website-factory/company-01/> |
@@ -321,10 +346,13 @@ python -m pytest -q          # 304개 (브라우저 검사 포함 — playwright
 
 ## 앞으로
 
-- **문의 폼을 실제로 받는 곳** — 지금은 받는 서버가 없어 손님에게 전화·카톡으로
-  안내합니다. `--form-action` 으로 Formspree 같은 주소를 꽂으면 그때부터 접수됩니다.
-- **판매 홈페이지의 공개 연락처** — `storefront/storefront.json` 의 `brand.contact`.
-  비어 있으면 광고를 태워도 손님이 닿을 길이 없습니다. 가장 급합니다.
+- **신청을 받을 곳** — `storefront.json` 의 `submission.provider`·`endpoint`.
+  비어 있으면 제작 상담 신청 버튼이 눌리지 않습니다. 가장 급합니다.
+  ([설정법](문서/ORDER_FLOW_V1.md))
+- **판매 홈페이지의 공개 연락처** — `storefront.json` 의 `brand.contact`.
+  전송이 실패했을 때 손님이 닿을 길입니다.
+- **사업자 정보** — `storefront.json` 의 `brand.legal`. 통신판매 고지 의무입니다.
+- **고객 홈페이지의 문의 폼 수신처** — `--form-action` 으로 Formspree 같은 주소를 꽂습니다.
 - 관리자 웹 — 폼으로 주문서를 채우고 미리보기를 띄우는 곳 (구조는 이미 맞춰 두었습니다)
 - 마스터 늘리기 (요식업 사진 중심형, 전문직 문서 중심형)
 - 레퍼런스 분석에 스크린샷 기반 판단 더하기 (지금은 CSS 만 읽는다)

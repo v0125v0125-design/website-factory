@@ -23,6 +23,8 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoes
 from markupsafe import Markup, escape  # noqa: E402
 
 DATA = HERE / "storefront.json"
+# 속장 — (폴더 이름, 템플릿). 주소는 /store/order/ 처럼 끝에 / 가 붙습니다.
+PAGES = (("order", "order.html"), ("materials", "materials.html"), ("privacy", "privacy.html"))
 
 
 def jsonld(site: dict) -> str:
@@ -74,6 +76,31 @@ def jsonld(site: dict) -> str:
     return text.replace("</", "<\\/")
 
 
+def legal_lines(site: dict) -> list[str]:
+    """푸터에 적는 사업자 정보. **비어 있는 칸은 아예 적지 않습니다** —
+    가짜 등록번호를 만들어 화면에 세우는 것보다 없는 편이 낫습니다."""
+    legal = site["brand"]["legal"]
+    order = [
+        ("", "businessName"), ("대표 ", "owner"), ("사업자등록번호 ", "registration"),
+        ("", "address"), ("", "contact"), ("", "email"),
+    ]
+    return [f"{prefix}{legal[key]}" for prefix, key in order if legal.get(key)]
+
+
+def privacy_rows(site: dict, key: str = "rows") -> list[dict]:
+    """보유 기간은 설정값에서 채웁니다. 비어 있으면 그 줄을 빼 버립니다."""
+    period = site["brand"]["legal"].get("retentionPeriod", "").strip()
+    out = []
+    for row in site["privacy"][key]:
+        value = row["value"]
+        if row["label"] == "보유 기간":
+            if not period:
+                continue
+            value = period
+        out.append({"label": row["label"], "value": value})
+    return out
+
+
 def load(path: Path = DATA) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -115,13 +142,33 @@ def build(out_dir: str | Path, data: dict | None = None) -> Path:
             ("이메일", site["brand"]["contact"].get("email", ""), "mail"),
         ) if c[1]],
         "available_samples": [s for s in site["samples"]["items"] if s.get("status") == "available"],
+        "legal_lines": legal_lines(site),
+        "privacy_rows": privacy_rows(site, "rows"),
+        "privacy_material_rows": privacy_rows(site, "materialRows"),
+        "submission_ready": bool(site["submission"].get("provider") and site["submission"].get("endpoint")),
     }
 
     (out / "index.html").write_text(
-        environment.get_template("index.html").render(**context), encoding="utf-8"
+        environment.get_template("index.html").render(**context, base="", self_path=""),
+        encoding="utf-8",
     )
+    # 속장 — 주문 · 제작자료 · 개인정보. 한 단계 아래라 자산 경로에 ../ 가 붙습니다.
+    for folder, template in PAGES:
+        (out / folder).mkdir(parents=True, exist_ok=True)
+        (out / folder / "index.html").write_text(
+            environment.get_template(template).render(
+                **context, base="../", self_path=f"{folder}/"
+            ),
+            encoding="utf-8",
+        )
+
     (out / "assets" / "styles.css").write_text(
-        environment.get_template("styles.css.j2").render(**context), encoding="utf-8"
+        environment.get_template("styles.css.j2").render(**context, base="", self_path=""),
+        encoding="utf-8",
+    )
+    (out / "assets" / "submit.js").write_text(
+        environment.get_template("submit.js.j2").render(**context, base="", self_path=""),
+        encoding="utf-8",
     )
 
     samples = HERE / "assets" / "samples"
@@ -139,7 +186,12 @@ def build(out_dir: str | Path, data: dict | None = None) -> Path:
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         f"  <url><loc>{base}/</loc><lastmod>{date.today().isoformat()}</lastmod></url>\n"
-        "</urlset>\n",
+        + "".join(
+            f"  <url><loc>{base}/{folder}/</loc>"
+            f"<lastmod>{date.today().isoformat()}</lastmod></url>\n"
+            for folder, _ in PAGES
+        )
+        + "</urlset>\n",
         encoding="utf-8",
     )
     return out

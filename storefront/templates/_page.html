@@ -1,0 +1,68 @@
+{#- 판매 홈페이지의 속장 한 벌(주문·자료·개인정보)이 쓰는 껍데기. -#}
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ seo.title }}{% endblock %}</title>
+<meta name="description" content="{% block description %}{{ seo.description }}{% endblock %}">
+<meta name="robots" content="{{ 'noindex, nofollow' if seo.noindex else 'index, follow' }}">
+<link rel="canonical" href="{{ urls.self }}{{ self_path }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ brand.name }}">
+<meta property="og:title" content="{% block og_title %}{{ seo.title }}{% endblock %}">
+<meta property="og:url" content="{{ urls.self }}{{ self_path }}">
+<meta property="og:locale" content="ko_KR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="{{ base }}assets/styles.css">
+</head>
+<body class="page">
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header class="hd">
+  <div class="wrap hd__in">
+    <a class="hd__brand" href="{{ base }}"><span class="hd__mark">{{ brand.shortName }}</span>{{ brand.name }}</a>
+    <nav class="hd__nav" aria-label="주요 메뉴">
+      <ul class="hd__list">
+        <li><a href="{{ base }}#samples">디자인 보기</a></li>
+        <li><a href="{{ base }}#pricing">가격</a></li>
+        <li><a href="{{ base }}#faq">자주 묻는 질문</a></li>
+      </ul>
+    </nav>
+    <div class="hd__cta">{% block headcta %}<a class="btn btn--sm" href="{{ base }}order/">제작 상담 신청</a>{% endblock %}</div>
+  </div>
+</header>
+
+<main id="main">
+{% block main %}{% endblock %}
+</main>
+
+<footer class="ft">
+  <div class="wrap ft__in">
+    <div>
+      <p class="ft__brand">{{ brand.name }}</p>
+      <p style="margin:0">{{ brand.tagline }}</p>
+    </div>
+    <ul class="ft__links">
+      <li><a href="{{ base }}">홈</a></li>
+      <li><a href="{{ base }}order/">제작 상담 신청</a></li>
+      <li><a href="{{ base }}privacy/">개인정보 안내</a></li>
+    </ul>
+    {% if legal_lines %}
+    <p style="width:100%;margin:18px 0 0">{{ legal_lines | join(' · ') }}</p>
+    {% endif %}
+    <p class="ft__note">
+      샘플 홈페이지는 가상 업체 자료로 만든 견본입니다. 실제 업체의 이름·연락처·사진·문구를 사용하지 않았습니다.
+      가격은 모두 부가세 별도이며, 검색 상위 노출은 약속드리지 않습니다.
+      {% if seo.noindex %}이 페이지는 검수용 임시 주소로 검색 노출을 막아 두었습니다(noindex).{% endif %}
+      © {{ year }} {{ brand.name }}
+    </p>
+  </div>
+</footer>
+
+<script src="{{ base }}assets/submit.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

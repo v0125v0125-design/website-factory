@@ -1,0 +1,52 @@
+{% extends "_page.html" %}
+{% block title %}{{ site.privacy.heading }} | {{ brand.name }}{% endblock %}
+{% block description %}{{ brand.name }} 가 제작 상담과 홈페이지 제작을 위해 수집하는 정보와 그 쓰임을 적어 둔 안내입니다.{% endblock %}
+{% block main %}
+  <section class="sec">
+    <div class="wrap doc">
+      <p class="eyebrow">PRIVACY</p>
+      <h1 class="h2">{{ site.privacy.heading }}</h1>
+      <p class="lede">{{ brand.name }} 는 홈페이지 제작 상담과 제작에 필요한 만큼만 받습니다.</p>
+
+      <h2 class="doc__h">1. 제작 상담 신청</h2>
+      <dl class="doc__table">
+        {% for row in privacy_rows %}
+        <div><dt>{{ row.label }}</dt><dd>{{ row.value }}</dd></div>
+        {% endfor %}
+      </dl>
+
+      <h2 class="doc__h">2. 제작 자료 제출</h2>
+      <dl class="doc__table">
+        {% for row in privacy_material_rows %}
+        <div><dt>{{ row.label }}</dt><dd>{{ row.value }}</dd></div>
+        {% endfor %}
+      </dl>
+
+      <h2 class="doc__h">3. 보내신 내용이 도착하는 곳</h2>
+      <p>
+        {% if site.submission.provider %}
+        신청 내용은 저희가 쓰는 접수 서비스를 거쳐 담당자에게 전달됩니다. 그 서비스에도 같은 내용이 기록됩니다.
+        {% else %}
+        지금은 온라인 접수 창구를 준비하는 중입니다. 접수가 열리기 전까지는 전화·메신저로만 상담을 받습니다.
+        {% endif %}
+      </p>
+
+      <h2 class="doc__h">4. 문의</h2>
+      {% if channels or legal_lines %}
+      <ul class="doc__list">
+        {% for ch in channels %}
+        <li>{{ ch[0] }} · {{ ch[1] }}</li>
+        {% endfor %}
+        {% for line in legal_lines %}
+        <li>{{ line }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="muted">공개 연락처는 준비하는 중입니다.</p>
+      {% endif %}
+
+      <p class="doc__note">{{ site.privacy.note }}</p>
+      <p class="muted" style="font-size:.875rem">최종 수정 {{ site.privacy.updated }}</p>
+    </div>
+  </section>
+{% endblock %}

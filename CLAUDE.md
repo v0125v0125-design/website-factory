@@ -14,6 +14,8 @@
   · 마스터를 복사해 색만 바꾸지 마십시오 — 업종마다 사는 이유가 다릅니다.
   · 확인할 수 없는 숫자(누적 고객·만족도·업력)를 화면에 세우지 마십시오.
   · 받는 곳이 없는 문의 폼이 "접수되었습니다" 라고 말하게 하지 마십시오.
+    받는 곳(storefront.json 의 submission)이 비면 버튼을 잠그고 다른 길을 안내합니다.
+  · 첫 신청 화면에서 제작 자료를 다 받으려 하지 마십시오 — 두 단계로 나눠 두었습니다.
 
 원페이지·5페이지 홈페이지를 템플릿으로 찍어 파는 공장입니다.
 구조와 쓰는 법은 `README.md` 에 있습니다. 아래에는 **지켜야 할 것**만 적습니다.
@@ -34,7 +36,7 @@
 
 ```bash
 python tools/doctor.py                    # 이 컴퓨터에 무엇이 없는지
-python -m pytest -q                       # 304개
+python -m pytest -q                       # 357개
 python -m factory.cli build examples/customers/a-gonggan.json -o out/a --offline --clean
 python -m factory.cli serve out/a
 ```

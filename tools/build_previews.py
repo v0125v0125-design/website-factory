@@ -68,10 +68,10 @@ def preview_base() -> str:
     return f"https://{found.group(1)}.github.io/{found.group(2)}" if found else ""
 
 
-def _keep_only_web_files(folder: Path) -> None:
+def _keep_only_web_files(folder: Path, extra: tuple[str, ...] = ()) -> None:
     """고객에게 보일 필요가 없는 것을 걷어낸다 (보고서·납품메모·호스팅 설정)."""
     for child in list(folder.iterdir()):
-        if child.name in PUBLISH:
+        if child.name in PUBLISH or child.name in extra:
             continue
         shutil.rmtree(child) if child.is_dir() else child.unlink()
 
@@ -92,9 +92,13 @@ def _build_storefront(out: Path, base: str) -> None:
     data = json.loads(text)
     data["urls"]["self"] = f"{base}/store/" if base else data["urls"]["self"]
     storefront.build(out / "store", data)
-    # 미리보기 묶음에서는 폴더마다 브라우저가 쓰는 것만 둔다 (robots 는 뿌리에 하나)
-    _keep_only_web_files(out / "store")
+    # 미리보기 묶음에서는 폴더마다 브라우저가 쓰는 것만 둔다 (robots 는 뿌리에 하나).
+    # 판매 홈페이지는 속장(주문·자료·개인정보)을 함께 둡니다.
+    pages = tuple(folder for folder, _ in storefront.PAGES)
+    _keep_only_web_files(out / "store", extra=pages)
     _mark_noindex(out / "store" / "index.html")
+    for folder in pages:
+        _mark_noindex(out / "store" / folder / "index.html")
 
 
 def _index_page(rows: list[dict], built_at: str) -> str:

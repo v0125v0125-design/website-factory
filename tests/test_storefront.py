@@ -43,6 +43,26 @@ def page(site: Path) -> str:
 
 
 @pytest.fixture(scope="module")
+def order(site: Path) -> str:
+    return (site / "order" / "index.html").read_text(encoding="utf-8")
+
+
+@pytest.fixture(scope="module")
+def materials(site: Path) -> str:
+    return (site / "materials" / "index.html").read_text(encoding="utf-8")
+
+
+@pytest.fixture(scope="module")
+def privacy(site: Path) -> str:
+    return (site / "privacy" / "index.html").read_text(encoding="utf-8")
+
+
+@pytest.fixture(scope="module")
+def adapter(site: Path) -> str:
+    return (site / "assets" / "submit.js").read_text(encoding="utf-8")
+
+
+@pytest.fixture(scope="module")
 def data() -> dict:
     return load()
 
@@ -94,13 +114,12 @@ def test_no_invented_reviews_or_numbers(page):
     assert '"review"' not in page
 
 
-def test_the_form_never_pretends_to_have_sent_anything(page, data):
-    """받는 곳이 없다. 그러면 접수되었다고 말하지 않는다."""
-    assert "<form" in page
-    assert "action=" not in page.split("<footer")[0].split("<form")[1].split(">")[0]
-    for lie in ("전송되었습니다", "접수되었습니다", "신청이 완료", "곧 연락드리겠습니다"):
-        assert lie not in page, lie
-    assert "아직 전송되지 않았습니다" in page or data["brand"]["contact"]["phone"]
+def test_the_sales_page_no_longer_carries_a_form(page):
+    """신청은 별도 화면에서 받습니다. 판매 페이지에는 폼이 없습니다."""
+    assert "<form" not in page
+    assert 'href="order/"' in page
+    assert 'href="order/?mode=recommend"' in page
+    assert 'href="privacy/"' in page
 
 
 def test_missing_contact_channels_show_no_dead_buttons(page, data):
@@ -115,11 +134,13 @@ def test_filled_contact_channels_do_appear(tmp_path):
     filled = load()
     filled["brand"]["contact"] = {"phone": "1544-1234", "kakao": "https://pf.kakao.com/_test",
                                   "email": "hello@example.test"}
-    html = (build(tmp_path / "wired", filled) / "index.html").read_text(encoding="utf-8")
-    assert 'href="tel:15441234"' in html
-    assert "https://pf.kakao.com/_test" in html
-    assert "mailto:hello@example.test" in html
-    assert "아직 전송되지 않았습니다" not in html
+    out = build(tmp_path / "wired", filled)
+    page = (out / "index.html").read_text(encoding="utf-8")
+    order = (out / "order" / "index.html").read_text(encoding="utf-8")
+    assert "1544-1234" in page
+    assert 'href="tel:15441234"' in order          # 실패했을 때 바로 걸 수 있어야 한다
+    assert "https://pf.kakao.com/_test" in order
+    assert "mailto:hello@example.test" in order
 
 
 # ── 파는 데 필요한 것이 다 있는가 ─────────────────────────────────
@@ -167,15 +188,22 @@ def test_preparing_samples_are_marked_not_linked(page, data):
     assert page.count("chip--soon") == len(preparing)
 
 
-def test_every_live_sample_can_be_chosen_in_the_order_form(data):
-    """고를 수 있는 디자인이 늘면 신청 폼에도 같이 늘어야 한다."""
+def test_every_live_sample_can_be_chosen_in_the_order_form(order, data):
+    """샘플이 늘면 주문 화면의 선택지도 저절로 늘어야 한다 — 손으로 적지 않는다."""
     live = [s["title"] for s in data["samples"]["items"] if s.get("status") == "available"]
-    options = next(f["options"] for f in data["order"]["fields"] if f["name"] == "design")
     assert live, "고를 수 있는 샘플이 하나도 없다"
+    block = order.split('name="sample"')[1].split("</select>")[0]
     for title in live:
-        assert title in options, title
+        assert f'value="{title}"' in block, title
     for title in (s["title"] for s in data["samples"]["items"] if s.get("status") != "available"):
-        assert title not in options, f"준비 중인 {title} 이 신청 폼에 있다"
+        assert f'value="{title}"' not in block, f"준비 중인 {title} 이 주문 화면에 있다"
+    assert 'value="미정"' in block
+
+
+def test_every_product_can_be_chosen_in_the_order_form(order, data):
+    block = order.split('name="product"')[1].split("</select>")[0]
+    for product in data["products"]["items"]:
+        assert f'value="{product["name"]}"' in block, product["name"]
 
 
 def test_more_than_one_industry_is_actually_on_sale(data):
@@ -195,6 +223,11 @@ def test_the_anchors_the_buttons_point_at_all_exist(page):
     targets = set(re.findall(r'href="#([a-z-]+)"', page))
     ids = set(re.findall(r'id="([a-z-]+)"', page))
     assert targets - ids == set(), targets - ids
+
+
+def test_the_sales_page_links_only_at_pages_that_exist(site, page):
+    for href in set(re.findall(r'href="([a-z]+/)(?:\?[^"]*)?"', page)):
+        assert (site / href / "index.html").is_file(), href
 
 
 # ── 검색과 공유 ───────────────────────────────────────────────────
@@ -256,9 +289,9 @@ def test_the_theme_colour_comes_only_from_the_data(tmp_path):
 
 def test_the_data_file_is_valid_json_with_the_blocks_the_page_needs():
     data = json.loads(DATA.read_text(encoding="utf-8"))
-    for key in ("brand", "theme", "urls", "seo", "nav", "hero", "reasons", "samples",
-                "products", "scope", "process", "trust", "faq", "order", "quote",
-                "advice", "closing"):
+    for key in ("brand", "theme", "submission", "upload", "urls", "seo", "nav", "hero",
+                "reasons", "samples", "products", "scope", "process", "trust", "faq",
+                "order", "material", "privacy", "closing"):
         assert key in data, key
 
 
@@ -268,9 +301,12 @@ def test_the_preview_bundle_carries_the_storefront(tmp_path):
     subprocess.run([sys.executable, str(ROOT / "tools" / "build_previews.py"), str(out)],
                    cwd=ROOT, check=True, capture_output=True, text=True)
     store = out / "store"
-    assert {child.name for child in store.iterdir()} == {"index.html", "assets"}
-    html = (store / "index.html").read_text(encoding="utf-8")
-    assert 'content="noindex, nofollow"' in html
+    assert {child.name for child in store.iterdir()} == {
+        "index.html", "assets", "order", "materials", "privacy"}
+    for page in ("index.html", "order/index.html", "materials/index.html", "privacy/index.html"):
+        html = (store / page).read_text(encoding="utf-8")
+        assert 'content="noindex, nofollow"' in html, page
+    assert (store / "assets" / "submit.js").is_file()
     assert 'href="store/"' in (out / "index.html").read_text(encoding="utf-8")
 
 

@@ -138,9 +138,19 @@ def check_storefront(r: Report) -> None:
         if not shot.is_file():
             r.soft(f"{sample['title']} 썸네일이 없습니다",
                    "python tools/shoot_sample_thumbs.py  (playwright 필요)")
+    submission = data.get("submission", {})
+    if submission.get("provider") and submission.get("endpoint"):
+        r.ok("신청 접수 창구", f"{submission['provider']} → {submission['endpoint'][:48]}")
+    else:
+        r.soft("신청을 받을 곳이 없습니다 — 제작 상담 신청 버튼이 눌리지 않습니다",
+               "storefront.json 의 submission.provider 와 endpoint 를 채우십시오 "
+               "(문서/ORDER_FLOW_V1.md 4장)")
     if not any(data["brand"]["contact"].get(k) for k in ("phone", "kakao", "email")):
         r.soft("판매 홈페이지에 공개 연락처가 없습니다",
                "광고를 태우기 전에 storefront/storefront.json 의 brand.contact 를 채우십시오")
+    if not data["brand"]["legal"].get("registration"):
+        r.soft("사업자 정보가 비어 있습니다 (통신판매 고지)",
+               "사업자등록을 마치면 storefront.json 의 brand.legal 을 채우십시오")
 
 
 def check_git(r: Report) -> None:

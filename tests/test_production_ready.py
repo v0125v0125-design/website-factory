@@ -416,9 +416,14 @@ def _build_preview_bundle(out: Path) -> Path:
 
 def test_preview_bundle_ships_only_what_a_browser_needs(tmp_path):
     site = _build_preview_bundle(tmp_path / "_site")
+    # 판매 홈페이지만 속장(주문·자료·개인정보)을 함께 싣습니다.
+    store_pages = {"order", "materials", "privacy"}
     for folder in sorted(p for p in site.iterdir() if p.is_dir()):
         names = {child.name for child in folder.iterdir()}
-        assert names == {"index.html", "assets"}, f"{folder.name}: {names}"
+        want = {"index.html", "assets"} | (store_pages if folder.name == "store" else set())
+        assert names == want, f"{folder.name}: {names}"
+    for page in store_pages:
+        assert (site / "store" / page / "index.html").is_file(), page
     assert not list(site.rglob("build_report.json"))
     assert not list(site.rglob("납품메모.md"))
     assert not list(site.rglob("CNAME"))
